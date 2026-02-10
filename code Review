@@ -1,0 +1,8 @@
+tbl_status
+COLUMN 
+id    Description
+'1' = Active;
+'2' = Locked;
+'3' = Reset;
+'4' = Blocked;
+'5' = 
