@@ -14,8 +14,6 @@ require 'connection.php'; // connection
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-
     <style>
     body {
         font-family: 'Poppins', sans-serif;
@@ -29,7 +27,7 @@ require 'connection.php'; // connection
     .login-title{
       text-align: center;
       font-size: 1rem;
-      letter-spacing: 1.5px;
+      letter-spacing: 1px;
       color: #004a9b;
       margin-top:0.5rem;
     }
@@ -153,7 +151,7 @@ require 'connection.php'; // connection
           <div class="my-4">
             <p class="divider-text d-flex justify-content-center align-items-center gap-2 mb-2"><img src="images/owi.jpg" alt="Logo" class="program-logo" style="width:40px;">Customer Loyalty Program</p>
             <div class="login-title">
-              LOG IN TO YOUR ACCOUNT<br>
+              LOG IN YOUR ACCOUNT<br>
             </div>
           </div>
         
@@ -179,7 +177,6 @@ require 'connection.php'; // connection
           <div class="d-flex justify-content-between align-items-center">
             <!-- Checkbox -->
             <div class="form-check mb-0">
-              
             </div>
             <a href="#!" class="text-body">Forgot password?</a>
           </div>
@@ -189,7 +186,6 @@ require 'connection.php'; // connection
             <p class="small fw-bold mt-2 pt-1 mb-0" style="margin-left:120px;">Don't have an account? <a href="#!"
                 class="link-danger">Register</a></p>
           </div>
-
         </form>
       </div> 
     </div>
@@ -227,7 +223,6 @@ require 'connection.php'; // connection
     $('.toggle-password').on('click', function () {
       const passwordInput = $('#password');
       const icon = $(this).find('i');
-
       if (passwordInput.attr('type') === 'password') {
         passwordInput.attr('type', 'text');
         icon.removeClass('fa-eye').addClass('fa-eye-slash');
@@ -241,10 +236,8 @@ require 'connection.php'; // connection
   //login validation
     $('#loginForm').on('submit', function(e) {
         e.preventDefault();
-
         var username = $('#username').val();
         var password = $('#password').val();
-
         $.ajax({
             url: 'login_process.php',
             type: 'POST',
