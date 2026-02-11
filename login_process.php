@@ -1,6 +1,6 @@
 <?php
 header('Content-Type: application/json');
-session_start(); // Start session to store user info upon success
+session_start();
 
 // 1. Database Connection
 $conn = new mysqli("localhost", "root", "", "clp");
@@ -14,8 +14,8 @@ if ($conn->connect_error) {
 $user = isset($_POST['user']) ? strtolower(trim($_POST['user'])) : '';
 $pass = isset($_POST['pass']) ? $_POST['pass'] : ''; 
 
-// 3. Updated Query: Fetching all additional user information
-$stmt = $conn->prepare("SELECT id, password, user_status, user_attempt, LastName, FirstName, user_level_id, dept_id, user_role FROM tbl_users WHERE username = ?");
+// 3. Enhanced Query: Fetching points, tier, and expiration for the dashboard
+$stmt = $conn->prepare("SELECT id, password, user_status, user_attempt, LastName, FirstName, user_level_id, dept_id, user_role, total_points, account_expiry, current_tier FROM tbl_users WHERE username = ?");
 $stmt->bind_param("s", $user);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -39,16 +39,21 @@ if ($userData['password'] === $pass) {
     $update->bind_param("i", $userData['id']);
     $update->execute();
 
-    // Display in dashboard when succefully Login
+    // Store essential dashboard data in Session
     $_SESSION['user_id'] = $userData['id'];
     $_SESSION['username'] = $user;
     $_SESSION['full_name'] = $userData['FirstName'] . " " . $userData['LastName'];
     $_SESSION['role'] = $userData['user_role'];
-    $_SESSION['dept'] = $userData['dept_id'];
+    $_SESSION['status'] = $userData['user_status'];
+    
+    // New Dashboard specific session data
+    $_SESSION['points'] = $userData['total_points'];
+    $_SESSION['expiry'] = $userData['account_expiry'];
+    $_SESSION['tier'] = $userData['current_tier'];
 
     echo json_encode(["status" => 1, "message" => "Access Granted"]);
 } else {
-    // FAILURE: Handle attempts and potential lockout
+    // FAILURE logic remains the same
     $newAttempts = $userData['user_attempt'] + 1;
     $newStatus = ($newAttempts >= 3) ? 'L' : $userData['user_status'];
     

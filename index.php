@@ -1,4 +1,5 @@
 <?php
+session_start(); 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ajax'])) {
     header('Content-Type: application/json');
@@ -12,26 +13,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ajax'])) {
     $username = isset($_POST['user']) ? strtolower(trim($_POST['user'])) : '';
     $password = isset($_POST['pass']) ? $_POST['pass'] : '';
 
-    $stmt = $db->prepare("SELECT id, password, user_status, user_attempt FROM tbl_users WHERE username = ?");
+    // Simplified Query: Removed points, expiry, and tier
+    $stmt = $db->prepare("SELECT id, password, user_status, user_attempt, FirstName, LastName FROM tbl_users WHERE username = ?");
     $stmt->bind_param("s", $username);
     $stmt->execute();
     $user = $stmt->get_result()->fetch_assoc();
 
-    // No user found
     if (!$user) {
         echo json_encode(["status" => 2, "message" => "Invalid Username"]);
         exit;
     }
 
-    // Check if blocked
     if ($user['user_status'] === 'Blocked' || $user['user_status'] === 'L') {
         echo json_encode(["status" => 3, "message" => "Account Blocked."]);
         exit;
     }
 
-    // Password Check
     if ($user['password'] === $password) {
         $db->query("UPDATE tbl_users SET user_attempt = 0, last_logIn = NOW(), user_status = 'A' WHERE id = " . $user['id']);
+        
+        // Store only basic info in Session
+        $_SESSION['user_id'] = $user['id'];
+        $_SESSION['username'] = $username;
+        $_SESSION['full_name'] = $user['FirstName'] . " " . $user['LastName'];
+        $_SESSION['status'] = 'Active'; 
+        
         echo json_encode(["status" => 1, "message" => "Access Granted"]);
     } else {
         $attempts = $user['user_attempt'] + 1;
@@ -46,7 +52,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ajax'])) {
     }
     exit;
 }
-
 ?>
 
 <!DOCTYPE html>
