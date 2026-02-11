@@ -1,43 +1,52 @@
 <?php
-// 1. BACKEND LOGIC: Remains the same as your functional version
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ajax'])) {
     header('Content-Type: application/json');
     $db = new mysqli("localhost", "root", "", "clp");
+    
     if ($db->connect_error) {
-        echo json_encode(["status" => "F", "message" => "Connection failed"]);
+        echo json_encode(["status" => 0, "message" => "Database Connection Error"]);
         exit;
     }
+
     $username = isset($_POST['user']) ? strtolower(trim($_POST['user'])) : '';
     $password = isset($_POST['pass']) ? $_POST['pass'] : '';
 
-    $query = "SELECT id, password, user_status, user_attempt FROM tbl_users WHERE username = ?";
-    $stmt = $db->prepare($query);
+    $stmt = $db->prepare("SELECT id, password, user_status, user_attempt FROM tbl_users WHERE username = ?");
     $stmt->bind_param("s", $username);
     $stmt->execute();
     $user = $stmt->get_result()->fetch_assoc();
 
+    // No user found
     if (!$user) {
-        echo json_encode(["status" => "F", "message" => "Invalid Username"]);
+        echo json_encode(["status" => 2, "message" => "Invalid Username"]);
         exit;
     }
+
+    // Check if blocked
     if ($user['user_status'] === 'Blocked' || $user['user_status'] === 'L') {
-        echo json_encode(["status" => "B", "message" => "Account Blocked."]);
+        echo json_encode(["status" => 3, "message" => "Account Blocked."]);
         exit;
     }
+
+    // Password Check
     if ($user['password'] === $password) {
         $db->query("UPDATE tbl_users SET user_attempt = 0, last_logIn = NOW(), user_status = 'A' WHERE id = " . $user['id']);
-        echo json_encode(["status" => "A", "message" => "Success"]);
+        echo json_encode(["status" => 1, "message" => "Access Granted"]);
     } else {
         $attempts = $user['user_attempt'] + 1;
         $newStatus = ($attempts >= 3) ? 'Blocked' : $user['user_status'];
+        
         $update = $db->prepare("UPDATE tbl_users SET user_attempt = ?, user_status = ? WHERE id = ?");
         $update->bind_param("isi", $attempts, $newStatus, $user['id']);
         $update->execute();
-        $msg = ($newStatus === 'Blocked') ? "Account Blocked due to 3 failed attempts." : "Invalid Password. Attempt $attempts/3";
-        echo json_encode(["status" => "F", "message" => $msg]);
+        
+        $msg = ($newStatus === 'Blocked') ? "Account Blocked." : "Invalid Password ($attempts/3)";
+        echo json_encode(["status" => 2, "message" => $msg]);
     }
     exit;
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -71,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ajax'])) {
         .side-left .brand-logo-img { height: auto; margin-bottom: 20px; }
         .side-left p { font-size: 1.1rem; opacity: 0.9; margin-bottom: 30px; }
 
-        /* RIGHT SIDE: Form Area */
+        /* RIGHT SIDE: for log in  */
         .side-right {
             flex: 1.2;
             display: flex;
@@ -194,14 +203,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ajax'])) {
 
 <script>
 $(document).ready(function() {
-    // Input Handling
+    // 1. Username formatting
     $('#username').on('input', function() {
         let val = $(this).val().toLowerCase().replace(/\s/g, ''); 
         if (val.length > 18) val = val.substring(0, 18);
         $(this).val(val);
     });
 
-    // Password Visibility
+    // 2. Toggle Visibility
     $('#togglepassword').on('click', function() {
         const passwordInput = $('#password');
         const isPassword = passwordInput.attr('type') === 'password';
@@ -209,16 +218,19 @@ $(document).ready(function() {
         $(this).toggleClass('fa-eye-slash fa-eye');
     });
 
-    // AJAX Form Submission
+    // 3. AJAX Submission
     $('#loginForm').on('submit', function(e) {
         e.preventDefault();
         const username = $('#username').val().trim();
         const rawPassword = $('#password').val();
 
         if (rawPassword.length < 8) {
-            $('#response-msg').html('<span style="color: #e74c3c;">Password must be at least 8 characters.</span>');
+            $('#response-msg').html('<span style="color: #e74c3c;">Minimum 8 characters required.</span>');
             return;
         }
+        
+        // Show a "loading" state on button
+        $('.login-btn').text('Checking...').prop('disabled', true);
         
         $.ajax({
             url: '', 
@@ -230,12 +242,42 @@ $(document).ready(function() {
             },
             dataType: 'json',
             success: function(res) {
-                if(res.status === 'A') {
-                    $('#response-msg').html('<span style="color: #27ae60;">' + res.message + '! Redirecting...</span>');
+                if(res.status === 1) { 
+                    // if login is success
+                    $('.login-btn').text('Log In').prop('disabled', false);
+                    $('#response-msg').html('<span style="color: #27ae60; font-weight: bold;">Welcome! Redirecting...</span>');
                     setTimeout(() => { window.location.href = 'dashboard.php'; }, 1000);
-                } else {
-                    $('#response-msg').html('<span style="color: #e74c3c;">' + res.message + '</span>');
+                } 
+                else if(res.status === 3) {
+                    // unavailable login form
+                    $('#response-msg').html('<span style="color: #c0392b; font-weight: bold;">' + res.message + '</span>');
+                    
+                    // disable inputs
+                    $('#username, #password').prop('disabled', true).css({
+                        'background-color': '#f2f2f2',
+                        'cursor': 'not-allowed'
+                    });
+
+                    // disable Button
+                    $('.login-btn').text('Account Locked').prop('disabled', true).css({
+                        'opacity': '0.6',
+                        'cursor': 'not-allowed',
+                        'background': '#666'
+                    });
+
+                    //hide the icons
+                    $('#togglepassword').hide();
                 }
+                else { 
+                    // FAILED (status 2 or other)
+                    $('.login-btn').text('Log In').prop('disabled', false);
+                    $('#response-msg').html('<span style="color: #e67e22;">' + res.message + '</span>');
+                    $('#password').val('').focus(); // Clear and focus for retry
+                }
+            },
+            error: function() {
+                $('.login-btn').text('Log In').prop('disabled', false);
+                $('#response-msg').html('<span style="color: #e74c3c;">System Error. Try again later.</span>');
             }
         });
     });
