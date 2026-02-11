@@ -1,6 +1,7 @@
 <?php
 session_start();
 require 'connection.php'; 
+
 $username = trim($_POST['username'] ?? '');
 $password = trim($_POST['password'] ?? '');
 
@@ -9,123 +10,94 @@ if ($username === '' || $password === '') {
     exit;
 }
 
-//fecth user
+// Fetch user
 $sql = "SELECT * FROM tbl_users WHERE username = ? LIMIT 1";
 $stmt = $mysqli->prepare($sql);
 $stmt->bind_param("s", $username);
 $stmt->execute();
 $result = $stmt->get_result();
 $user = $result->fetch_assoc();
-//User not found
+
+// User not found
 if (!$user) {
     echo "<div class='text-danger'>Invalid username or password.</div>";
     exit;
 }
-//User Status Check
-/* Status checks */
+
+// User Status Check 
 switch ((int)$user['user_status']) {
     case 2: // Locked
-        echo "<div class='text-danger fw-bold'>
-                Your account is locked.<br>
-                Please contact IT Administrator.
-              </div>";
+        echo "<div class='text-danger fw-bold'>Your account is locked. Contact IT.</div>";
         exit;
-
-    case 3: // Reset
-        echo "<div class='text-warning fw-bold'>
-                Password reset required.<br>
-                Please reset your password.
-              </div>";
-        exit;
-
-    case 4: // Blocked
-        echo "<div class='text-danger fw-bold'>
-                Account is blocked.<br>
-                Contact IT Administrator.
-              </div>";
+    case 4: // Blocked 
+        echo "<div class='text-danger fw-bold'>Account is blocked. Contact IT.</div>";
         exit;
 }
-//Attempt Check
-if ($user['user_attempt'] >= 3) {
-    // Auto mark as Blocked
-    $block = $mysqli->prepare("
-        UPDATE tbl_users 
-        SET user_status = 'Blocked' 
-        WHERE id = ?
-    ");
-    $block->bind_param("i", $user['id']);
-    $block->execute();
 
-    echo "<div class='text-danger fw-bold'>
-            Account locked after 3 failed attempts.<br>
-            Contact IT Administrator.
-          </div>";
+// Attempt Check
+if ($user['user_attempt'] >= 3) {
+    echo "<div class='text-danger fw-bold'>Account locked after 3 failed attempts.</div>";
     exit;
 }
 
-//Paswword Check
+// Password Check
 $encodedPassword = base64_encode($password);
 if ($encodedPassword !== $user['password']) {
     $attempts = $user['user_attempt'] + 1;
-    $update = $mysqli->prepare("
-        UPDATE tbl_users 
-        SET user_attempt = ? 
-        WHERE id = ?
-    ");
+    $update = $mysqli->prepare("UPDATE tbl_users SET user_attempt = ? WHERE id = ?");
     $update->bind_param("ii", $attempts, $user['id']);
     $update->execute();
+    
     $remaining = 3 - $attempts;
-    if ($remaining <= 0) {
-        // Lock + Block
-        $lock = $mysqli->prepare("
-            UPDATE tbl_users 
-            SET user_status = 'Blocked' 
-            WHERE id = ?
-        ");
-        $lock->bind_param("i", $user['id']);
-        $lock->execute();
+    echo "<div class='text-danger'>Incorrect password. Remaining: <b>$remaining</b></div>";
+    exit;
+}
 
-        echo "<div class='text-danger fw-bold'>
-                Account locked after 3 failed attempts.
-              </div>";
-    } else {
-        echo "<div class='text-danger'>
-                Incorrect password.<br>
-                Remaining attempt(s): <b>$remaining</b>
-              </div>";
-    }
-    exit;
-}
-//Role Check
-if ($user['user_role'] != 1) {
-    echo "<div class='text-danger fw-bold'>
-            Access denied.<br>
-            IT users only.
-          </div>";
-    exit;
-}
+// Set Session Data
 $_SESSION['user_id']   = $user['id'];
-$_SESSION['username'] = $user['username'];
+$_SESSION['username']  = $user['username'];
 $_SESSION['user_role'] = $user['user_role'];
 $_SESSION['dept_id']   = $user['dept_id'];
-//Reset attempts and update last login
-$success = $mysqli->prepare("
-    UPDATE tbl_users 
-    SET user_attempt = 0,
-        last_logIn = NOW()
-    WHERE id = ?
-");
+$_SESSION['FirstName'] = $user['FirstName']; 
+$_SESSION['LastName']  = $user['LastName'];
+
+// Reset attempts and update last login
+$success = $mysqli->prepare("UPDATE tbl_users SET user_attempt = 0, last_logIn = NOW() WHERE id = ?");
 $success->bind_param("i", $user['id']);
 $success->execute();
+
+// Determine Redirect and Display Name
+$redirect_url = "";
+$role_display_name = "";
+
+switch ((int)$user['user_role']) {
+    case 1: 
+        $redirect_url = 'admin_dashboard.php';
+        $role_display_name = 'Administrator';
+        break;
+    case 2:
+        $redirect_url = 'it_dashboard.php';
+        $role_display_name = 'IT Support';
+        break;
+    case 3:
+        $redirect_url = 'customer_dashboard.php';
+        $role_display_name = 'Customer';
+        break;
+    default: 
+        echo "<div class='text-danger fw-bold'>Access denied. Role not recognized.</div>";
+        exit;
+}
+
+//  Show personalized welcome and Redirect
+$firstName = htmlspecialchars($user['FirstName']);
 
 echo "
 <div class='text-success fw-bold'>
     Login successful!<br>
-    Redirecting to IT Dashboard...
 </div>
 <script>
     setTimeout(function(){
-        window.location.href = 'IT_dashboard.php';
+        window.location.href = '$redirect_url';
     }, 1500);
 </script>
 ";
