@@ -45,9 +45,9 @@ $power_users = $db->query("SELECT id, username FROM tbl_users LIMIT 3");
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { --brand-blue: #004a9b; --bg-light: #f4f7f6; --danger-red: #ff7675; --success-green: #27ae60; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg-light); margin: 0; display: flex; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg-light); margin: 0; display: flex; overflow-x: hidden; }
         
-        /* --- SIDEBAR --- */
+        /* --- SIDEBAR OR MENU BAR--- */
         .sidebar { width: 250px; background: var(--brand-blue); color: white; min-height: 100vh; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; }
         .sidebar h2 { font-size: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 10px; }
         .nav-links-container { flex-grow: 1; margin-top: 20px; }
@@ -58,7 +58,19 @@ $power_users = $db->query("SELECT id, username FROM tbl_users LIMIT 3");
         .bottom-nav { display: none; position: fixed; bottom: 0; width: 100%; background: white; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); justify-content: space-around; padding: 12px 0; z-index: 1000; }
         .bottom-nav-item { color: #888; font-size: 1.2rem; cursor: pointer; text-align: center; }
         .bottom-nav-item.active { color: var(--brand-blue); }
-        
+
+        /* --- BURGER MENU (MOBILE ONLY) --- */
+        .mobile-drawer { 
+            position: fixed; top: 0; right: -320px; width: 280px; height: 100%; 
+            background: var(--brand-blue); color: white; z-index: 3000; 
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+            padding: 30px 20px; box-shadow: -5px 0 15px rgba(0,0,0,0.2); 
+            visibility: hidden; pointer-events: none; 
+        }
+        .mobile-drawer.active { right: 0; visibility: visible; pointer-events: auto; }
+        .drawer-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; z-index: 2999; }
+        .drawer-link { display: flex; align-items: center; color: white; text-decoration: none; padding: 15px 0; font-size: 1.1rem; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .drawer-link i { margin-right: 15px; width: 25px; text-align: center; }
 
         .logout-link { margin-top: auto; background-color: rgba(255, 75, 75, 0.1); color: #ff7675 !important; border-radius: 8px; padding: 12px 15px !important; font-weight: 600; border: 1px solid rgba(255, 75, 75, 0.2); transition: all 0.3s ease; display: flex; align-items: center; cursor: pointer; }
         .logout-link:hover { background-color: #ff7675 !important; color: white !important; }
@@ -70,7 +82,6 @@ $power_users = $db->query("SELECT id, username FROM tbl_users LIMIT 3");
         .card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
         .card h3 { margin-top: 0; font-size: 0.9rem; color: #888; border-bottom: 1px solid #eee; padding-bottom: 10px; text-transform: uppercase; }
         
-        /* amChart Styling */
         #chartdiv { width: 100%; height: 400px; }
         .full-row { grid-column: 1 / -1; }
 
@@ -100,6 +111,11 @@ $power_users = $db->query("SELECT id, username FROM tbl_users LIMIT 3");
             .card h3 { font-size: 0.7rem; }
             .header h1 { font-size: 1.3rem; }
             #chartdiv { height: 300px; }
+        }
+
+        /* hide menu while in desktop */
+        @media (min-width: 769px) {
+            .mobile-drawer, .drawer-overlay { display: none !important; }
         }
     </style>
 </head>
@@ -180,7 +196,20 @@ $power_users = $db->query("SELECT id, username FROM tbl_users LIMIT 3");
     <div class="bottom-nav-item active"><i class="fa fa-home"></i></div>
     <div class="bottom-nav-item"><i class="fa fa-search"></i></div>
     <div class="bottom-nav-item"><i class="fa fa-bell"></i></div>
-    <div class="bottom-nav-item" onclick="openLogoutModal()"><i class="fa fa-bars"></i></div>
+    <div class="bottom-nav-item" onclick="toggleMobileMenu()"><i class="fa fa-bars"></i></div>
+</div>
+
+<div class="drawer-overlay" id="drawerOverlay" onclick="toggleMobileMenu()"></div>
+<div class="mobile-drawer" id="mobileDrawer">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
+        <h3 style="margin:0;">Menu</h3>
+        <i class="fa fa-times" onclick="toggleMobileMenu()" style="cursor:pointer;"></i>
+    </div>
+    <a href="profile.php" class="drawer-link"><i class="fa fa-user"></i> Profile</a>
+    <a href="settings.php" class="drawer-link"><i class="fa fa-cog"></i> Settings</a>
+    <a href="javascript:void(0)" class="drawer-link" onclick="toggleMobileMenu(); openLogoutModal();" style="color: #ff7675;">
+        <i class="fa fa-sign-out-alt"></i> Logout
+    </a>
 </div>
 
 <div id="logoutModal" class="modal-overlay">
@@ -195,7 +224,12 @@ $power_users = $db->query("SELECT id, username FROM tbl_users LIMIT 3");
 </div>
 
 <script>
-    // --- amChart---
+    function toggleMobileMenu() {
+        $('#mobileDrawer').toggleClass('active');
+        $('#drawerOverlay').fadeToggle(300);
+    }
+
+    // amcChart code
     am5.ready(function() {
         var root = am5.Root.new("chartdiv");
         root.setThemes([am5themes_Animated.new(root)]);
@@ -235,7 +269,7 @@ $power_users = $db->query("SELECT id, username FROM tbl_users LIMIT 3");
         chart.appear(1000, 100);
     });
 
-    // --- Chart.js ---
+    // Chartjs code
     const ctx2 = document.getElementById('segmentChart').getContext('2d');
     new Chart(ctx2, { type: 'pie', data: { labels: ['B2B', 'B2C'], datasets: [{ data: [65, 35], backgroundColor: ['#004a9b', '#3498db'] }] }, options: { plugins: { legend: { position: 'bottom' } } } });
 
