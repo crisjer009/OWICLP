@@ -144,8 +144,7 @@ require 'connection.php';
 
                         <div class="d-flex justify-content-between align-items-center mb-4">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="rememberMe">
-                                <label class="form-check-label small" for="rememberMe">Remember me</label>
+                                
                             </div>
                             <a href="#!" class="small text-decoration-none" style="color: #004a9b;">Forgot password?</a>
                         </div>

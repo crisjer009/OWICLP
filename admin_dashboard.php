@@ -74,7 +74,7 @@ require_once 'connection.php';
             transform: translateX(5px);
         }
         .nav-links i { margin-right: 12px; width: 20px; }
-        /* Main Content */
+ 
         .main-content {
             margin-left: var(--sidebar-width);
             padding: 30px;
@@ -88,7 +88,6 @@ require_once 'connection.php';
             margin-bottom: 30px;
         }
 
-        /* Stat Cards */
         .stat-card {
             background: white;
             border-radius: 16px;
