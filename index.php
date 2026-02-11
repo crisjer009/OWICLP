@@ -14,7 +14,12 @@ require 'connection.php';
     <style>
         body {
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #eaf2ff, #f8fbff);
+            background: linear-gradient(rgba(229, 238, 253, 0.54), rgba(147, 175, 221, 0.65)), 
+                    url('images/bg_login.png'); 
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -32,9 +37,9 @@ require 'connection.php';
             background: #ffffff;
             padding: 1.5rem;
             border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 74, 155, 0.15);
+            box-shadow: 0 20px 40px rgba(94, 120, 206, 0.62);
             border: 1px solid rgba(0, 74, 155, 0.1);
-            margin-right: -70px;
+            margin-right: -60px;
             margin-bottom: -40px;
             
         }
@@ -42,7 +47,7 @@ require 'connection.php';
         .divider-text {
             color: #004a9b;
             font-weight: 700;
-            font-size: 1.2rem;
+            font-size: 1rem;
             letter-spacing: 0.5px;
             display: flex;
             align-items: center;
@@ -91,14 +96,22 @@ require 'connection.php';
             padding: 0.5rem 0;
             font-size: 0.9rem;
         }
-        @media (max-width: 576px) {
+        @media (max-width:820px){
+          .login-card{
+              margin-left:5px;
+              margin-right:5px;
+
+          }
+        }
+        @media (max-width: 768px) {
             .login-card {
                 padding: 1.5rem;
-                margin: 0 10px;
+                margin:0;
             }
             .divider-text {
                 font-size: 1.2rem;
             }
+            
         }
     </style>
 </head>
@@ -109,7 +122,7 @@ require 'connection.php';
         <div class="row g-5 align-items-center justify-content-center">
             
             <div class="col-md-6 col-lg-6 d-none d-md-block text-center">
-                <img src="images/owi logo 1.png" class="img-fluid" alt="Branding Image" style="max-height: 400px;">
+                <img src="images/owi logo 1.png" class="img-fluid align-items:center;" alt="Branding Image" style="max-height: 400px;">
             </div>
             
             <div class="col-12 col-md-8 col-lg-5 col-xl-4">
