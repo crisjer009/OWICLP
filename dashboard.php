@@ -41,7 +41,7 @@ $power_users = $db->query("SELECT id, username FROM tbl_users LIMIT 3");
     <script src="https://cdn.amcharts.com/lib/5/index.js"></script>
     <script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
     <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
-
+    <link rel="icon" type="img/x-icon" href="logo/logo2.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { --brand-blue: #004a9b; --bg-light: #f4f7f6; --danger-red: #ff7675; --success-green: #27ae60; }
@@ -58,7 +58,7 @@ $power_users = $db->query("SELECT id, username FROM tbl_users LIMIT 3");
         .bottom-nav { display: none; position: fixed; bottom: 0; width: 100%; background: white; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); justify-content: space-around; padding: 12px 0; z-index: 1000; }
         .bottom-nav-item { color: #888; font-size: 1.2rem; cursor: pointer; text-align: center; }
         .bottom-nav-item.active { color: var(--brand-blue); }
-        .plus-btn { background: var(--brand-blue); color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-top: -30px; box-shadow: 0 4px 10px rgba(0,74,155,0.3); }
+        
 
         .logout-link { margin-top: auto; background-color: rgba(255, 75, 75, 0.1); color: #ff7675 !important; border-radius: 8px; padding: 12px 15px !important; font-weight: 600; border: 1px solid rgba(255, 75, 75, 0.2); transition: all 0.3s ease; display: flex; align-items: center; cursor: pointer; }
         .logout-link:hover { background-color: #ff7675 !important; color: white !important; }
@@ -179,7 +179,6 @@ $power_users = $db->query("SELECT id, username FROM tbl_users LIMIT 3");
 <div class="bottom-nav">
     <div class="bottom-nav-item active"><i class="fa fa-home"></i></div>
     <div class="bottom-nav-item"><i class="fa fa-search"></i></div>
-    <div class="plus-btn"><i class="fa fa-plus"></i></div>
     <div class="bottom-nav-item"><i class="fa fa-bell"></i></div>
     <div class="bottom-nav-item" onclick="openLogoutModal()"><i class="fa fa-bars"></i></div>
 </div>
@@ -196,7 +195,7 @@ $power_users = $db->query("SELECT id, username FROM tbl_users LIMIT 3");
 </div>
 
 <script>
-    // --- amCharts 5 Logic ---
+    // --- amChart---
     am5.ready(function() {
         var root = am5.Root.new("chartdiv");
         root.setThemes([am5themes_Animated.new(root)]);
