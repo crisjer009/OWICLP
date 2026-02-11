@@ -42,7 +42,7 @@ if (!isset($_SESSION['user_id'])) {
         }
 
         .sidebar .logo-section {
-            padding: 30px;
+            padding: 15px;
             text-align: center;
             border-bottom: 1px solid rgba(255,255,255,0.1);
         }
@@ -132,7 +132,7 @@ if (!isset($_SESSION['user_id'])) {
 <div class="sidebar" id="sidebar">
     <div class="logo-section">
         <img src="images/owi.jpg" alt="Logo">
-        <h6 class="text-white mt-3 fw-bold">LOYALTY PROGRAM</h6>
+        <h6 class="text-white mt-3 fw-bold">CUSTOMER DASHBOARD</h6>
     </div>
     <ul class="nav-links">
         <li><a href="customer_dashboard" class="active"><i class="fas fa-chart-pie"></i> Dashboard</a></li>
@@ -153,7 +153,7 @@ if (!isset($_SESSION['user_id'])) {
             <small class="text-muted">Welcome back,
                 <span class="text-primary fw-bold">
                     <?php
-                    echo isset($_SESSION['FirstName'])? htmlspecialchars(string: $_SESSION['FirstName']."".$_SESSION['LastName']): "Guest";
+                    echo isset($_SESSION['FirstName'])? htmlspecialchars(string: $_SESSION['FirstName']." ".$_SESSION['LastName']): "Guest";
                     ?>
                 </span>
             </small>
@@ -190,30 +190,6 @@ if (!isset($_SESSION['user_id'])) {
                 <div>
                     <h3 class="fw-bold mb-0">0</h3>
                     <small class="text-muted">Pending Redemptions</small>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row g-4">
-        <div class="col-lg-8">
-            <div class="card border-0 shadow-sm p-4" style="border-radius: 16px;">
-                <h6 class="fw-bold mb-4">Points Redemption Trend</h6>
-                <canvas id="redemptionChart" height="150"></canvas>
-            </div>
-        </div>
-        <div class="col-lg-4">
-            <div class="card border-0 shadow-sm p-4" style="border-radius: 16px;">
-                <h6 class="fw-bold mb-4">Recent Activity</h6>
-                <div class="small">
-                    <div class="d-flex mb-3">
-                        <div class="bg-primary p-2 rounded-circle me-3" style="width:10px; height:10px;"></div>
-                        <div><strong>John Doe</strong> redeemed a Starbucks Gift Card<br><small class="text-muted">2 mins ago</small></div>
-                    </div>
-                    <div class="d-flex mb-3">
-                        <div class="bg-success p-2 rounded-circle me-3" style="width:10px; height:10px;"></div>
-                        <div><strong>New User</strong> registered via Mobile App<br><small class="text-muted">15 mins ago</small></div>
-                    </div>
                 </div>
             </div>
         </div>

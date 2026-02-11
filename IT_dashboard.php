@@ -27,7 +27,6 @@ require_once 'connection.php';
             background-color: var(--bg-light);
             overflow-x: hidden;
         }
-        /* Sidebar Styling */
         .sidebar {
             width: var(--sidebar-width);
             background: var(--primary-blue);
@@ -39,7 +38,7 @@ require_once 'connection.php';
         }
 
         .sidebar .logo-section {
-            padding: 30px;
+            padding: 15px;
             text-align: center;
             border-bottom: 1px solid rgba(255,255,255,0.1);
         }
@@ -129,7 +128,7 @@ require_once 'connection.php';
 <div class="sidebar" id="sidebar">
     <div class="logo-section">
         <img src="images/owi.jpg" alt="Logo">
-        <h6 class="text-white mt-3 fw-bold">LOYALTY PROGRAM</h6>
+        <h6 class="text-white mt-3 fw-bold">IT DASHBOARD</h6>
     </div>
     <ul class="nav-links">
         <li><a href="admin_dashboard" class="active"><i class="fas fa-chart-pie"></i> Dashboard</a></li>
