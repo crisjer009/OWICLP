@@ -1,6 +1,6 @@
 <?php
-// login_process.php
 header('Content-Type: application/json');
+session_start(); // Start session to store user info upon success
 
 // 1. Database Connection
 $conn = new mysqli("localhost", "root", "", "clp");
@@ -10,40 +10,45 @@ if ($conn->connect_error) {
     exit;
 }
 
-// 2. Safely capture data
+// 2. Capture data from AJAX
 $user = isset($_POST['user']) ? strtolower(trim($_POST['user'])) : '';
-$pass = isset($_POST['pass']) ? $_POST['pass'] : ''; // Base64 encoded from frontend
+$pass = isset($_POST['pass']) ? $_POST['pass'] : ''; 
 
-// 3. Check if user exists
-$stmt = $conn->prepare("SELECT id, password, user_status, user_attempt FROM tbl_users WHERE username = ?");
+// 3. Updated Query: Fetching all additional user information
+$stmt = $conn->prepare("SELECT id, password, user_status, user_attempt, LastName, FirstName, user_level_id, dept_id, user_role FROM tbl_users WHERE username = ?");
 $stmt->bind_param("s", $user);
 $stmt->execute();
 $result = $stmt->get_result();
 $userData = $result->fetch_assoc();
 
 if (!$userData) {
-    // Code 2: Invalid User
     echo json_encode(["status" => 2, "message" => "Invalid Username"]);
     exit;
 }
 
-// 4. Check if account is already locked
+// 4. Check Blocked Status
 if ($userData['user_status'] === 'L' || $userData['user_status'] === 'Blocked') {
-    // Code 3: Blocked
     echo json_encode(["status" => 3, "message" => "Account Blocked. Contact Admin."]);
     exit;
 }
 
 // 5. Verify Password
 if ($userData['password'] === $pass) {
-    // SUCCESS: Reset attempts and update status to Active ('A')
+    // SUCCESS: Reset attempts and set status to Active
     $update = $conn->prepare("UPDATE tbl_users SET user_attempt = 0, last_logIn = NOW(), user_status = 'A' WHERE id = ?");
     $update->bind_param("i", $userData['id']);
     $update->execute();
 
+    // Display in dashboard when succefully Login
+    $_SESSION['user_id'] = $userData['id'];
+    $_SESSION['username'] = $user;
+    $_SESSION['full_name'] = $userData['FirstName'] . " " . $userData['LastName'];
+    $_SESSION['role'] = $userData['user_role'];
+    $_SESSION['dept'] = $userData['dept_id'];
+
     echo json_encode(["status" => 1, "message" => "Access Granted"]);
 } else {
-    // FAILURE: Increment attempts
+    // FAILURE: Handle attempts and potential lockout
     $newAttempts = $userData['user_attempt'] + 1;
     $newStatus = ($newAttempts >= 3) ? 'L' : $userData['user_status'];
     
@@ -52,10 +57,8 @@ if ($userData['password'] === $pass) {
     $update->execute();
 
     if ($newStatus === 'L') {
-        // Code 3: Just became blocked
-        echo json_encode(["status" => 3, "message" => "Account Blocked due to 3 failed attempts."]);
+        echo json_encode(["status" => 3, "message" => "Account Blocked."]);
     } else {
-        // Code 2: Wrong password
         $remaining = 3 - $newAttempts;
         echo json_encode(["status" => 2, "message" => "Invalid Password. $remaining attempts left."]);
     }

@@ -61,9 +61,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ajax'])) {
         :root { --brand-blue: #004a9b; --brand-pink: #e056fd; }
         * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
         
-        body, html { margin: 0; padding: 0; height: 100%; width: 100%; overflow-x: hidden; }
+       body, html { 
+        margin: 0; 
+        padding: 0; 
+        height: 100%; 
+        width: 100%; 
+        overflow-x: hidden; 
+        background: linear-gradient(115deg, #ffffff 50%,  #004a9b 50%); /* add gradient for body */
+        background-attachment: fixed; 
+        }
 
-        /* Main Container for Split Screen */
+        /* Split for the container */
         .wrapper { display: flex; min-height: 100vh; width: 100%; }
 
         /* LEFT SIDE: Branding */
@@ -165,6 +173,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ajax'])) {
                 padding: 40px 30px;
             }
         }
+        #contact-info {
+            display: none; /* Hide log in form */
+            text-align: left;
+            margin-top: 20px;
+            padding: 15px;
+            border-top: 1px dashed #ccc;
+            color: #333;
+            font-size: 0.85rem;
+        }
+        .contact-title {
+            color: #c0392b;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+        .office-name { font-weight: 600; margin-bottom: 5px; }
     </style>
 </head>
 <body>
@@ -197,20 +221,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ajax'])) {
                 <button type="submit" class="login-btn">Log In</button>
             </form>
             <div id="response-msg"></div>
+            <div id="response-msg"></div>
+           
+            
+         <div id="contact-info">
+             <div class="contact-title">Contact Us</div>
+             <div class="office-name">Corporate Office:</div>
+             <p style="margin: 5px 0;">
+                 Office Warehouse, Inc.<br>
+                 Blk 13 Lot 1 E. Rodriguez Jr. Avenue<br>
+                 Quezon City, Metro Manila, Philippines
+            </p>
+            <div style="margin-top: 10px;">
+                     <strong>Tel:</strong> 02 8376-0877<br>
+                     <strong>Tel:</strong> 02 8376-0887<br>
+                     <strong>Email:</strong> info@officewarehouse.com.ph
+                 </div>
+            </div>
         </div>
     </div>
 </div>
 
 <script>
 $(document).ready(function() {
-    // 1. Username formatting
+    // 1. Username formatting (lowercase and max length)
     $('#username').on('input', function() {
         let val = $(this).val().toLowerCase().replace(/\s/g, ''); 
         if (val.length > 18) val = val.substring(0, 18);
         $(this).val(val);
     });
 
-    // 2. Toggle Visibility
+    // 2. Toggle Password Visibility
     $('#togglepassword').on('click', function() {
         const passwordInput = $('#password');
         const isPassword = passwordInput.attr('type') === 'password';
@@ -229,50 +270,46 @@ $(document).ready(function() {
             return;
         }
         
-        // Show a "loading" state on button
+        // Show loading state
         $('.login-btn').text('Checking...').prop('disabled', true);
         
         $.ajax({
-            url: '', 
+            url: '', // Posts to current file
             method: 'POST',
             data: { 
                 ajax: 1,
                 user: username, 
-                pass: btoa(rawPassword) 
+                pass: btoa(rawPassword) // Base64 encoding
             },
             dataType: 'json',
             success: function(res) {
                 if(res.status === 1) { 
-                    // if login is success
+                    // Success log in
                     $('.login-btn').text('Log In').prop('disabled', false);
                     $('#response-msg').html('<span style="color: #27ae60; font-weight: bold;">Welcome! Redirecting...</span>');
                     setTimeout(() => { window.location.href = 'dashboard.php'; }, 1000);
                 } 
                 else if(res.status === 3) {
-                    // unavailable login form
+                    // ACCOUNT BLOCKED - Transition to Contact Info
                     $('#response-msg').html('<span style="color: #c0392b; font-weight: bold;">' + res.message + '</span>');
                     
-                    // disable inputs
-                    $('#username, #password').prop('disabled', true).css({
-                        'background-color': '#f2f2f2',
-                        'cursor': 'not-allowed'
+                    // change form 
+                    $('#loginForm, #sub-text, #login-title').fadeOut(400, function() {
+                        // This shows the contact info after form is gone
+                        $('#contact-info').fadeIn(400);
+                        
+                        // Apply locked styles to the card
+                        $('.login-card').css({
+                            'border': '1px solid #c0392b',
+                            'transition': 'all 0.5s ease'
+                        });
                     });
-
-                    // disable Button
-                    $('.login-btn').text('Account Locked').prop('disabled', true).css({
-                        'opacity': '0.6',
-                        'cursor': 'not-allowed',
-                        'background': '#666'
-                    });
-
-                    //hide the icons
-                    $('#togglepassword').hide();
                 }
                 else { 
-                    // FAILED (status 2 or other)
+                    // FAILED (Status 2 or other)
                     $('.login-btn').text('Log In').prop('disabled', false);
                     $('#response-msg').html('<span style="color: #e67e22;">' + res.message + '</span>');
-                    $('#password').val('').focus(); // Clear and focus for retry
+                    $('#password').val('').focus(); 
                 }
             },
             error: function() {
@@ -283,6 +320,5 @@ $(document).ready(function() {
     });
 });
 </script>
-
 </body>
 </html>
