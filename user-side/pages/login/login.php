@@ -105,30 +105,80 @@ body { background: #94abd8; display: flex; justify-content: center; align-items:
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 20px;
+    margin-top: 25px;
 }
 
-.fa-google{
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #fff1ef;
-  text-decoration: none;
-  color: #c93333;
-  font-size: 22px;
-  cursor: pointer;
+.fa-google {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #ffffff;
+    text-decoration: none;
+    color: #EA4335;
+    font-size: 22px;
+    cursor: pointer;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+    transition: all 0.25s ease;
 }
 
+.fa-google:hover { background: #fbfdff; }
+    
 
+ /* Responsive tablet */ 
+@media (max-width:900px) {
+ .container { 
+    width: 90%;
+    height:auto;
+    flex-direction: column;
+}
 
+.left, .right {
+    width: auto;
+    padding: 0%;
+    text-align: center;
+}
 
+.login-box button {
+    width: 70%;
+}
+/*  Responsive Mobile Phones */
+@media (max-width: 500px) {
+    body {
+        padding: 20px;
+    }
 
+    .container {
+        width: 100%;
+        border-radius: 10px;
+    }
 
+    .right h1 {
+        font-size: 2.0rem;
+    }
 
+    .left h2 {
+        font-size: 1.4rem;
+    }
 
+    .login-box input {
+        padding: 10px;
+        font-size: 0.85rem;
+    }
+
+    .login-box button {
+        width: 100%;
+        padding: 12px;
+    }
+
+    .left p, .right p {
+        font-size: 0.85rem;
+    }
+    }
+}
+     
 </style>
 </head>
 <body>
@@ -156,8 +206,8 @@ body { background: #94abd8; display: flex; justify-content: center; align-items:
         <div class="social-icons">
     
     
-    <!-- google link -->
-    <a href="#" target="_blank" class="fa fa-google"></a>
+    <!--  for google link connection -->
+    <a href="https://www.google.com/" target="_blank" class="fa fa-google"></a>
     
     
 </div>

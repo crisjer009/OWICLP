@@ -11,6 +11,9 @@ $(document).ready(function() {
             $message.text('Please enter both username and password.');
             return false;
         }
+
+
+
 // loading button... /* need 3 sec loading only 
         $submitBtn.text('Logging in...').prop('disabled', true);
         $message.text('');
