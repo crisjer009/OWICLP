@@ -12,35 +12,52 @@ $(document).ready(function() {
             return false;
         }
 
-
-
-// loading button... /* need 3 sec loading only 
-        $submitBtn.text('Logging in...').prop('disabled', true);
+        // Show loading spinner inside button
+        if(!$submitBtn.find('.spinner').length) {
+            $submitBtn.prepend('<span class="spinner" style="width:18px;height:18px;border:3px solid #fff;border-top:3px solid transparent;border-radius:50%;display:inline-block;margin-right:10px;animation:spin 1s linear infinite;"></span>');
+        }
+        $submitBtn.prop('disabled', true);
         $message.text('');
 
+        // Record start time
+        var startTime = new Date().getTime();
+
+        // Send AJAX immediately
         $.ajax({
-            url: 'login_process.php', 
+            url: 'login_process.php',
             type: 'POST',
             dataType: 'json',
             data: { username: username, password: password },
             success: function(response) {
-                $message.text(response.message);
+                var elapsed = new Date().getTime() - startTime;
+                var delay = Math.max(0, 3000 - elapsed); // Ensure total 3 seconds loading only
 
-                if(response.status === 'success') {
-                    window.location.href = '../dashboard.php';
-                } else {
-                    // Disable button code if account is locked after 3 attempts
-                    if(response.lock) {
-                        $submitBtn.text('ACCOUNT LOCKED').prop('disabled', true);
+                setTimeout(function() {
+                    $submitBtn.find('.spinner').remove(); // Remove spinner
+                    $message.text(response.message);
+
+                    if(response.status === 'success') {
+                        window.location.href = '../dashboard.php';
                     } else {
-                        $submitBtn.text('LOG IN').prop('disabled', false);
+                        if(response.lock) { // user account will be locked after the 3 wrong attempts 
+                            $submitBtn.text('ACCOUNT LOCKED').prop('disabled', true);
+                        } else {
+                            $submitBtn.text('LOG IN').prop('disabled', false);
+                        }
                     }
-                }
+                }, delay);
             },
             error: function() {
-                $message.text('An error occurred. Please try again.');
-                $submitBtn.text('LOG IN').prop('disabled', false);
+                var elapsed = new Date().getTime() - startTime;
+                var delay = Math.max(0, 3000 - elapsed);
+
+                setTimeout(function() {
+                    $submitBtn.find('.spinner').remove();
+                    $message.text('An error occurred. Please try again.');
+                    $submitBtn.text('LOG IN').prop('disabled', false);
+                }, delay);
             }
         });
+
     });
 });

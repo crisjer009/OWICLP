@@ -99,6 +99,10 @@ body { background: #94abd8; display: flex; justify-content: center; align-items:
 .left h2 { font-size: 1.8rem; margin-bottom: 20px; }
 .left p { font-size: 0.9rem; line-height: 1.5; color: #ddd; }
 
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
 
 
 .social-icons {
