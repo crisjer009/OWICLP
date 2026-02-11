@@ -11,7 +11,7 @@ $(document).ready(function() {
             $message.text('Please enter both username and password.');
             return false;
         }
-
+// loading button... /* need 3 sec loading only 
         $submitBtn.text('Logging in...').prop('disabled', true);
         $message.text('');
 
@@ -21,11 +21,17 @@ $(document).ready(function() {
             dataType: 'json',
             data: { username: username, password: password },
             success: function(response) {
+                $message.text(response.message);
+
                 if(response.status === 'success') {
                     window.location.href = '../dashboard.php';
                 } else {
-                    $message.text(response.message);
-                    $submitBtn.text('LOG IN').prop('disabled', false);
+                    // Disable button code if account is locked after 3 attempts
+                    if(response.lock) {
+                        $submitBtn.text('ACCOUNT LOCKED').prop('disabled', true);
+                    } else {
+                        $submitBtn.text('LOG IN').prop('disabled', false);
+                    }
                 }
             },
             error: function() {

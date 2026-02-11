@@ -4,8 +4,9 @@ require '../../../db_connection.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = $_POST['username'];
-    $password = base64_encode($_POST['password']);
+    $password = $_POST['password']; // Use plain text for now
 
+    // Fetch user
     $stmt = $conn->prepare("SELECT * FROM tbl_users WHERE username = :username LIMIT 1");
     $stmt->execute(['username' => $username]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -13,40 +14,47 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $response = [];
 
     if ($user) {
+        //  if the account is locked or restricted
         if ($user['user_status'] == 'L') {
             $response['status'] = 'error';
             $response['message'] = 'Account is locked. Please contact admin.';
+            $response['lock'] = true; //  disable button
         } elseif ($user['user_status'] == 'R') {
             $response['status'] = 'error';
             $response['message'] = 'Password reset required. Please reset your password.';
-        }elseif($user['user_status'] == 'B') {
+        } elseif ($user['user_status'] == 'B') {
             $response['status'] = 'error';
-            $response['message'] ='Account is Restricted. Please contact admin.';
-        
-        } elseif ($user['password'] === $password) {
+            $response['message'] = 'Account is restricted. Please contact admin.';
+        } elseif ($user['password'] === base64_encode($password)) { // keep your current base64 logic
+            // Successful login
             $_SESSION['user'] = $user['username'];
             $update = $conn->prepare("UPDATE tbl_users SET user_attempt = 0, last_logIn = NOW() WHERE id = :id");
             $update->execute(['id' => $user['id']]);
 
             $response['status'] = 'success';
-            $response['message'] = ''; 
+            $response['message'] = '';
+            $response['lock'] = false;
         } else {
+            // Wrong password
             $attempts = $user['user_attempt'] + 1;
             if ($attempts >= 3) {
                 $update = $conn->prepare("UPDATE tbl_users SET user_attempt = :attempts, user_status = 'L' WHERE id = :id");
                 $update->execute(['attempts' => $attempts, 'id' => $user['id']]);
                 $response['status'] = 'error';
                 $response['message'] = 'Account locked due to 3 failed attempts.';
+                $response['lock'] = true; // Frontend disables login
             } else {
                 $update = $conn->prepare("UPDATE tbl_users SET user_attempt = :attempts WHERE id = :id");
                 $update->execute(['attempts' => $attempts, 'id' => $user['id']]);
                 $response['status'] = 'error';
                 $response['message'] = "Invalid username or password. Attempt $attempts of 3.";
+                $response['lock'] = false;
             }
         }
     } else {
         $response['status'] = 'error';
         $response['message'] = 'User not found.';
+        $response['lock'] = false;
     }
 
     header('Content-Type: application/json');

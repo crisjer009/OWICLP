@@ -38,14 +38,14 @@ body { background: #94abd8; display: flex; justify-content: center; align-items:
 }
 
 .right h1 { font-size: 2rem; font-weight: bold; margin-bottom: 10px; color: #222; }
-.right p { font-size: 0.9rem; color: #555; margin-bottom: 30px; }
+.right p { font-size: 0.9rem; color: #0e0d0d; margin-bottom: 30px; }
 
 .login-box input {
     width: 100%;
     padding: 12px;
     margin-bottom: 15px;
     border: 1px solid #ccc;
-    border-radius: 8px;
+    border-radius: 25px;
     font-size: 0.9rem;
     outline: none;
     transition: border-color 0.3s ease;
@@ -54,12 +54,12 @@ body { background: #94abd8; display: flex; justify-content: center; align-items:
 
 .login-box button {
     width: 50%;          
-    padding: 12px;
+    padding: 15px;
     background: #141618;
     color: #fff;
     font-weight: bold;
     border: none;
-    border-radius: 8px;
+    border-radius: 50px;
     cursor: pointer;
     transition: background 0.3s ease;
     display: block;      
@@ -140,7 +140,7 @@ body { background: #94abd8; display: flex; justify-content: center; align-items:
     </div>
 
     <div class="right">
-        <h1>DRAFT LOGIN FORM</h1>
+        <h1>LOGIN FORM</h1>
         <p>Welcome Back!</p>
 
         <div class="message" id="message"><?php echo $message; ?></div>
