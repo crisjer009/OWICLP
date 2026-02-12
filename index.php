@@ -119,10 +119,9 @@ require 'connection.php';
 
 <div class="main-wrapper">
     <div class="container">
-        <div class="row g-5 align-items-center justify-content-center">
-            
+        <div class="row g-5 align-items-center justify-content-center">  
             <div class="col-md-6 col-lg-6 d-none d-md-block text-center">
-                <img src="images/owi logo 1.png" class="img-fluid align-items:center;" alt="Branding Image" style="max-height: 400px;">
+                <img src="images/clp new.png" class="img-fluid align-items:center;" alt="Branding Image" style="max-height: 600px;">
             </div>
             
             <div class="col-12 col-md-8 col-lg-5 col-xl-4">
@@ -171,7 +170,6 @@ require 'connection.php';
                     </form>
                 </div>
             </div> 
-
         </div>
     </div>
 </div>
