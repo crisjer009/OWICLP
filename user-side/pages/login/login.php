@@ -31,12 +31,12 @@ html, body {
     height:100%; 
 }
 
-/* BODY BLUE  */
+/*  violet and light gray  */
 body { 
     display:flex; 
     justify-content:center; 
     align-items:center; 
-    background: linear-gradient(135deg, rgb(2, 0, 36), #dadbdb);
+    background: linear-gradient(135deg, rgb(2, 0, 36), #4b4a4af6);
 }
 
 /* Container */
@@ -48,7 +48,7 @@ body {
     grid-template-columns: repeat(2,1fr);
     border-radius:12px;
     overflow:hidden;
-    box-shadow:0 8px 24px rgba(0,0,0,0.2);
+    box-shadow:0 10px 24px rgba(0,0,0,0.2);
 }
 
 /* LEFT SIDE (WHITE WITH LOGO) */
@@ -79,7 +79,6 @@ body {
 
 /* RIGHT SIDE */
 .right {
-    background: linear-gradient(135deg, rgb(2, 0, 36), #fdffffef);
     display:flex;
     flex-direction:column;
     justify-content:center;
@@ -92,12 +91,12 @@ body {
     font-size:2rem; 
     font-weight:bold; 
     margin-bottom:10px; 
-    color:#000; 
+    color: #fff;; 
 }
 
 .right p { 
     font-size:0.9rem; 
-    color:#000; 
+    color:#fff; 
     margin-bottom:30px; 
 }
 
@@ -156,7 +155,7 @@ body {
         align-items: center;
         min-height: 100vh;
         padding: 20px;
-    background: linear-gradient(135deg, #004a9b, #dadbdb);
+    background: linear-gradient(135deg, rgb(2, 0, 36), #4b4a4af6);
     }
 
     .container {
@@ -268,7 +267,7 @@ body {
     body {
         margin: 0;
         padding: 0;
-    background: linear-gradient(135deg, #004a9b, #dadbdb);
+    background: linear-gradient(135deg, rgb(2, 0, 36), #4b4a4af6);
         display: flex;
         justify-content: center;
         align-items: center;
@@ -281,7 +280,6 @@ body {
         max-width: 380px;
         background: #ffffff;
         border-radius: 15px;
-        padding: 35px 25px;
         box-shadow: 0 8px 20px rgba(0,0,0,0.1);
         transition: transform 0.3s ease;
     }
@@ -295,7 +293,7 @@ body {
         font-size: 2rem;
         text-align: center;
         font-weight: 600;
-        color: #333;
+        color: #000000;
         margin-bottom: 25px;
     }
 
@@ -352,11 +350,7 @@ body {
         color: #2a5c9b;
     }
 
-    /* Hide any left section if exists */
-    .left {
-        display: none;
-    }
-
+    
     /* Right section full width */
     .right {
         width: 100%;
