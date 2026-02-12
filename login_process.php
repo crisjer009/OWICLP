@@ -2,7 +2,6 @@
 header('Content-Type: application/json');
 session_start();
 
-// 1. Database Connection
 $conn = new mysqli("localhost", "root", "", "clp");
 
 if ($conn->connect_error) {
@@ -10,65 +9,47 @@ if ($conn->connect_error) {
     exit;
 }
 
-// 2. Capture data from AJAX
 $user = isset($_POST['user']) ? strtolower(trim($_POST['user'])) : '';
 $pass = isset($_POST['pass']) ? $_POST['pass'] : ''; 
 
-// 3. Enhanced Query: Fetching points, tier, and expiration for the dashboard
-$stmt = $conn->prepare("SELECT id, password, user_status, user_attempt, LastName, FirstName, user_level_id, dept_id, user_role, total_points, account_expiry, current_tier FROM tbl_users WHERE username = ?");
+$stmt = $conn->prepare("SELECT id, password, user_status, user_attempt, LastName, FirstName, user_role, total_points, account_expiry, current_tier FROM tbl_users WHERE username = ?");
 $stmt->bind_param("s", $user);
 $stmt->execute();
-$result = $stmt->get_result();
-$userData = $result->fetch_assoc();
+$userData = $stmt->get_result()->fetch_assoc();
 
 if (!$userData) {
     echo json_encode(["status" => 2, "message" => "Invalid Username"]);
     exit;
 }
 
-// 4. Check Blocked Status
 if ($userData['user_status'] === 'L' || $userData['user_status'] === 'Blocked') {
     echo json_encode(["status" => 3, "message" => "Account Blocked. Contact Admin."]);
     exit;
 }
 
-// 5. Verify Password
-if ($userData['password'] === $pass) {
-    // SUCCESS: Reset attempts and set status to Active
-    $update = $conn->prepare("UPDATE tbl_users SET user_attempt = 0, last_logIn = NOW(), user_status = 'A' WHERE id = ?");
+// Check Base64 encoded password
+if ($userData['password'] === base64_encode($pass)) { 
+    $update = $conn->prepare("UPDATE tbl_users SET user_attempt = 0, last_logIn = NOW(), user_status = 'Active' WHERE id = ?");
     $update->bind_param("i", $userData['id']);
     $update->execute();
 
-    // Store essential dashboard data in Session
-    $_SESSION['user_id'] = $userData['id'];
-    $_SESSION['username'] = $user;
+    $_SESSION['user_id']   = $userData['id'];
     $_SESSION['full_name'] = $userData['FirstName'] . " " . $userData['LastName'];
-    $_SESSION['role'] = $userData['user_role'];
-    $_SESSION['status'] = $userData['user_status'];
-    
-    // New Dashboard specific session data
-    $_SESSION['points'] = $userData['total_points'];
-    $_SESSION['expiry'] = $userData['account_expiry'];
-    $_SESSION['tier'] = $userData['current_tier'];
+    $_SESSION['user_role'] = (int)$userData['user_role']; 
+    $_SESSION['points']    = $userData['total_points'];
+    $_SESSION['tier']      = $userData['current_tier'];
 
-    echo json_encode(["status" => 1, "message" => "Access Granted"]);
+    // Redirection Logic
+    $redirectPage = ($_SESSION['user_role'] === 1 || $_SESSION['user_role'] === 3) ? "admin_dashboard.php" : "dashboard.php";
+
+    echo json_encode(["status" => 1, "message" => "Access Granted", "redirect" => $redirectPage]);
 } else {
-    // FAILURE logic remains the same
     $newAttempts = $userData['user_attempt'] + 1;
     $newStatus = ($newAttempts >= 3) ? 'L' : $userData['user_status'];
-    
     $update = $conn->prepare("UPDATE tbl_users SET user_attempt = ?, user_status = ? WHERE id = ?");
     $update->bind_param("isi", $newAttempts, $newStatus, $userData['id']);
     $update->execute();
-
-    if ($newStatus === 'L') {
-        echo json_encode(["status" => 3, "message" => "Account Blocked."]);
-    } else {
-        $remaining = 3 - $newAttempts;
-        echo json_encode(["status" => 2, "message" => "Invalid Password. $remaining attempts left."]);
-    }
+    
+    echo json_encode(["status" => 2, "message" => ($newStatus === 'L') ? "Account Blocked." : "Invalid Password."]);
 }
-
-$stmt->close();
-$conn->close();
 ?>

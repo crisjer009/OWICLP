@@ -1,32 +1,49 @@
 <?php
 session_start();
 
-// 1. Redirect if not logged in
+// 1. Authentication Check
 if (!isset($_SESSION['user_id'])) {
     header("Location: index.php");
     exit;
 }
 
-// 2. Database Connection
+// 2. Role-Based Redirection Logic (New Logic)
+// Role 1 = Admin, Role 3 = IT Dept
+$userRole = isset($_SESSION['user_role']) ? (int)$_SESSION['user_role'] : 0;
+if ($userRole === 1 || $userRole === 3) {
+    header("Location: admin_dashboard.php");
+    exit;
+}
+
+// 3. Database Connection
 $db = new mysqli("localhost", "root", "", "clp");
 
-// 3. Retrieve basic session data
+// 4. Retrieve session & live database data (New Logic)
+$user_id   = $_SESSION['user_id'];
 $full_name = $_SESSION['full_name'];
 $username  = $_SESSION['username'];
 $status    = isset($_SESSION['status']) ? $_SESSION['status'] : 'Active';
 
-// 4. Placeholders
-$points      = 0; 
-$tier        = "Member"; 
-$tier_color  = "#bdc3c7"; 
+// Pull real points and tier from tbl_users
+$cust_query = $db->query("SELECT total_points, current_tier, account_expiry FROM tbl_users WHERE id = '$user_id'");
+$cust_data  = $cust_query->fetch_assoc();
 
-$issued_mtd   = 12450; 
-$redeemed_mtd = 8200;  
-$at_risk_count = 5;    
+$total_points = $cust_data['total_points'] ?? 0;
+$current_tier = $cust_data['current_tier'] ?? 'Member';
+$expiry_date  = $cust_data['account_expiry'] ?? 'N/A';
 
-// 5. Data Queries
-$leaderboard = $db->query("SELECT username FROM tbl_users LIMIT 3");
-$power_users = $db->query("SELECT id, username FROM tbl_users LIMIT 3");
+// Dynamic values for the UI cards
+$issued_mtd    = $total_points;
+$redeemed_mtd  = 0; // Placeholder for future transaction logic
+$at_risk_count = ($total_points > 0) ? 1 : 0;
+
+// Leaderboard fetching (New Logic)
+$power_users = $db->query("SELECT username, total_points FROM tbl_users WHERE user_role = 2 ORDER BY total_points DESC LIMIT 3");
+
+// Tier color logic for the badge
+$tier_color = "#bdc3c7"; // Default
+if ($current_tier == "Gold") $tier_color = "#f1c40f";
+if ($current_tier == "Platinum") $tier_color = "#3498db";
 ?>
 
 <!DOCTYPE html>
@@ -37,7 +54,6 @@ $power_users = $db->query("SELECT id, username FROM tbl_users LIMIT 3");
     <title>Customer Dashboard | CLP</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
     <script src="https://cdn.amcharts.com/lib/5/index.js"></script>
     <script src="https://cdn.amcharts.com/lib/5/xy.js"></script>
     <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
@@ -47,35 +63,28 @@ $power_users = $db->query("SELECT id, username FROM tbl_users LIMIT 3");
         :root { --brand-blue: #004a9b; --bg-light: #f4f7f6; --danger-red: #ff7675; --success-green: #27ae60; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg-light); margin: 0; display: flex; overflow-x: hidden; }
         
-        /* --- SIDEBAR OR MENU BAR--- */
+        /* SIDEBAR */
         .sidebar { width: 250px; background: var(--brand-blue); color: white; min-height: 100vh; padding: 20px; display: flex; flex-direction: column; justify-content: space-between; }
         .sidebar h2 { font-size: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 10px; }
         .nav-links-container { flex-grow: 1; margin-top: 20px; }
         .nav-link { color: white; text-decoration: none; display: block; padding: 12px 0; opacity: 0.8; transition: 0.3s; }
         .nav-link:hover { opacity: 1; padding-left: 10px; }
 
-        /* --- BOTTOM NAV --- */
+        /* MOBILE NAV */
         .bottom-nav { display: none; position: fixed; bottom: 0; width: 100%; background: white; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); justify-content: space-around; padding: 12px 0; z-index: 1000; }
         .bottom-nav-item { color: #888; font-size: 1.2rem; cursor: pointer; text-align: center; }
         .bottom-nav-item.active { color: var(--brand-blue); }
 
-        /* --- BURGER MENU (MOBILE ONLY) --- */
-        .mobile-drawer { 
-            position: fixed; top: 0; right: -320px; width: 280px; height: 100%; 
-            background: var(--brand-blue); color: white; z-index: 3000; 
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
-            padding: 30px 20px; box-shadow: -5px 0 15px rgba(0,0,0,0.2); 
-            visibility: hidden; pointer-events: none; 
-        }
+        /* BURGER MENU DRAWER */
+        .mobile-drawer { position: fixed; top: 0; right: -320px; width: 280px; height: 100%; background: var(--brand-blue); color: white; z-index: 3000; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); padding: 30px 20px; visibility: hidden; pointer-events: none; }
         .mobile-drawer.active { right: 0; visibility: visible; pointer-events: auto; }
         .drawer-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; z-index: 2999; }
-        .drawer-link { display: flex; align-items: center; color: white; text-decoration: none; padding: 15px 0; font-size: 1.1rem; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .drawer-link { display: flex; align-items: center; color: white; text-decoration: none; padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
         .drawer-link i { margin-right: 15px; width: 25px; text-align: center; }
 
-        .logout-link { margin-top: auto; background-color: rgba(255, 75, 75, 0.1); color: #ff7675 !important; border-radius: 8px; padding: 12px 15px !important; font-weight: 600; border: 1px solid rgba(255, 75, 75, 0.2); transition: all 0.3s ease; display: flex; align-items: center; cursor: pointer; }
-        .logout-link:hover { background-color: #ff7675 !important; color: white !important; }
+        
 
-        /* --- DASHBOARD --- */
+        /* MAIN CONTENT */
         .main-content { flex: 1; padding: 30px; overflow-y: auto; }
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
         .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
@@ -84,23 +93,19 @@ $power_users = $db->query("SELECT id, username FROM tbl_users LIMIT 3");
         
         #chartdiv { width: 100%; height: 400px; }
         .full-row { grid-column: 1 / -1; }
-
         .power-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        .power-table th { text-align: left; font-size: 0.8rem; color: #aaa; padding: 8px; border-bottom: 1px solid #eee; }
         .power-table td { padding: 10px 8px; font-size: 0.85rem; border-bottom: 1px solid #f9f9f9; }
 
         .tier-badge { display: inline-block; padding: 5px 15px; border-radius: 20px; font-weight: bold; color: #fff; background: <?php echo $tier_color; ?>; }
-        textarea { width: 100%; border-radius: 10px; border: 1px solid #ddd; padding: 10px; margin-bottom: 10px; resize: none; box-sizing: border-box;}
-        .send-btn { background: var(--brand-blue); color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; width: 100%;}
+        textarea { width: 100%; border-radius: 10px; border: 1px solid #ddd; padding: 10px; resize: none; box-sizing: border-box;}
+        .send-btn { background: var(--brand-blue); color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; width: 100%; margin-top:10px;}
 
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.4); z-index: 2000; align-items: center; justify-content: center; }
-        .modal-box { background: white; width: 280px; border-radius: 15px; text-align: center; overflow: hidden; animation: fadeIn 0.2s ease-out; }
+        .modal-box { background: white; width: 280px; border-radius: 15px; text-align: center; overflow: hidden; }
         .modal-footer { display: flex; border-top: 1px solid #eee; }
         .modal-btn { flex: 1; padding: 12px; border: none; background: none; font-size: 1rem; cursor: pointer; }
         .confirm-btn { color: #6c5ce7; font-weight: bold; }
         
-        @keyframes fadeIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-
         @media (max-width: 768px) { 
             body { flex-direction: column; padding-bottom: 80px; } 
             .sidebar { display: none; } 
@@ -108,14 +113,7 @@ $power_users = $db->query("SELECT id, username FROM tbl_users LIMIT 3");
             .main-content { padding: 20px; }
             .dashboard-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; } 
             .full-width-mobile { grid-column: span 2; }
-            .card h3 { font-size: 0.7rem; }
-            .header h1 { font-size: 1.3rem; }
             #chartdiv { height: 300px; }
-        }
-
-        /* hide menu while in desktop */
-        @media (min-width: 769px) {
-            .mobile-drawer, .drawer-overlay { display: none !important; }
         }
     </style>
 </head>
@@ -127,20 +125,18 @@ $power_users = $db->query("SELECT id, username FROM tbl_users LIMIT 3");
         <p><i class="fa fa-user-circle"></i> <?php echo $full_name; ?></p>
         <nav class="nav-links-container">
             <a href="#" class="nav-link"><i class="fa fa-home"></i> Dashboard</a>
-            <a href="#" class="nav-link"><i class="fa fa-shopping-cart"></i> My Purchases</a>
+            <a href="#" class="nav-link"><i class="fa fa-shopping-cart"></i> My History</a>
+            <a href="#" class="nav-link"><i class="fa-sharp-duotone fa-solid fa-award"></i> My Benifits</a>
+            <a href="#" class="nav-link"><i class="fa-sharp fa-solid fa-user-gear"></i> Settings</a>
         </nav>
     </div>
-    <a href="javascript:void(0)" class="nav-link logout-link" onclick="openLogoutModal()">
-        <i class="fa fa-sign-out-alt"></i> Logout
-    </a>
-</div>
+    <img src="icon/switch.png" alt="Logout" onclick="openLogoutModal()" style="width: 35px; height: 35px; margin-right: 10px; vertical-align: middle;">
+    </div>
 
 <div class="main-content">
     <div class="header">
         <h1>Welcome, <?php echo explode(' ', $full_name)[0]; ?>!</h1>
-        <div class="account-status">
-            <span style="color: <?php echo ($status == 'A' || $status == 'Active') ? 'green' : 'red'; ?>;">● <?php echo $status; ?> Account</span>
-        </div>
+        <div class="tier-badge"><?php echo $current_tier; ?></div>
     </div>
 
     <div class="dashboard-grid">
@@ -150,18 +146,18 @@ $power_users = $db->query("SELECT id, username FROM tbl_users LIMIT 3");
         </div>
 
         <div class="card" style="text-align: center;">
-            <h3>Issued (MTD)</h3>
-            <div style="font-size: 1.5rem; font-weight: bold; color: var(--brand-blue);"><?php echo number_format($issued_mtd); ?></div>
+            <h3>Available Points</h3>
+            <div style="font-size: 1.5rem; font-weight: bold; color: var(--brand-blue);"><?php echo number_format($total_points); ?></div>
         </div>
 
         <div class="card" style="text-align: center;">
-            <h3>Redeemed (MTD)</h3>
+            <h3>Redeemed</h3>
             <div style="font-size: 1.5rem; font-weight: bold; color: var(--success-green);"><?php echo number_format($redeemed_mtd); ?></div>
         </div>
 
         <div class="card" style="text-align: center; border-left: 4px solid var(--danger-red);">
-            <h3>At Risk</h3>
-            <div style="font-size: 1.5rem; font-weight: bold; color: var(--danger-red);"><?php echo $at_risk_count; ?></div>
+            <h3>Point Expiry</h3>
+            <div style="font-size: 1rem; font-weight: bold; color: var(--danger-red);"><?php echo $expiry_date; ?></div>
         </div>
 
         <div class="card full-width-mobile">
@@ -172,12 +168,12 @@ $power_users = $db->query("SELECT id, username FROM tbl_users LIMIT 3");
         <div class="card full-width-mobile">
             <h3>Top Power Users</h3>
             <table class="power-table">
-                <thead><tr><th>Member</th><th>Points</th></tr></thead>
+                <thead><tr><th>Member</th><th style="text-align:right;">Points</th></tr></thead>
                 <tbody>
-                    <?php while($user = $power_users->fetch_assoc()): ?>
+                    <?php while($row = $power_users->fetch_assoc()): ?>
                     <tr>
-                        <td><?php echo $user['username']; ?></td>
-                        <td style="text-align: right; font-weight: bold;"><?php echo rand(2000, 8000); ?></td>
+                        <td><?php echo $row['username']; ?></td>
+                        <td style="text-align: right; font-weight: bold;"><?php echo number_format($row['total_points']); ?></td>
                     </tr>
                     <?php endwhile; ?>
                 </tbody>
@@ -205,8 +201,10 @@ $power_users = $db->query("SELECT id, username FROM tbl_users LIMIT 3");
         <h3 style="margin:0;">Menu</h3>
         <i class="fa fa-times" onclick="toggleMobileMenu()" style="cursor:pointer;"></i>
     </div>
-    <a href="profile.php" class="drawer-link"><i class="fa fa-user"></i> Profile</a>
-    <a href="settings.php" class="drawer-link"><i class="fa fa-cog"></i> Settings</a>
+    <a href="#" class="drawer-link"><i class="fa fa-user"></i> Profile</a>
+    <a href="#" class="drawer-link"><i class="fa fa-cog"></i> Settings</a>
+    <a href="#" class="drawer-link"><i class="fa fa-shopping-cart"></i>My History</a>
+    <a href="#" class="drawer-link"><i class="fa-sharp-duotone fa-solid fa-award"></i>My Benifits</a>
     <a href="javascript:void(0)" class="drawer-link" onclick="toggleMobileMenu(); openLogoutModal();" style="color: #ff7675;">
         <i class="fa fa-sign-out-alt"></i> Logout
     </a>
@@ -214,8 +212,8 @@ $power_users = $db->query("SELECT id, username FROM tbl_users LIMIT 3");
 
 <div id="logoutModal" class="modal-overlay">
     <div class="modal-box">
-        <div class="modal-header" style="color:#ff4757; padding-top:20px;">Logout</div>
-        <div class="modal-body" style="padding-bottom:20px;">Are you sure you want to logout?</div>
+        <div class="modal-header" style="color:#ff4757; padding-top:20px; font-weight:bold;">Logout</div>
+        <div class="modal-body" style="padding:10px 0 20px 0;">Are you sure you want to logout?</div>
         <div class="modal-footer">
             <button class="modal-btn" onclick="closeLogoutModal()" style="color:#a4b0be; border-right:1px solid #eee;">Cancel</button>
             <button class="modal-btn confirm-btn" onclick="location.href='logout.php'">Confirm</button>
@@ -229,7 +227,7 @@ $power_users = $db->query("SELECT id, username FROM tbl_users LIMIT 3");
         $('#drawerOverlay').fadeToggle(300);
     }
 
-    // amcChart code
+    // amCharts initialization 
     am5.ready(function() {
         var root = am5.Root.new("chartdiv");
         root.setThemes([am5themes_Animated.new(root)]);
@@ -238,10 +236,10 @@ $power_users = $db->query("SELECT id, username FROM tbl_users LIMIT 3");
         legend.valueLabels.template.set("forceHidden", true);
 
         var data = [
-            { year: "2022", paper: 78, ink: 20, office: 55 },
-            { year: "2023", paper: 200, ink: 150, office: 90 },
-            { year: "2024", paper: 160, ink: 210, office: 101 },
-            { year: "2025", paper: 347, ink: 180, office: 150 }
+            { year: "2023", paper: 78, ink: 20, office: 55 },
+            { year: "2024", paper: 200, ink: 150, office: 90 },
+            { year: "2025", paper: 160, ink: 210, office: 101 },
+            { year: "2026", paper: 347, ink: 180, office: 150 }
         ];
 
         var xAxis = chart.xAxes.push(am5xy.CategoryAxis.new(root, { categoryField: "year", renderer: am5xy.AxisRendererX.new(root, { minGridDistance: 50 }) }));
@@ -269,11 +267,11 @@ $power_users = $db->query("SELECT id, username FROM tbl_users LIMIT 3");
         chart.appear(1000, 100);
     });
 
-    // Chartjs code
+    // Chart.js initialization 
     const ctx2 = document.getElementById('segmentChart').getContext('2d');
     new Chart(ctx2, { type: 'pie', data: { labels: ['B2B', 'B2C'], datasets: [{ data: [65, 35], backgroundColor: ['#004a9b', '#3498db'] }] }, options: { plugins: { legend: { position: 'bottom' } } } });
 
-    function sendMessage() { alert("Message sent."); }
+    function sendMessage() { alert("Message sent to Admin."); }
     function openLogoutModal() { document.getElementById('logoutModal').style.display = 'flex'; }
     function closeLogoutModal() { document.getElementById('logoutModal').style.display = 'none'; }
 </script>
