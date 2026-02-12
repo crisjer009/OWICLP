@@ -11,7 +11,7 @@ $(document).ready(function() {
             $message.text('Please enter both username and password.');
             return false;
         }
-
+        
         // Show loading spinner inside button
         if(!$submitBtn.find('.spinner').length) {
             $submitBtn.prepend('<span class="spinner" style="width:18px;height:18px;border:3px solid #fff;border-top:3px solid transparent;border-radius:50%;display:inline-block;margin-right:10px;animation:spin 1s linear infinite;"></span>');
@@ -19,10 +19,8 @@ $(document).ready(function() {
         $submitBtn.prop('disabled', true);
         $message.text('');
 
-        // Record start time
         var startTime = new Date().getTime();
 
-        // Send AJAX immediately
         $.ajax({
             url: 'login_process.php',
             type: 'POST',

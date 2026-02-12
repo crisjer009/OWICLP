@@ -10,63 +10,103 @@ if (isset($_SESSION['message'])) {
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <link href="https://fonts.googleapis.com/css?family=Poppins:600&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login</title>
+
+<link href="https://fonts.googleapis.com/css?family=Poppins:600&display=swap" rel="stylesheet">
     <script src="https://kit.fontawesome.com/a81368914c.js"></script>
-    <style>
-        /* Reset and body styles */
-        * { margin:0; padding:0; box-sizing:border-box; font-family: 'Poppins', sans-serif; }
-        html, body { width:100%; height:100%; }
-        body { display:flex; justify-content:center; align-items:center; background:#94abd8; }
 
-        /* Container */
-        .container {
-            width: 80%;
-            max-width: 1000px;
-            height: 600px;
-            display: grid;
-            grid-template-columns: repeat(2,1fr);
-            border-radius:12px;
-            overflow:hidden;
-            box-shadow:0 8px 24px rgba(0,0,0,0.1);
-        }
+<style>
+* { 
+    margin:0; 
+    padding:0; 
+    box-sizing:border-box; 
+    font-family: 'Poppins', sans-serif; 
+}
 
-        /* Left Side */
-        .left {
-            background:#004b9b;
-            color:#fff;
-            display:flex;
-            flex-direction:column;
-            justify-content:center;
-            align-items:center;
-            padding:40px;
-            text-align:center;
-        }
-        .left h2 { font-size:1.8rem; margin-bottom:20px; }
-        .left p { font-size:0.9rem; line-height:1.5; color:#ddd; }
+html, body { 
+    width:100%; 
+    height:100%; 
+}
 
-        /* Right Side */
-        .right {
-            background:#fff;
-            display:flex;
-            flex-direction:column;
-            justify-content:center;
-            align-items:center;
-            padding:50px;
-            text-align:center;
-        }
-        .right h1 { font-size:2rem; font-weight:bold; margin-bottom:10px; color:#222; }
-        .right p { font-size:0.9rem; color:#0e0d0d; margin-bottom:30px; }
+/* BODY BLUE  */
+body { 
+    display:flex; 
+    justify-content:center; 
+    align-items:center; 
+    background: linear-gradient(135deg, #004a9b, #dadbdb);
+}
 
-        /* Message */
+/* Container */
+.container {
+    width: 80%;
+    max-width: 1000px;
+    height: 600px;
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    border-radius:12px;
+    overflow:hidden;
+    box-shadow:0 8px 24px rgba(0,0,0,0.2);
+}
+
+/* LEFT SIDE (WHITE WITH LOGO) */
+.left {
+    background:#ffffff;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:40px;
+}
+
+.left {
+    transition: 
+        opacity 0.5s ease,
+        transform 0.5s ease,
+        max-height 0.5s ease,
+        padding 0.5s ease;
+    overflow: hidden;
+}
+
+
+/* LOGO */
+.left img{
+    width:280px;
+    max-width:100%;
+    height:auto;
+}
+
+/* RIGHT SIDE */
+.right {
+    background:#fff;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    padding:50px;
+    text-align:center;
+}
+
+.right h1 { 
+    font-size:2rem; 
+    font-weight:bold; 
+    margin-bottom:10px; 
+    color:#222; 
+}
+
+.right p { 
+    font-size:0.9rem; 
+    color:#555; 
+    margin-bottom:30px; 
+}
+
+/* Message */
         .message { margin-bottom:15px; font-size:0.9rem; text-align:center; color:red; }
         .success { color:green; }
 
-        /* Login form inputs */
-        .login-box input {
+/* Login form inputs */
+.login-box input {
             width:100%;
             padding:12px;
             margin-bottom:15px;
@@ -76,10 +116,11 @@ if (isset($_SESSION['message'])) {
             outline:none;
             transition:border-color 0.3s ease;
         }
-        .login-box input:focus { border-color:#0066cc; }
+        .login-box input:focus { 
+            border-color:#0066cc; }
 
-        /* Button */
-        .login-box button {
+/* Button */
+.login-box button {
             width:50%;
             padding:15px;
             background:#141618;
@@ -94,19 +135,20 @@ if (isset($_SESSION['message'])) {
         }
         .login-box button:hover { background:#004c99; }
 
-        /* Links */
-        .login-box a {
-            display:block;
-            margin-top:10px;
-            font-size:0.8rem;
-            color:#1f2020;
-            text-decoration:none;
-        }
-        .login-box a:hover { text-decoration:underline; }
+/* Links */
+.login-box a {
+    display:block;
+    margin-top:10px;
+    font-size:0.8rem;
+    color:#2a5298;
+    text-decoration:none;
+}
 
-        
-        
-        /* Responsive tablet */
+.login-box a:hover { 
+    text-decoration:underline; 
+}
+
+/* Responsive tablet */
         @media (max-width:900px) {
     body {
         display: flex;
@@ -114,7 +156,7 @@ if (isset($_SESSION['message'])) {
         align-items: center;
         min-height: 100vh;
         padding: 20px;
-        background: #e0e5ec; /* soft modern background */
+    background: linear-gradient(135deg, #004a9b, #dadbdb);
     }
 
     .container {
@@ -125,7 +167,7 @@ if (isset($_SESSION['message'])) {
         grid-template-columns: 1fr;
         gap: 0;
         background: #fff;
-        border-radius: 15px;
+        border-radius: 25px;
         padding: 35px 25px;
         box-shadow: 0 8px 20px rgba(0,0,0,0.1);
         transition: transform 0.3s ease;
@@ -141,6 +183,20 @@ if (isset($_SESSION['message'])) {
         padding: 0;
         text-align: center;
     }
+    /* Animate left section out */
+.left {
+    opacity: 0;
+    transform: translateY(-20px);
+    max-height: 0;
+    padding: 0;
+}
+
+/* Right section full */
+.right {
+    width: 100%;
+    text-align: center;
+}
+
 
     /* Adjust heading */
     .right h1 {
@@ -161,7 +217,7 @@ if (isset($_SESSION['message'])) {
     }
 
     .login-box input:focus {
-        border-color: #4a90e2;
+        border-color: #0e0f0f;
         background: #fff;
         outline: none;
         box-shadow: 0 0 5px rgba(74,144,226,0.3);
@@ -169,23 +225,27 @@ if (isset($_SESSION['message'])) {
 
     /* Button full width with max 80% */
     .login-box button {
-        width: 80%;
-        max-width: 300px;
-        padding: 15px;
-        font-size: 1rem;
-        border-radius: 10px;
-        border: none;
-        background: linear-gradient(135deg, #4a90e2, #357abd);
-        color: #fff;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
+    width: 80%;
+    max-width: 300px;
+    padding: 15px;
+    font-size: 1rem;
+    border-radius: 10px;
+    border: 2px solid #000;  /* black border */
+    background-color: #fff;  /* white background */
+    color: #000;             /* black text */
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
 
-    .login-box button:hover {
-        background: linear-gradient(135deg, #357abd, #2a5c9b);
-        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    }
+.login-box button:hover {
+    background-color: #357abd; /* blue on hover */
+    border-color: #357abd;     /* border also blue */
+    color: #fff;               /* text becomes white */
+    box-shadow: 0 6px 15px rgba(0,0,0,0.1); /* subtle shadow */
+    transform: translateY(-2px); /* lift effect */
+}
+
 
     /* Forgot password link */
     .login-box .forgot-password {
@@ -208,7 +268,7 @@ if (isset($_SESSION['message'])) {
     body {
         margin: 0;
         padding: 0;
-        background: #004a9b; 
+    background: linear-gradient(135deg, #004a9b, #dadbdb);
         display: flex;
         justify-content: center;
         align-items: center;
@@ -252,7 +312,7 @@ if (isset($_SESSION['message'])) {
     }
 
     .login-box input:focus {
-        border-color: #4a90e2;
+        border-color: #e0e5eb;
         background: #fff;
         outline: none;
         box-shadow: 0 0 5px rgba(74,144,226,0.3);
@@ -260,24 +320,24 @@ if (isset($_SESSION['message'])) {
 
     /* Login button */
     .login-box button {
-        width: 100%;
-        padding: 15px;
-        font-size: 1rem;
-        border-radius: 10px;
-        border: none;
-        background: linear-gradient(135deg, #4a90e2, #357abd);
-        color: #fff;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
+    width: 80%;
+    max-width: 300px;
+    padding: 15px;
+    font-size: 1rem;
+    border-radius: 10px;
+    border: 2px solid #000;  
+    background-color: #fff;  
+    color: #000;             
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
 
     .login-box button:hover {
-        background: linear-gradient(135deg, #357abd, #2a5c9b);
+        background: linear-gradient(135deg, #496377, #2a5c9b);
         box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     }
 
-    /* Forgot password link */
     .login-box .forgot-password {
         display: block;
         text-align: center;
@@ -303,17 +363,21 @@ if (isset($_SESSION['message'])) {
         padding: 0;
     }
 }
-
-    </style>
+</style>
 </head>
 <body>
+    <!-- LEFT SIDE WITH SVG LOGO -->
     <div class="container">
-        <div class="left">
-            <h2>Office Warehouse Inc</h2>
-        </div>
-        <div class="right">
-            <h1>LOGIN FORM</h1>
-            <p>Welcome Back!</p>
+
+    <!-- LEFT SIDE WITH SVG LOGO -->
+    <div class="left">
+    <img src="../../../images/image.svg"> 
+    </div>
+
+    <!-- RIGHT SIDE LOGIN -->
+    <div class="right">
+        <h1>LOGIN FORM</h1>
+        <p>Welcome Back!</p>
 
             <div class="message" id="message"><?php echo $message; ?></div>
 
@@ -326,7 +390,6 @@ if (isset($_SESSION['message'])) {
                 </form>
             </div>
 
-            
         </div>
     </div>
     <!-- jQuery -->
