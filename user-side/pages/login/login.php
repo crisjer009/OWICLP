@@ -36,7 +36,7 @@ body {
     display:flex; 
     justify-content:center; 
     align-items:center; 
-    background: linear-gradient(135deg, #004a9b, #dadbdb);
+    background: linear-gradient(135deg, rgb(2, 0, 36), #dadbdb);
 }
 
 /* Container */
@@ -79,7 +79,7 @@ body {
 
 /* RIGHT SIDE */
 .right {
-    background:#fff;
+    background: linear-gradient(135deg, rgb(2, 0, 36), #fdffffef);
     display:flex;
     flex-direction:column;
     justify-content:center;
@@ -92,12 +92,12 @@ body {
     font-size:2rem; 
     font-weight:bold; 
     margin-bottom:10px; 
-    color:#222; 
+    color:#000; 
 }
 
 .right p { 
     font-size:0.9rem; 
-    color:#555; 
+    color:#000; 
     margin-bottom:30px; 
 }
 
@@ -140,7 +140,7 @@ body {
     display:block;
     margin-top:10px;
     font-size:0.8rem;
-    color:#2a5298;
+    color:#000;
     text-decoration:none;
 }
 
@@ -393,7 +393,10 @@ body {
         </div>
     </div>
     <!-- jQuery -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
+<script src="Jquery.js"></script>
 <script src="login.js"></script>
 </body>
 </html>
