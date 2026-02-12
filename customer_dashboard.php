@@ -211,18 +211,26 @@ $userInitial = substr($userName, 0, 1);
           <img src="images/owi.jpg" alt="Logo" class="brand-logo">
           <span class="brand-text">OWI CLP</span>
         </div>
-        
         <ul class="nav-menu">
-            <small class="text-uppercase text-muted fw-bold ps-3 mb-2 d-block" style="font-size: 11px; letter-spacing: 1px;">Home</small>
-            <li><a href="#" class="nav-item-custom active"><i class="fas fa-home"></i> Dashboard</a></li>
-            <li><a href="customer_profile.php" class="nav-item-custom"><i class="fas fa-user-circle"></i> Customer Profile</a></li>
-            <small class="text-uppercase text-muted fw-bold ps-3 mt-4 mb-2 d-block" style="font-size: 11px; letter-spacing: 1px;">Apps & Pages</small>
-            <li><a href="customer_loyalty.php" class="nav-item-custom"><i class="fas fa-gift"></i> Loyalty & Rewards</a></li>
-            <li><a href="customer_purchase.php" class="nav-item-custom"><i class="fas fa-history"></i> Purchase & Points </a></li>
-            <li><a href="customer_purchase.php" class="nav-item-custom"><i class="fas fa-history"></i> Promotions </a></li>
-            <small class="text-uppercase text-muted fw-bold ps-3 mt-4 mb-2 d-block" style="font-size: 11px; letter-spacing: 1px;">Settings</small>
-            <li><a href="customer_settings.php" class="nav-item-custom"><i class="fas fa-cog"></i> Account Settings</a></li>
-            <li><a href="#" id="sidebarLogout" class="nav-item-custom text-danger"><i class="fas fa-power-off"></i> Logout</a></li>
+          <small class="menu-divider">
+            <span>Main Menu</span>
+          </small>
+          <li><a href="#" class="nav-item-custom active"><i class="fas fa-th-large"></i>Dashboard</a></li>
+          <li><a href="customer_profile.php" class="nav-item-custom"><i class="fas fa-user-gear"></i>Customer Profile</a></li>
+
+          <small class="menu-divider">
+            <span>Loyalty & Growth</span>
+          </small>
+          <li><a href="customer_loyalty.php" class="nav-item-custom"><i class="fas fa-award"></i>Loyalty & Rewards</a></li>
+          <li><a href="customer_purchase.php" class="nav-item-custom"><i class="fas fa-file-invoice-dollar"></i>Purchase & Points</a></li>
+          <li><a href="customer_promotions.php" class="nav-item-custom"><i class="fas fa-bullhorn"></i>Promotions</a></li>
+        
+
+          <small class="menu-divider">
+           <span>Preferences</span>
+          </small>
+          <li><a href="customer_settings.php" class="nav-item-custom"><i class="fas fa-sliders-h"></i>Account Settings</a></li>
+          <li><a href="#" id="sidebarLogout" class="nav-item-custom text-danger logout-hover"><i class="fas fa-right-from-bracket"></i>Logout</a></li>
         </ul>
     </nav>
 
@@ -240,12 +248,6 @@ $userInitial = substr($userName, 0, 1);
                 </div>
 
                 <div class="d-flex align-items-center">
-                    <button class="btn btn-link text-dark nav-link px-2"><i class="far fa-moon fs-5"></i></button>
-                    <button class="btn btn-link text-dark nav-link px-2 position-relative">
-                        <i class="far fa-bell fs-5"></i>
-                        <span class="position-absolute top-25 start-75 translate-middle p-1 bg-danger border border-light rounded-circle"></span>
-                    </button>
-
                     <div class="dropdown ms-3">
                         <div class="d-flex align-items-center" data-bs-toggle="dropdown" style="cursor: pointer;">
                             <div class="avatar-circle me-2"><?php echo $userInitial; ?></div>

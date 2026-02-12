@@ -13,7 +13,7 @@ $userInitial = substr($userName, 0, 1);
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>OWI CLP | Admin Dashboard</title>
+    <title>OWI CLP | Customer Dashboard</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
@@ -51,12 +51,14 @@ $userInitial = substr($userName, 0, 1);
             position: fixed;
             left: 0;
             top: 0;
+            display:flex;
+            flex-direction: column;
             transition: all 0.3s ease;
             z-index: 1050;
             border-right: 1px dashed #dadae3;
             box-shadow: 0 20px 40px rgba(94, 120, 206, 0.62);
-             background: linear-gradient(rgba(229, 238, 253, 0.54), rgba(147, 175, 221, 0.65)), 
-                    url('images/bg_login.png'); 
+            background: linear-gradient(rgba(236, 238, 240, 0.99),rgba(202, 221, 248, 0.86)),
+            url('images/bg_login.png'); 
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -69,6 +71,7 @@ $userInitial = substr($userName, 0, 1);
           align-items: center;
           border-bottom: 1px solid rgba(58,53,65,0.05);
           margin-bottom: 10px;
+          flex-shrink:0;
         }
 
         .brand-logo{
@@ -86,19 +89,43 @@ $userInitial = substr($userName, 0, 1);
           margin-left:12px;
           text-transform: uppercase;
         }
-
         .nav-menu{
-          list-style: none;
-          padding: 10px 15px;
+            list-style:none;
+            padding:10px 15px 30px 15px;
+            margin:0;
+            overflow-y: auto;
+            flex-grow:1;
         }
-        
+        .nav-menu::-webkit-scrollbar{
+            width:5px;
+        }
+        .nav-menu::-webkit-scrollbar-track{
+            background:transparent;
+        }
+        .nav-menu::-webkit-scrollbar-thumb{
+            background: rgba(0,74,155,0.2);
+            border-radius:10px;
+        }
+        .nav-menu::-webkit-scrollbar-thumb:hover{
+            background: var(--primary-color);
+        }
+        .menu-divider{
+            display:block;
+            text-transform:uppercase;
+            font-size:11px;
+            font-weight:700;
+            color:#3a35418a;
+            letter-spacing:1px;
+            padding: 20px 0 10px 10px;
+        }
+       
         .nav-item-custom {
             display: flex;
             align-items: center;
             padding: 10px 16px;
             margin-bottom: 4px;
             border-radius: 0 50px 50px 0;
-            color: #3A3541AD;
+            color: #3a3541ed;
             text-decoration: none;
             transition: 0.2s;
             font-weight: 500;
@@ -189,7 +216,6 @@ $userInitial = substr($userName, 0, 1);
             }
             .sidebar-overlay.active { display: block; }
         }
-
         /* --- Dashboard Cards --- */
         .m-card {
             background: white;
@@ -201,34 +227,46 @@ $userInitial = substr($userName, 0, 1);
     </style>
 </head>
 <body>
+    <div class="sidebar-overlay" id="overlay" onclick="toggleSidebar()"></div>
+       <nav class="sidebar" id="sidebar">
+           <div class="sidebar-header">
+             <img src="images/owi.jpg" alt="Logo" class="brand-logo">
+             <span class="brand-text">OWI CLP</span>
+            </div>
+           <ul class="nav-menu">
+               <small class="menu-divider">
+                 <span>Analytics</span>
+               </small>
+               <li><a href="admin_dashboard.php" class="nav-item-custom active"><i class="fas fa-chart-line"></i> Program Overview</a></li>
+               <li><a href="admin_reports.php" class="nav-item-custom"><i class="fas fa-file-export"></i> Detailed Reports</a></li>
+    
+               <small class="menu-divider">
+                 <span>User Control</span>
+               </small>
+               <li><a href="admin_customers.php" class="nav-item-custom"><i class="fas fa-users"></i> Member Directory</a></li>
+               <li><a href="admin_tiers.php" class="nav-item-custom"><i class="fas fa-layer-group"></i> Tier Management</a></li>
 
- <div class="sidebar-overlay" id="overlay" onclick="toggleSidebar()"></div>
-    <nav class="sidebar" id="sidebar">
-        <div class="sidebar-header">
-          <img src="images/owi.jpg" alt="Logo" class="brand-logo">
-          <span class="brand-text">OWI CLP</span>
-        </div>
-        
-        <ul class="nav-menu">
-            <small class="text-uppercase text-muted fw-bold ps-3 mb-2 d-block" style="font-size: 11px; letter-spacing: 1px;">Home</small>
-            <li><a href="#" class="nav-item-custom active"><i class="fas fa-home"></i> Dashboard</a></li>
-            <li><a href="customer_profile.php" class="nav-item-custom"><i class="fas fa-user-circle"></i> Profile</a></li>
-            
-            <small class="text-uppercase text-muted fw-bold ps-3 mt-4 mb-2 d-block" style="font-size: 11px; letter-spacing: 1px;">Apps & Pages</small>
-            <li><a href="customer_loyalty.php" class="nav-item-custom"><i class="fas fa-gift"></i> Loyalty Program</a></li>
-            <li><a href="customer_purchase.php" class="nav-item-custom"><i class="fas fa-history"></i> Transactions</a></li>
-            
-            <small class="text-uppercase text-muted fw-bold ps-3 mt-4 mb-2 d-block" style="font-size: 11px; letter-spacing: 1px;">Settings</small>
-            <li><a href="customer_settings.php" class="nav-item-custom"><i class="fas fa-cog"></i> Account Settings</a></li>
-            <li><a href="#" id="sidebarLogout" class="nav-item-custom text-danger"><i class="fas fa-power-off"></i> Logout</a></li>
-        </ul>
-    </nav>
+               <small class="menu-divider">
+                 <span>Inventory & Rewards</span>
+               </small>
+               <li><a href="admin_redemptions.php" class="nav-item-custom"><i class="fas fa-ticket-alt"></i> Pending Claims 
+               <span class="badge bg-danger ms-auto rounded-pill" style="font-size: 0.7rem;">5</span>
+               </a></li>
+               <li><a href="admin_catalog.php" class="nav-item-custom"><i class="fas fa-gift"></i> Reward Catalog</a></li>
+               <li><a href="admin_promotions.php" class="nav-item-custom"><i class="fas fa-bullhorn"></i> Campaign Manager</a></li>
+    
+               <small class="menu-divider">
+                  <span>System Rules</span>
+               </small>
+               <li><a href="admin_points_config.php" class="nav-item-custom"><i class="fas fa-coins"></i> Earning Rules</a></li>
+               <li><a href="admin_settings.php" class="nav-item-custom"><i class="fas fa-user-shield"></i> Admin Settings</a></li>
+               <li><a href="#" id="sidebarLogout" class="nav-item-custom text-danger mt-4"><i class="fas fa-power-off"></i> Log Out</a></li>
+           </ul>
+       </nav>
 
-    <div class="main-container">
-        
+    <div class="main-container">  
         <header class="top-navbar">
-            <div class="container-fluid d-flex align-items-center justify-content-between p-0">
-                
+            <div class="container-fluid d-flex align-items-center justify-content-between p-0">  
                 <div class="d-flex align-items-center flex-grow-1">
                     <button class="btn border-0 d-lg-none me-2" onclick="toggleSidebar()">
                         <i class="fas fa-bars fa-lg"></i>
@@ -240,12 +278,6 @@ $userInitial = substr($userName, 0, 1);
                 </div>
 
                 <div class="d-flex align-items-center">
-                    <button class="btn btn-link text-dark nav-link px-2"><i class="far fa-moon fs-5"></i></button>
-                    <button class="btn btn-link text-dark nav-link px-2 position-relative">
-                        <i class="far fa-bell fs-5"></i>
-                        <span class="position-absolute top-25 start-75 translate-middle p-1 bg-danger border border-light rounded-circle"></span>
-                    </button>
-
                     <div class="dropdown ms-3">
                         <div class="d-flex align-items-center" data-bs-toggle="dropdown" style="cursor: pointer;">
                             <div class="avatar-circle me-2"><?php echo $userInitial; ?></div>
@@ -273,9 +305,7 @@ $userInitial = substr($userName, 0, 1);
                 </div>
             </div>
         </header>
-
-     
-  </div>
+    </div>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -310,5 +340,5 @@ $userInitial = substr($userName, 0, 1);
         document.getElementById('sidebarLogout').onclick = handleLogout;
         document.getElementById('navbarLogout').onclick = handleLogout;
     </script>
-</body>
+  </body>
 </html>
