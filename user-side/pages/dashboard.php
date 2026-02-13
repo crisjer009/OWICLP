@@ -41,7 +41,7 @@ body{
 .sidebar{
     width:260px;
     background:#004a9b;
-    color:#fff;
+    background: linear-gradient(135deg, rgb(2, 0, 36), #4b4a4af6);
     display:flex;
     flex-direction:column;
     justify-content:space-between;
@@ -55,6 +55,7 @@ body{
     font-size:1.8rem;
     line-height:1.2;
     font-weight:700;
+    color:#fff;
 }
 
 .sidebar a{
@@ -76,7 +77,7 @@ body{
 }
 
 .sidebar a:hover{
-    background:#3b82f6;
+    background: #000;;
 }
 
 .logout{
@@ -92,7 +93,7 @@ body{
 .main{
     flex:1;
     padding:50px;
-    background:#f0f2f5;
+    background: linear-gradient(135deg, rgb(2, 0, 36), #4b4a4af6);
 }
 
 /* TOP SECTION */
@@ -107,10 +108,11 @@ body{
 .top h2{
     font-size:1.8rem;
     margin-bottom:5px;
+    color: #ffffff;;
 }
 
 .top small{
-    color:#555;
+    color: #ffffff;;
 }
 
 .search input{
@@ -135,7 +137,7 @@ body{
 }
 
 .card{
-    background:#3b82f6;
+    background:#190f0f;
     color:white;
     padding:25px 20px;
     border-radius:15px;
@@ -167,6 +169,87 @@ body{
     font-size:26px;
     font-weight:600;
 }
+
+
+/* CC style */
+.main-card{
+    width: 100%;
+    max-width: 380px;
+    aspect-ratio: 1.7 / 1; /* perfect credit card ratio */
+    
+    background: linear-gradient(135deg, #111, #2c2c2c);
+    color: white;
+    padding: 25px;
+    border-radius: 18px;
+    margin-bottom: 25px;
+    border: 1px solid rgba(255,255,255,0.15);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+
+/* wifi logo */
+.card-top{
+    display:flex;
+    justify-content:flex-end;
+    font-size:22px;
+    opacity:0.8;
+}
+
+/* CARD NUMBER */
+.card-number{
+    font-size:22px;
+    letter-spacing:4px;
+    font-weight:500;
+    margin:20px 0;
+}
+
+/* BOTTOM */
+.card-bottom{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.card-holder small{
+    font-size:12px;
+    opacity:0.7;
+}
+
+.card-holder p{
+    margin-top:3px;
+    font-weight:600;
+    font-size:14px;
+}
+
+/* CARD LOGO */
+.mastercard-logo{
+    position:relative;
+    width:50px;
+    height:30px;
+}
+
+.circle{
+    width:28px;
+    height:28px;
+    border-radius:50%;
+    position:absolute;
+}
+
+.circle.red{
+    background:#eb001b;
+    left:0;
+}
+
+.circle.yellow{
+    background:#f79e1b;
+    right:0;
+}
+
+
+
 
 /* PROGRESS */
 .progress-box{
@@ -204,6 +287,90 @@ body{
     font-size:0.9rem;
     color:#555;
 }
+.transactions-wrapper{
+    display:grid;
+    grid-template-columns: 2fr 1fr;
+    gap:30px;
+}
+
+
+
+/* RECENT BOX */
+.recent-box{
+    background:#fff;
+    padding:20px;
+    border-radius:20px;
+    box-shadow:0 6px 20px rgba(0,0,0,0.05);
+}
+
+.recent-header{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:15px;
+}
+
+.transaction-item{
+    display:flex;
+    justify-content:space-between;
+    padding:12px 0;
+    border-bottom:1px solid #eee;
+}
+
+.transaction-item:last-child{
+    border:none;
+}
+
+/* UPCOMING */
+.upcoming-box{
+    background:#fff;
+    padding:20px;
+    border-radius:20px;
+    box-shadow:0 6px 20px rgba(0,0,0,0.05);
+}
+
+.payment-card{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:15px 0;
+    border-bottom:1px solid #eee;
+}
+
+.payment-card:last-child{
+    border:none;
+}
+
+.icon{
+    width:40px;
+    height:40px;
+    border-radius:10px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:white;
+    margin-right:10px;
+}
+
+.green-bg{
+    background:#22c55e;
+}
+
+.blue-bg{
+    background:#3b82f6;
+}
+
+/* COLORS */
+.green{
+    color:#22c55e;
+    font-weight:600;
+}
+
+.red{
+    color:#ef4444;
+    font-weight:600;
+}
+
+
 
 /* BADGE */
 .badge{
@@ -247,6 +414,8 @@ th{
 .green{color:green; font-weight:600;}
 .red{color:red; font-weight:600;}
 
+
+
 /* RESPONSIVE */
 @media (max-width:900px){
     .wrapper{
@@ -279,223 +448,294 @@ th{
             <a href="#" id="dashboardLink"><i class="fas fa-home"></i>Dashboard</a>         
             <a href="#" id="earnPointsLink"><i class="fas fa-gift"></i>Earn Points</a>
             <a href="#" id="rewardsLink"><i class="fas fa-star"></i>Rewards</a>
-            <a href="#"><i class="fas fa-exchange-alt"></i>Transactions</a>
+            <a href="#" id="transactionsLink"><i class="fas fa-exchange-alt"></i>Transactions</a>
             <a href="#"><i class="fas fa-user"></i>Profile</a>
         </div>
 
         <a class="logout" href="/user-side/pages/login/logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a>
     </div>
 
-    <!-- MAIN -->
-    <div class="main">
+  <!-- MAIN CONTAINER -->
+<div class="main">
 
-        <!-- DASHBOARD CONTENT -->
-        <div id="dashboardContent">
-            <div class="top">
-                <div>
-                    <h2>Welcome Back, <?php echo htmlspecialchars($_SESSION['user']); ?>
-                        <span class="badge">GOLD ⭐</span>
-                    </h2>
-                    <small>Keep earning points to reach PLATINUM!</small>
-                </div>
-
-                <div class="search">
-                    <input type="text" placeholder="Search...">
-                </div>
+    <!-- DASHBOARD CONTENT -->
+    <div id="dashboardContent">
+        <div class="top">
+            <div>
+                <h2>Welcome Back, <?php echo htmlspecialchars($_SESSION['user']); ?>
+                    <span class="badge">GOLD ⭐</span>
+                </h2>
+                <small>Keep earning points to reach PLATINUM!</small>
             </div>
-
-            <div class="cards">
-                <div class="card">
-                    <h3>Total Points</h3>
-                    <p>1,256</p>
-                    <i class="fas fa-coins"></i>
-                </div>
-
-                <div class="card">
-                    <h3>Rewards Redeemed</h3>
-                    <p>10</p>
-                    <i class="fas fa-gift"></i>
-                </div>
-
-                <div class="card">
-                    <h3>Vouchers</h3>
-                    <p>2</p>
-                    <i class="fas fa-ticket-alt"></i>
-                </div>
-            </div>
-
-            <div class="progress-box">
-                <small>Earn 1,744 more points to reach PLATINUM</small>
-                <div class="progress">
-                    <div class="bar" id="progressBar"></div>
-                </div>
-                <div class="progress-labels">
-                    <span>GOLD</span>
-                    <span>PLATINUM</span>
-                </div>
-            </div>
-
-            <div class="table-box">
-                <h4>Recent Activity</h4>
-                <table>
-                    <tr>
-                        <th>Date</th>
-                        <th>Description</th>
-                        <th>Points</th>
-                    </tr>
-                    <tr>
-                        <td>Feb 11, 2026</td>
-                        <td>Redeemed Voucher</td>
-                        <td class="green">+250</td>
-                    </tr>
-                    <tr>
-                        <td>Feb 09, 2026</td>
-                        <td>Earned Points from Purchase</td>
-                        <td class="green">+500</td>
-                    </tr>
-                    <tr>
-                        <td>Feb 07, 2026</td>
-                        <td>Redeemed Reward</td>
-                        <td class="red">-100</td>
-                    </tr>
-                </table>
+            <div class="search">
+                <input type="text" placeholder="Search...">
             </div>
         </div>
 
-        <!-- EARN POINTS CONTENT -->
-        <div id="earnPointsContent" style="display:none;">
-            <div class="top">
-                <div>
-                    <h2>Earn Points
-                        <span class="badge">GOLD ⭐</span>
-                    </h2>
-                    <small>Complete actions to earn more points!</small>
-                </div>
-
-                <div class="search">
-                    <input type="text" placeholder="Search...">
-                </div>
+        <div class="cards">
+            <div class="card">
+                <h3>Total Points</h3>
+                <p>1,256</p>
+                <i class="fas fa-coins"></i>
             </div>
-
-            <div class="cards">
-                <div class="card">
-                    <h3>Daily Login</h3>
-                    <p>5 days Streak</p>
-                    <i class="fas fa-calendar-check"></i>
-                </div>
-
-                <div class="card">
-                    <h3>Purchase Product</h3>
-                    <p>+200 Points</p>
-                    <i class="fas fa-shopping-cart"></i>
-                </div>
-
-                <div class="card">
-                    <h3>Refer a Friend</h3>
-                    <p>+100 Points</p>
-                    <i class="fas fa-user-plus"></i>
-                </div>
+            <div class="card">
+                <h3>Rewards Redeemed</h3>
+                <p>10</p>
+                <i class="fas fa-gift"></i>
             </div>
-
-            <div class="progress-box">
-                <small>You have earned 500 points this month!</small>
-                <div class="progress">
-                    <div class="bar" id="earnPointsProgressBar" style="width:38%;"></div>
-                </div>
-                <div class="progress-labels">
-                    <span>500</span>
-                    <span>1,500</span>
-                </div>
-            </div>
-
-            <div class="table-box">
-                <h4>Recent Actions</h4>
-                <table>
-                    <tr>
-                        <th>Date</th>
-                        <th>Action</th>
-                        <th>Points</th>
-                    </tr>
-                    <tr>
-                        <td>Feb 10, 2026</td>
-                        <td>Purchased Product</td>
-                        <td class="green">+200</td>
-                    </tr>
-                    <tr>
-                        <td>Feb 09, 2026</td>
-                        <td>Referred a Friend</td>
-                        <td class="green">+100</td>
-                    </tr>
-                    <tr>
-                        <td>Feb 08, 2026</td>
-                        <td>Feedback Survey</td>
-                        <td class="green">+30</td>
-                    </tr>
-                </table>
+            <div class="card">
+                <h3>Vouchers</h3>
+                <p>2</p>
+                <i class="fas fa-ticket-alt"></i>
             </div>
         </div>
 
-        <!-- REWARDS CONTENT -->
-        <div id="rewardsContent" style="display:none;">
-            <div class="top">
-                <div>
-                    <h2>Rewards, <?php echo htmlspecialchars($_SESSION['user']); ?>
-                        <span class="badge">GOLD ⭐</span>
-                    </h2>
-                    <small>Check your rewards and vouchers!</small>
-                </div>
+        <div class="progress-box">
+            <small>Earn 1,744 more points to reach PLATINUM</small>
+            <div class="progress">
+                <div class="bar" id="progressBar"></div>
             </div>
-
-            <div class="cards">
-                <div class="card">
-                    <h3>Available Rewards</h3>
-                    <p>5</p>
-                    <i class="fas fa-gift"></i>
-                </div>
-
-                <div class="card">
-                    <h3>Redeemed Rewards</h3>
-                    <p>10</p>
-                    <i class="fas fa-check-circle"></i>
-                </div>
-
-                <div class="card">
-                    <h3>Vouchers</h3>
-                    <p>2</p>
-                    <i class="fas fa-ticket-alt"></i>
-                </div>
-            </div>
-
-            <div class="table-box">
-                <h4>Recent Reward Activity</h4>
-                <table>
-                    <tr>
-                        <th>Date</th>
-                        <th>Reward</th>
-                        <th>Status</th>
-                    </tr>
-                    <tr>
-                        <td>Feb 11, 2026</td>
-                        <td>Free Coffee</td>
-                        <td class="green">Redeemed</td>
-                    </tr>
-                    <tr>
-                        <td>Feb 09, 2026</td>
-                        <td>Discount Voucher</td>
-                        <td class="green">Redeemed</td>
-                    </tr>
-                    <tr>
-                        <td>Feb 07, 2026</td>
-                        <td>Gift Card</td>
-                        <td class="red">Pending</td>
-                    </tr>
-                </table>
+            <div class="progress-labels">
+                <span>GOLD</span>
+                <span>PLATINUM</span>
             </div>
         </div>
 
+        <div class="table-box">
+            <h4>Recent Activity</h4>
+            <table>
+                <tr>
+                    <th>Date</th>
+                    <th>Description</th>
+                    <th>Points</th>
+                </tr>
+                <tr>
+                    <td>Feb 11, 2026</td>
+                    <td>Redeemed Voucher</td>
+                    <td class="green">+250</td>
+                </tr>
+                <tr>
+                    <td>Feb 09, 2026</td>
+                    <td>Earned Points from Purchase</td>
+                    <td class="green">+500</td>
+                </tr>
+                <tr>
+                    <td>Feb 07, 2026</td>
+                    <td>Redeemed Reward</td>
+                    <td class="red">-100</td>
+                </tr>
+            </table>
+        </div>
     </div>
-</div>
 
+    <!-- EARN POINTS CONTENT -->
+    <div id="earnPointsContent" style="display:none;">
+        <div class="top">
+            <div>
+                <h2>Earn Points
+                    <span class="badge">GOLD ⭐</span>
+                </h2>
+                <small>Complete actions to earn more points!</small>
+            </div>
+            <div class="search">
+                <input type="text" placeholder="Search...">
+            </div>
+        </div>
+
+        <div class="cards">
+            <div class="card">
+                <h3>Daily Login</h3>
+                <p>5 days Streak</p>
+                <i class="fas fa-calendar-check"></i>
+            </div>
+            <div class="card">
+                <h3>Purchase Product</h3>
+                <p>+200 Points</p>
+                <i class="fas fa-shopping-cart"></i>
+            </div>
+            <div class="card">
+                <h3>Refer a Friend</h3>
+                <p>+100 Points</p>
+                <i class="fas fa-user-plus"></i>
+            </div>
+        </div>
+
+        <div class="progress-box">
+            <small>You have earned 500 points this month!</small>
+            <div class="progress">
+                <div class="bar" id="earnPointsProgressBar" style="width:38%;"></div>
+            </div>
+            <div class="progress-labels">
+                <span>500</span>
+                <span>1,500</span>
+            </div>
+        </div>
+
+        <div class="table-box">
+            <h4>Recent Actions</h4>
+            <table>
+                <tr>
+                    <th>Date</th>
+                    <th>Action</th>
+                    <th>Points</th>
+                </tr>
+                <tr>
+                    <td>Feb 10, 2026</td>
+                    <td>Purchased Product</td>
+                    <td class="green">+200</td>
+                </tr>
+                <tr>
+                    <td>Feb 09, 2026</td>
+                    <td>Referred a Friend</td>
+                    <td class="green">+100</td>
+                </tr>
+                <tr>
+                    <td>Feb 08, 2026</td>
+                    <td>Feedback Survey</td>
+                    <td class="green">+30</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <!-- REWARDS CONTENT -->
+    <div id="rewardsContent" style="display:none;">
+        <div class="top">
+            <div>
+                <h2>Rewards, <?php echo htmlspecialchars($_SESSION['user']); ?>
+                    <span class="badge">GOLD ⭐</span>
+                </h2>
+                <small>Check your rewards and vouchers!</small>
+            </div>
+        </div>
+
+        <div class="cards">
+            <div class="card">
+                <h3>Available Rewards</h3>
+                <p>5</p>
+                <i class="fas fa-gift"></i>
+            </div>
+            <div class="card">
+                <h3>Redeemed Rewards</h3>
+                <p>10</p>
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="card">
+                <h3>Vouchers</h3>
+                <p>2</p>
+                <i class="fas fa-ticket-alt"></i>
+            </div>
+        </div>
+
+        <div class="table-box">
+            <h4>Recent Reward Activity</h4>
+            <table>
+                <tr>
+                    <th>Date</th>
+                    <th>Reward</th>
+                    <th>Status</th>
+                </tr>
+                <tr>
+                    <td>Feb 11, 2026</td>
+                    <td>Free Coffee</td>
+                    <td class="green">Redeemed</td>
+                </tr>
+                <tr>
+                    <td>Feb 09, 2026</td>
+                    <td>Discount Voucher</td>
+                    <td class="green">Redeemed</td>
+                </tr>
+                <tr>
+                    <td>Feb 07, 2026</td>
+                    <td>Gift Card</td>
+                    <td class="red">Pending</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <!-- TRANSACTIONS CONTENT -->
+    <div id="transactionsContent" style="display:none;">
+        <div class="transactions-wrapper">
+
+            <!-- LEFT SIDE -->
+            <div class="left-section">
+                <div class="main-card">
+                    <div class="card-top"><i class="fas fa-wifi"></i></div>
+                    <div class="card-number">4562 1122 4595 7852</div>
+                    <div class="card-bottom">
+                        <div class="card-holder">
+                            <small>Card Holder</small>
+                            <p><?php echo htmlspecialchars($_SESSION['user']); ?></p>
+                        </div>
+                        <div class="mastercard-logo">
+                            <div class="circle red"></div>
+                            <div class="circle yellow"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="recent-box">
+                    <div class="recent-header">
+                        <h4>Recent Transactions</h4>
+                        <span>Recent</span>
+                    </div>
+
+                    <div class="transaction-item">
+                        <div>
+                            <strong>Taxi Trips</strong>
+                            <small>Feb 12, 2026</small>
+                        </div>
+                        <span class="red">-50</span>
+                    </div>
+
+                    <div class="transaction-item">
+                        <div>
+                            <strong>Public Transport</strong>
+                            <small>Feb 10, 2026</small>
+                        </div>
+                        <span class="red">-20</span>
+                    </div>
+
+                    <div class="transaction-item">
+                        <div>
+                            <strong>Freelance Payment</strong>
+                            <small>Feb 09, 2026</small>
+                        </div>
+                        <span class="green">+500</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT SIDE -->
+            <div class="right-section">
+                <div class="upcoming-box">
+                    <h4>Upcoming Payments</h4>
+
+                    <div class="payment-card">
+                        <div class="icon green-bg"><i class="fas fa-briefcase"></i></div>
+                        <div>
+                            <strong>Freelance</strong>
+                            <small>Expected</small>
+                        </div>
+                        <span>$1,500</span>
+                    </div>
+
+                    <div class="payment-card">
+                        <div class="icon blue-bg"><i class="fas fa-wallet"></i></div>
+                        <div>
+                            <strong>Salary</strong>
+                            <small>Monthly</small>
+                        </div>
+                        <span>$4,000</span>
+                    </div>
+                </div>
+            </div>
+
+        </div> 
+    </div> 
+        
+</div>         
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="dashboard.js"></script>
 </body>

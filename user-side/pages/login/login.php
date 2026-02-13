@@ -132,7 +132,7 @@ body {
             margin:0 auto 15px;
             display:block;
         }
-        .login-box button:hover { background:#004c99; }
+        .login-box button:hover { background:black; }
 
 /* Links */
 .login-box a {
@@ -296,7 +296,7 @@ body {
         color: #000000;
         margin-bottom: 25px;
     }
-
+        
     /* Inputs */
     .login-box input {
         width: 100%;
@@ -332,7 +332,7 @@ body {
 }
 
     .login-box button:hover {
-        background: linear-gradient(135deg, #496377, #2a5c9b);
+       background:black; 
         box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     }
 

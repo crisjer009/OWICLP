@@ -3,7 +3,7 @@ $(document).ready(function(){
     // ===== SIDEBAR PAGE SWITCHING =====
     function showSection(sectionId){
         // Hide all sections
-        $("#dashboardContent, #earnPointsContent, #rewardsContent").hide();
+        $("#dashboardContent, #earnPointsContent, #rewardsContent, #transactionsContent").hide();
         // Show selected section
         $(sectionId).show();
     }
@@ -24,6 +24,11 @@ $(document).ready(function(){
         showSection("#rewardsContent");
     });
 
+    $("#transactionsLink").click(function(e){
+        e.preventDefault();
+        showSection("#transactionsContent");
+    });
+
     // Show dashboard by default
     showSection("#dashboardContent");
 
@@ -35,8 +40,10 @@ $(document).ready(function(){
     let counterInterval = setInterval(function(){
         if(count >= points){
             clearInterval(counterInterval);
+            $("#pointsCounter").text(points.toLocaleString());
         } else {
             count += 25;
+            if(count > points) count = points;
             $("#pointsCounter").text(count.toLocaleString());
         }
     }, 30);
