@@ -1,11 +1,9 @@
 <?php 
-session_start(); 
-// Redirect to login if session is empty
+session_start();
 if (!isset($_SESSION['user_id'])) {
     header("Location: index.php");
     exit();
 }
-// User details for display
 $userName = isset($_SESSION['FirstName']) ? htmlspecialchars($_SESSION['FirstName'] . " " . $_SESSION['LastName']) : "John Doe";
 $userInitial = substr($userName, 0, 1);
 ?>
@@ -179,7 +177,6 @@ $userInitial = substr($userName, 0, 1);
             transform: translateY(-50%);
             color: #3A3541AD;
         }
-
         /* --- User Profile Dropdown --- */
         .avatar-circle {
             width: 40px;
@@ -201,7 +198,6 @@ $userInitial = substr($userName, 0, 1);
             min-width: 230px;
             padding: 10px;
         }
-
         /* --- Responsive Behavior --- */
         @media (max-width: 992px) {
             .sidebar { left: -100%; }
@@ -237,7 +233,7 @@ $userInitial = substr($userName, 0, 1);
                <small class="menu-divider">
                  <span>Analytics</span>
                </small>
-               <li><a href="admin_dashboard.php" class="nav-item-custom active"><i class="fas fa-chart-line"></i> Program Overview</a></li>
+               <li><a href="admin_dashboard.php" class="nav-item-custom active"><i class="fas fa-chart-line"></i> Dashboard</a></li>
                <li><a href="admin_reports.php" class="nav-item-custom"><i class="fas fa-file-export"></i> Detailed Reports</a></li>
     
                <small class="menu-divider">
@@ -276,14 +272,13 @@ $userInitial = substr($userName, 0, 1);
                         <input type="text" class="form-control shadow-none" placeholder="Search (Ctrl+/)">
                     </div>
                 </div>
-
                 <div class="d-flex align-items-center">
                     <div class="dropdown ms-3">
                         <div class="d-flex align-items-center" data-bs-toggle="dropdown" style="cursor: pointer;">
                             <div class="avatar-circle me-2"><?php echo $userInitial; ?></div>
                             <div class="d-none d-sm-block">
                                 <span class="d-block fw-bold mb-0" style="font-size: 0.9rem; line-height: 1.2;"><?php echo $userName; ?></span>
-                                <small class="text-muted" style="font-size: 0.75rem;">Client Account</small>
+                                <small class="text-muted" style="font-size: 0.75rem;">Admin Account</small>
                             </div>
                         </div>
                         <ul class="dropdown-menu dropdown-menu-end dropdown-menu-custom mt-3">
@@ -305,6 +300,62 @@ $userInitial = substr($userName, 0, 1);
                 </div>
             </div>
         </header>
+        <main class="p-4">
+            <div class="row g-4">
+                <div class="col-xl-8 col-lg-7">
+                    <div class="m-card">
+                        <h6 class="fw-bold">Points Economy (Accural vs. Redemption)</h6>
+                        <div id="chartPointsTrend" style="width:100%; height:350px;"></div>
+                    </div>
+                </div>
+                <div class="col-xl-4 col-lg-5">
+                    <div class="m-card">
+                        <h6 class="fw-bold">Member Tier Distribution</h6>
+                        <div id="chartTierDist" style="width:100%; height:350px;"></div>
+                    </div>
+                </div>
+                <div class="col-xl-6">
+                    <div class="m-card">
+                        <h6 class="fw-bold">Top 5 Rewards Claimed</h6>
+                        <div id="chartTopRewards" style="width:100%; height:350px;"></div>
+                    </div>
+                </div>
+
+                <div class="col-xl-6">
+                    <div class="m-card">
+                        <h6 class="fw-bold">Points Expiry Forecast (Next 6 Months)</h6>
+                        <div id="chartExpiry" style="width:100%; height:350px;"></div>
+                    </div>
+                </div>
+
+                <div class="col-xl-4">
+                    <div class="m-card">
+                        <h6 class="fw-bold">Acquisition Growth</h6>
+                        <div id="chartSignups" style="width:100%; height:300px;"></div>
+                    </div>
+                </div>
+
+                <div class="col-xl-4">
+                    <div class="m-card text-center">
+                        <h6 class="fw-bold text-start">Program Redemption Rate</h6>
+                        <div id="chartRedemptionGauge" style="width:100%; height:250px;"></div>
+                        <p class="small text-muted">Target: 65% utilization</p>
+                    </div>
+                </div>
+                <div class="col-xl-4">
+                    <div class="m-card">
+                        <h6 class="fw-bold">Earning Channels</h6>
+                        <div id="chartChannels" style="width:100%; height:300px;"></div>
+                    </div>
+                </div>
+                <div class="col-xl-12">
+                    <div class="m-card">
+                        <h6 class="fw-bold">Store-wise Engagement (Points Issued)</h6>
+                        <div id="chartStorePerformance" style="width:100%; height 400px;"></div>
+                    </div>
+                </div>
+            </div>
+       </main>
     </div>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -314,14 +365,12 @@ $userInitial = substr($userName, 0, 1);
     <script src="https://cdn.amcharts.com/lib/5/percent.js"></script>
     <script src="https://cdn.amcharts.com/lib/5/radar.js"></script>
     <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
-
     <script>
         // Sidebar Toggle for Mobile
         function toggleSidebar() {
             document.getElementById('sidebar').classList.toggle('show');
             document.getElementById('overlay').classList.toggle('active');
         }
-
         // Unified Logout Logic
         function handleLogout(e) {
             e.preventDefault();
@@ -336,9 +385,78 @@ $userInitial = substr($userName, 0, 1);
                 if (result.isConfirmed) window.location.href = 'index.php';
             });
         }
-
         document.getElementById('sidebarLogout').onclick = handleLogout;
         document.getElementById('navbarLogout').onclick = handleLogout;
     </script>
-  </body>
+    <script>
+        am5.ready(function() {
+            // Helper function to create root and chart
+            function createChart(divId) {
+              var root = am5.Root.new(divId);
+              root.setThemes([am5themes_Animated.new(root)]);
+              return root;
+            }
+            // POINTS TREND (XY Line & Column)
+            var root1 = createChart("chartPointsTrend");
+            var chart1 = root1.container.children.push(am5xy.XYChart.new(root1, { layout: root1.verticalLayout }));
+            var xAxis1 = chart1.xAxes.push(am5xy.CategoryAxis.new(root1, { categoryField: "month", renderer: am5xy.AxisRendererX.new(root1, {}) }));
+            var yAxis1 = chart1.yAxes.push(am5xy.ValueAxis.new(root1, { renderer: am5xy.AxisRendererY.new(root1, {}) }));
+            var s1 = chart1.series.push(am5xy.ColumnSeries.new(root1, { name: "Earned", xAxis: xAxis1, yAxis: yAxis1, valueYField: "e", categoryXField: "month" }));
+            var s2 = chart1.series.push(am5xy.LineSeries.new(root1, { name: "Redeemed", xAxis: xAxis1, yAxis: yAxis1, valueYField: "r", categoryXField: "month" }));
+            s1.data.setAll([{month:"Sep",e:15000,r:8000},{month:"Oct",e:18000,r:9500},{month:"Nov",e:25000,r:12000},{month:"Dec",e:35000,r:28000}]);
+            s2.data.setAll([{month:"Sep",e:15000,r:8000},{month:"Oct",e:18000,r:9500},{month:"Nov",e:25000,r:12000},{month:"Dec",e:35000,r:28000}]);
+            xAxis1.data.setAll(s1.data.values);
+            // TIER DISTRIBUTION (Pie)
+            var root2 = createChart("chartTierDist");
+            var chart2 = root2.container.children.push(am5percent.PieChart.new(root2, {}));
+            var series2 = chart2.series.push(am5percent.PieSeries.new(root2, { valueField: "val", categoryField: "tier" }));
+            series2.data.setAll([{tier:"Bronze",val:5000},{tier:"Silver",val:2500},{tier:"Gold",val:800},{tier:"Platinum",val:200}]);
+            // TOP REWARDS (Horizontal Bar)
+            var root3 = createChart("chartTopRewards");
+            var chart3 = root3.container.children.push(am5xy.XYChart.new(root3, { layout: root3.verticalLayout }));
+            var yAxis3 = chart3.yAxes.push(am5xy.CategoryAxis.new(root3, { categoryField: "item", renderer: am5xy.AxisRendererY.new(root3, { inversed: true }) }));
+            var xAxis3 = chart3.xAxes.push(am5xy.ValueAxis.new(root3, { renderer: am5xy.AxisRendererX.new(root3, {}) }));
+            var series3 = chart3.series.push(am5xy.ColumnSeries.new(root3, { xAxis: xAxis3, yAxis: yAxis3, valueXField: "qty", categoryYField: "item" }));
+            series3.data.setAll([{item:"Gift Card",qty:450},{item:"Office Chair",qty:320},{item:"Paper Pack",qty:280},{item:"Ink Refill",qty:210}]);
+            yAxis3.data.setAll(series3.data.values);
+            // EXPIRY FORECAST (Area Chart)
+            var root4 = createChart("chartExpiry");
+            var chart4 = root4.container.children.push(am5xy.XYChart.new(root4, {}));
+            var xAxis4 = chart4.xAxes.push(am5xy.CategoryAxis.new(root4, { categoryField: "date", renderer: am5xy.AxisRendererX.new(root4, {}) }));
+            var yAxis4 = chart4.yAxes.push(am5xy.ValueAxis.new(root4, { renderer: am5xy.AxisRendererY.new(root4, {}) }));
+            var series4 = chart4.series.push(am5xy.LineSeries.new(root4, { xAxis: xAxis4, yAxis: yAxis4, valueYField: "pts", categoryXField: "date" }));
+            series4.fills.template.setAll({ visible: true, fillOpacity: 0.5 });
+            series4.data.setAll([{date:"Mar",pts:5000},{date:"Apr",pts:12000},{date:"May",pts:7000},{date:"Jun",pts:15000}]);
+            xAxis4.data.setAll(series4.data.values);
+            // SIGNUPS (Step Line)
+            var root5 = createChart("chartSignups");
+            var chart5 = root5.container.children.push(am5xy.XYChart.new(root5, {}));
+            var xAxis5 = chart5.xAxes.push(am5xy.CategoryAxis.new(root5, { categoryField: "week", renderer: am5xy.AxisRendererX.new(root5, {}) }));
+            var yAxis5 = chart5.yAxes.push(am5xy.ValueAxis.new(root5, { renderer: am5xy.AxisRendererY.new(root5, {}) }));
+            var series5 = chart5.series.push(am5xy.LineSeries.push(am5xy.LineSeries.new(root5, { xAxis: xAxis5, yAxis: yAxis5, valueYField: "v", categoryXField: "week" })));
+            series5.data.setAll([{week:"W1",v:100},{week:"W2",v:150},{week:"W3",v:130},{week:"W4",v:210}]);
+            xAxis5.data.setAll(series5.data.values);
+            // REDEMPTION GAUGE (Radar)
+            var root6 = createChart("chartRedemptionGauge");
+            var chart6 = root6.container.children.push(am5radar.RadarChart.new(root6, { innerRadius: -15, startAngle: 180, endAngle: 360 }));
+            var xAxis6 = chart6.xAxes.push(am5xy.ValueAxis.new(root6, { min: 0, max: 100, renderer: am5radar.AxisRendererCircular.new(root6, {}) }));
+            var axisDataItem = xAxis6.makeDataItem({ value: 58 });
+            xAxis6.createAxisRange(axisDataItem);
+            axisDataItem.get("axisFill").setAll({ visible: true, fill: am5.color(0x004a9b) });
+            // CHANNELS (Donut)
+            var root7 = createChart("chartChannels");
+            var chart7 = root7.container.children.push(am5percent.PieChart.new(root7, { innerRadius: am5.percent(60) }));
+            var series7 = chart7.series.push(am5percent.PieSeries.new(root7, { valueField: "v", categoryField: "c" }));
+            series7.data.setAll([{c:"In-Store",v:70},{c:"Web",v:20},{c:"Mobile App",v:10}]);
+            // STORE PERFORMANCE (Column)
+            var root8 = createChart("chartStorePerformance");
+            var chart8 = root8.container.children.push(am5xy.XYChart.new(root8, {}));
+            var xAxis8 = chart8.xAxes.push(am5xy.CategoryAxis.new(root8, { categoryField: "store", renderer: am5xy.AxisRendererX.new(root8, {}) }));
+            var yAxis8 = chart8.yAxes.push(am5xy.ValueAxis.new(root8, { renderer: am5xy.AxisRendererY.new(root8, {}) }));
+            var series8 = chart8.series.push(am5xy.ColumnSeries.new(root8, { xAxis: xAxis8, yAxis: yAxis8, valueYField: "p", categoryXField: "store" }));
+            series8.data.setAll([{store:"Makati",p:45000},{store:"Quezon City",p:38000},{store:"Cebu",p:31000},{store:"Davao",p:28000},{store:"Online Store",p:52000}]);
+            xAxis8.data.setAll(series8.data.values);
+        });
+    </script>
+</body>
 </html>
