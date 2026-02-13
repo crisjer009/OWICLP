@@ -93,7 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ajax'])) {
         #response-msg { margin-top: 25px; min-height: 20px; }
         #contact-info { display: none; text-align: left; margin-top: 20px; padding: 15px; border-top: 1px dashed #ccc; color: #333; font-size: 0.85rem; }
 
-        /* --- OLD UI MOBILE MEDIA QUERIES --- */
+        /* ---UI MOBILE MEDIA QUERIES --- */
         @media (max-width: 850px) {
             .side-left { display: none !important; } 
             .side-right { background: linear-gradient(135deg, #a2d2ff 0%, #004a9b 100%); width: 100%; }
@@ -167,8 +167,6 @@ $(document).ready(function() {
         e.preventDefault();
         const username = $('#username').val().trim();
         const rawPassword = $('#password').val();
-
-        $('.login-btn').text('Checking...').prop('disabled', true);
         
         $.ajax({
             url: '', 
@@ -176,12 +174,11 @@ $(document).ready(function() {
             data: { 
                 ajax: 1,
                 user: username, 
-                pass: btoa(rawPassword) 
+                pass: btoa(rawPassword) // base64 encoded
             },
             dataType: 'json',
             success: function(res) {
                 if(res.status === 1) { 
-                    $('#response-msg').html('<span style="color: #27ae60;">Success! Redirecting...</span>');
                     setTimeout(() => { window.location.href = res.redirect; }, 1000);
                 } 
                 else if(res.status === 3) {

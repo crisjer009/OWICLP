@@ -1,9 +1,11 @@
 <?php
-session_start(); // Access the current session
-session_unset(); // Remove all session variables
-session_destroy(); // Destroy the session itself
-
-// Redirect to the login page
+session_start();
+session_unset();
+session_destroy();
+// Clear cookies if you used them
+if (isset($_COOKIE[session_name()])) {
+    setcookie(session_name(), '', time()-3600, '/');
+}
 header("Location: index.php");
 exit;
 ?>

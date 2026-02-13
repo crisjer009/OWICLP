@@ -15,7 +15,7 @@ $db = new mysqli("localhost", "root", "", "clp");
 $isAdmin = ($userRole === 1);
 $isIT    = ($userRole === 3);
 $theme_color = $isAdmin ? '#2c3e50' : '#2980b9'; // var values from root
-$panel_title = $isAdmin ? 'Admin Panel' : 'IT Dashboard';
+$panel_title = $isAdmin ? 'CLP | Admin' : 'CLP | IT Dashboard';
 
 // 4. Retrieve session data
 $full_name = $_SESSION['full_name'];

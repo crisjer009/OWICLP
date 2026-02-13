@@ -1,14 +1,20 @@
 <?php
 session_start();
 
+// --- NEW CACHE CONTROL LOGIC ---
+// Forces the browser to always request a fresh page from the server
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-ca che");
+header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
+
 // 1. Authentication Check
 if (!isset($_SESSION['user_id'])) {
     header("Location: index.php");
     exit;
 }
 
-// 2. Role-Based Redirection Logic (New Logic)
-// Role 1 = Admin, Role 3 = IT Dept
+// 2. Role-Based Redirection Logic
 $userRole = isset($_SESSION['user_role']) ? (int)$_SESSION['user_role'] : 0;
 if ($userRole === 1 || $userRole === 3) {
     header("Location: admin_dashboard.php");
@@ -18,7 +24,7 @@ if ($userRole === 1 || $userRole === 3) {
 // 3. Database Connection
 $db = new mysqli("localhost", "root", "", "clp");
 
-// 4. Retrieve session & live database data (New Logic)
+// 4. Retrieve session & live database data
 $user_id   = $_SESSION['user_id'];
 $full_name = $_SESSION['full_name'];
 $username  = $_SESSION['username'];
@@ -34,14 +40,14 @@ $expiry_date  = $cust_data['account_expiry'] ?? 'N/A';
 
 // Dynamic values for the UI cards
 $issued_mtd    = $total_points;
-$redeemed_mtd  = 0; // Placeholder for future transaction logic
+$redeemed_mtd  = 0; 
 $at_risk_count = ($total_points > 0) ? 1 : 0;
 
-// Leaderboard fetching (New Logic)
+// Leaderboard fetching
 $power_users = $db->query("SELECT username, total_points FROM tbl_users WHERE user_role = 2 ORDER BY total_points DESC LIMIT 3");
 
 // Tier color logic for the badge
-$tier_color = "#bdc3c7"; // Default
+$tier_color = "#bdc3c7"; 
 if ($current_tier == "Gold") $tier_color = "#f1c40f";
 if ($current_tier == "Platinum") $tier_color = "#3498db";
 ?>
@@ -115,6 +121,53 @@ if ($current_tier == "Platinum") $tier_color = "#3498db";
             .full-width-mobile { grid-column: span 2; }
             #chartdiv { height: 300px; }
         }
+        .mobile-brand-header { display: block; text-align: center; padding: 10px 0; }
+            .mobile-brand-header img { width: 220px; }
+            .mobile-tagline { font-weight: bold; font-style: italic; font-size: 14px; color: #000; margin-top: -5px; }
+
+            /* Profile Section with Circular Image */
+            .profile-card {
+                background: #5d5fef;
+                border-radius: 25px;
+                padding: 45px 20px 20px 20px;
+                color: white;
+                position: relative;
+                margin-top: 50px;
+                box-shadow: 0 10px 25px rgba(93, 95, 239, 0.3);
+            }
+            .profile-img-circle {
+                width: 100px; height: 100px;
+                background: #dcdbd3;
+                border-radius: 50%;
+                position: absolute;
+                top: -55px; left: 25px;
+                border: 4px solid #fff;
+            }
+            .points-display { text-align: right; }
+            .points-display h2 { margin: 0; font-size: 26px; }
+
+            /* Stats Grid */
+            .mobile-stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 25px; }
+            .stat-box { border: 1px solid #eee; border-radius: 20px; padding: 20px; background: #fff; text-align: left; }
+            .stat-box h4 { margin: 0; color: #333; font-size: 15px; font-weight: 600; }
+            .stat-box .val { font-size: 32px; font-weight: bold; margin: 10px 0; color: #000; }
+
+            /* Participation Card */
+            .chart-card { border: 1px solid #eee; border-radius: 20px; padding: 20px; margin-top: 25px; }
+            .chart-label { font-size: 15px; font-weight: 600; margin-bottom: 15px; }
+
+            /* Bottom Nav */
+            .bottom-nav { 
+                display: flex; position: fixed; bottom: 0; width: 100%; 
+                background: #fff; border-top: 1px solid #f0f0f0;
+                justify-content: space-around; padding: 18px 0; z-index: 1000;
+            }
+            .bottom-nav i { font-size: 24px; color: #333; cursor: pointer; }
+        
+
+        @media (min-width: 769px) { .mobile-brand-header, .profile-card, .mobile-stats-row, .bottom-nav { display: none; } }
+        
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 2000; align-items: center; justify-content: center; }
     </style>
 </head>
 <body>
@@ -125,7 +178,7 @@ if ($current_tier == "Platinum") $tier_color = "#3498db";
         <p><i class="fa fa-user-circle"></i> <?php echo $full_name; ?></p>
         <nav class="nav-links-container">
             <a href="#" class="nav-link"><i class="fa fa-home"></i> Dashboard</a>
-            <a href="#" class="nav-link"><i class="fa fa-shopping-cart"></i> My History</a>
+            <a href="#" class="nav-link"><i class="fa-solid fa-clock-rotate-left"></i> My History</a>
             <a href="#" class="nav-link"><i class="fa-sharp-duotone fa-solid fa-award"></i> My Benifits</a>
             <a href="#" class="nav-link"><i class="fa-sharp fa-solid fa-user-gear"></i> Settings</a>
         </nav>
@@ -133,10 +186,20 @@ if ($current_tier == "Platinum") $tier_color = "#3498db";
     <img src="icon/switch.png" alt="Logout" onclick="openLogoutModal()" style="width: 35px; height: 35px; margin-right: 10px; vertical-align: middle;">
     </div>
 
-<div class="main-content">
-    <div class="header">
-        <h1>Welcome, <?php echo explode(' ', $full_name)[0]; ?>!</h1>
-        <div class="tier-badge"><?php echo $current_tier; ?></div>
+    <div class="main-content">
+        <h1>Dashboard, </h1>
+    <div class="profile-card">
+        <div class="profile-img-circle"></div>
+        <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+            <div>
+                <div style="font-size: 15px; font-weight: bold;"><?php echo $full_name; ?></div>
+                <div style="font-size: 15px; opacity: 0.9;"><?php echo $current_tier; ?></div>
+            </div>
+            <div class="points-display">
+                <div style="font-size: 13px; opacity: 0.9;">Redeem Points</div>
+                <h2><?php echo number_format($total_points); ?> pts</h2>
+            </div>
+        </div>
     </div>
 
     <div class="dashboard-grid">
@@ -160,11 +223,7 @@ if ($current_tier == "Platinum") $tier_color = "#3498db";
             <div style="font-size: 1rem; font-weight: bold; color: var(--danger-red);"><?php echo $expiry_date; ?></div>
         </div>
 
-        <div class="card full-width-mobile">
-            <h3>Revenue Split (B2B vs B2C)</h3> 
-            <canvas id="segmentChart" height="200"></canvas>
-        </div>
-
+        
         <div class="card full-width-mobile">
             <h3>Top Power Users</h3>
             <table class="power-table">
@@ -203,7 +262,7 @@ if ($current_tier == "Platinum") $tier_color = "#3498db";
     </div>
     <a href="#" class="drawer-link"><i class="fa fa-user"></i> Profile</a>
     <a href="#" class="drawer-link"><i class="fa fa-cog"></i> Settings</a>
-    <a href="#" class="drawer-link"><i class="fa fa-shopping-cart"></i>My History</a>
+    <a href="#" class="drawer-link"><i class="fa-solid fa-clock-rotate-left"></i> History</a>
     <a href="#" class="drawer-link"><i class="fa-sharp-duotone fa-solid fa-award"></i>My Benifits</a>
     <a href="javascript:void(0)" class="drawer-link" onclick="toggleMobileMenu(); openLogoutModal();" style="color: #ff7675;">
         <i class="fa fa-sign-out-alt"></i> Logout
@@ -222,12 +281,65 @@ if ($current_tier == "Platinum") $tier_color = "#3498db";
 </div>
 
 <script>
+    // 1. Mobile Menu Logic
     function toggleMobileMenu() {
         $('#mobileDrawer').toggleClass('active');
         $('#drawerOverlay').fadeToggle(300);
     }
 
-    // amCharts initialization 
+    // 2. Modal UI logout logic
+    function openLogoutModal() { 
+        document.getElementById('logoutModal').style.display = 'flex'; 
+    }
+    
+    function closeLogoutModal() { 
+        document.getElementById('logoutModal').style.display = 'none'; 
+    }
+
+    function sendMessage() { 
+        alert("Message sent to Admin."); 
+    }
+
+    // 3. Browser Back-Button Disable Logic (Updated with History Trap)
+    (function (global) {
+        if (typeof (global) === "undefined") {
+            throw new Error("window is undefined");
+        }
+
+        var _hash = "!";
+        var noBackPlease = function () {
+            global.location.href += "#";
+            global.setTimeout(function () {
+                global.location.href += "!";
+            }, 50);
+        };
+
+        // This is the core fix for multiple clicks
+        history.pushState(null, null, location.href);
+        window.onpopstate = function () {
+            history.go(1);
+        };
+
+        global.onhashchange = function () {
+            if (global.location.hash !== _hash) {
+                global.location.hash = _hash;
+            }
+        };
+
+        global.onload = function () {
+            noBackPlease();
+            // Disables backspace navigation on modern browsers
+            document.body.onkeydown = function (e) {
+                var elm = e.target.nodeName.toLowerCase();
+                if (e.which === 8 && (elm !== 'input' && elm !== 'textarea')) {
+                    e.preventDefault();
+                }
+                e.stopPropagation();
+            };
+        };
+    })(window);
+
+    // 4. amCharts initialization 
     am5.ready(function() {
         var root = am5.Root.new("chartdiv");
         root.setThemes([am5themes_Animated.new(root)]);
@@ -267,13 +379,9 @@ if ($current_tier == "Platinum") $tier_color = "#3498db";
         chart.appear(1000, 100);
     });
 
-    // Chart.js initialization 
+    // 5. Chart.js initialization 
     const ctx2 = document.getElementById('segmentChart').getContext('2d');
     new Chart(ctx2, { type: 'pie', data: { labels: ['B2B', 'B2C'], datasets: [{ data: [65, 35], backgroundColor: ['#004a9b', '#3498db'] }] }, options: { plugins: { legend: { position: 'bottom' } } } });
-
-    function sendMessage() { alert("Message sent to Admin."); }
-    function openLogoutModal() { document.getElementById('logoutModal').style.display = 'flex'; }
-    function closeLogoutModal() { document.getElementById('logoutModal').style.display = 'none'; }
 </script>
 
 </body>
