@@ -16,6 +16,9 @@ if (isset($_SESSION['message'])) {
 <!-- Font Awesome for icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.amcharts.com/lib/5/index.js"></script>
+    <script src="https://cdn.amcharts.com/lib/5/percent.js"></script>
+    <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
 <style>
 /* RESET & FONT */
 *{
@@ -39,7 +42,7 @@ body{
 /* SIDEBAR */
 .sidebar{
     width:260px;
-    background:#004a9b;
+    background: linear-gradient(135deg, rgb(2, 0, 36), #4b4a4af6);
     color:#fff;
     display:flex;
     flex-direction:column;
@@ -75,7 +78,7 @@ body{
 }
 
 .sidebar a:hover{
-    background:#3b82f6;
+    background:black;
 }
 
 .logout{
@@ -226,7 +229,7 @@ body{
     color: #3b82f6;
 }
 
-/* TABLE-BOX CARDS (CHARTS & TABLES) */
+/* TABLE-BOX CARDS ( dashboard CHARTS & TABLES) */
 .table-box {
     background: #fff;
     padding: 20px;
@@ -242,7 +245,7 @@ body{
     font-weight: 600;
 }
 
-/* MAKE CHARTS RESPONSIVE */
+/* CHARTS RESPONSIVE */
 .table-box canvas {
     width: 100% !important;
     height: auto !important;
@@ -276,6 +279,35 @@ th {
     font-weight: 600;
 }
 
+.reports-flex {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+}
+
+#chartdiv {
+    width: 60%;
+    height: 450px;
+}
+
+#chartlegend {
+    width: 40%;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .reports-flex {
+        flex-direction: column;
+    }
+
+    #chartdiv,
+    #chartlegend {
+        width: 100%;
+    }
+}
+
+
 
 /* RESPONSIVE */
 @media (max-width:900px){
@@ -301,7 +333,7 @@ th {
 <body>
 <div class="wrapper">
 
-    <!-- SIDEBAR -->
+    <!-- Sidebar -->
     <div class="sidebar">
         <div>
             <h2>Admin Panel</h2>
@@ -318,137 +350,147 @@ th {
         <a class="logout" href="/admin/pages/logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a>
     </div>
 
-    <!-- MAIN -->
+    <!-- Main Content -->
     <div class="main">
 
-       <!-- DASHBOARD CONTENT -->
-<div id="dashboardContent">
+        <!-- Dashboard Content -->
+        <div id="dashboardContent">
 
-    <div class="top">
-        <div>
-            <h2>Welcome, ADMIN</h2>
-            <small>Here's a quick overview of your system</small>
-        </div>
-
-        <div class="search">
-            <input type="text" placeholder="Search users, transactions...">
-        </div>
-    </div>
-
-    <!-- NEW FLEX LAYOUT -->
-    <div class="dashboard-layout">
-
-        <!-- LEFT SIDE -->
-        <div class="dashboard-left">
-
-            <div class="cards">
-                <div class="card">
-                    <h3>Total Users</h3>
-                    <canvas id="usersMiniChart"></canvas>
-                    <i class="fas fa-users"></i>
+            <div class="top">
+                <div>
+                    <h2>Welcome, ADMIN</h2>
+                    <small>Here's a quick overview of your system</small>
                 </div>
-
-                <div class="card">
-                    <h3>Total Points</h3>
-                    <canvas id="pointsMiniChart"></canvas>
-                    <i class="fas fa-coins"></i>
-                </div>
-
-                <div class="card">
-                    <h3>Total Rewards</h3>
-                    <canvas id="rewardsMiniChart"></canvas>
-                    <i class="fas fa-gift"></i>
-                </div>
-
-                <div class="card">
-                    <h3>Total Transactions</h3>
-                    <canvas id="transactionsMiniChart"></canvas>
-                    <i class="fas fa-exchange-alt"></i>
+                <div class="search">
+                    <input type="text" placeholder="Search users, transactions...">
                 </div>
             </div>
 
-            <div class="table-box">
-                <h4>Recent User Activity</h4>
-                <table>
-                    <tr>
-                        <th>Date</th>
-                        <th>User</th>
-                        <th>Action</th>
-                        <th>Points</th>
-                    </tr>
-                    <tr>
-                        <td>Feb 11, 2026</td>
-                        <td>Michaela Doe</td>
-                        <td>Redeemed Reward</td>
-                        <td class="red">-100</td>
-                    </tr>
-                    <tr>
-                        <td>Feb 10, 2026</td>
-                        <td>John Johnny</td>
-                        <td>Earned Points from Purchase</td>
-                        <td class="green">+250</td>
-                    </tr>
-                    <tr>
-                        <td>Feb 09, 2026</td>
-                        <td>Gian Hermoso</td>
-                        <td>Referred a Friend</td>
-                        <td class="green">+100</td>
-                    </tr>
-                </table>
-            </div>
+            <!-- Dashboard Layout -->
+            <div class="dashboard-layout">
 
+                <!-- LEFT SIDE -->
+                <div class="dashboard-left">
+
+                    <div class="cards">
+                        <div class="card">
+                            <h3>Total Users</h3>
+                            <canvas id="usersMiniChart"></canvas>
+                            <i class="fas fa-users"></i>
+                        </div>
+
+                        <div class="card">
+                            <h3>Total Points</h3>
+                            <canvas id="pointsMiniChart"></canvas>
+                            <i class="fas fa-coins"></i>
+                        </div>
+
+                        <div class="card">
+                            <h3>Total Rewards</h3>
+                            <canvas id="rewardsMiniChart"></canvas>
+                            <i class="fas fa-gift"></i>
+                        </div>
+
+                        <div class="card">
+                            <h3>Total Transactions</h3>
+                            <canvas id="transactionsMiniChart"></canvas>
+                            <i class="fas fa-exchange-alt"></i>
+                        </div>
+                    </div>
+
+                    <div class="table-box">
+                        <h4>Recent User Activity</h4>
+                        <table>
+                            <tr>
+                                <th>Date</th>
+                                <th>User</th>
+                                <th>Action</th>
+                                <th>Points</th>
+                            </tr>
+                            <tr>
+                                <td>Feb 11, 2026</td>
+                                <td>Michaela Doe</td>
+                                <td>Redeemed Reward</td>
+                                <td class="red">-100</td>
+                            </tr>
+                            <tr>
+                                <td>Feb 10, 2026</td>
+                                <td>John Johnny</td>
+                                <td>Earned Points from Purchase</td>
+                                <td class="green">+250</td>
+                            </tr>
+                            <tr>
+                                <td>Feb 09, 2026</td>
+                                <td>Gian Hermoso</td>
+                                <td>Referred a Friend</td>
+                                <td class="green">+100</td>
+                            </tr>
+                        </table>
+                    </div>
+
+                </div>
+
+                <!-- RIGHT SIDE -->
+                <div class="dashboard-right">
+
+                    <!-- Yearly Sales -->
+                    <div class="table-box">
+                        <h4>Yearly Sales</h4>
+                        <canvas id="yearlySalesChart" height="200"></canvas>
+                    </div>
+
+                    <!-- Payment Gateway -->
+                    <div class="table-box">
+                        <h4>Payment Gateway</h4>
+                        <ul class="payment-list">
+                            <li><i class="fab fa-cc-visa"></i> Visa</li>
+                            <li><i class="fab fa-paypal"></i> PayPal</li>
+                        </ul>
+                    </div>
+
+                </div>
+
+            </div>
         </div>
 
-        <!-- RIGHT SIDE -->
-        <div class="dashboard-right">
-
-            <!-- Yearly Sales -->
-            <div class="table-box">
-                <h4>Yearly Sales</h4>
-                <canvas id="yearlySalesChart" height="200"></canvas>
-            </div>
-
-            <!-- Payment Gateway -->
-            <div class="table-box">
-                <h4>Payment Gateway</h4>
-                <ul class="payment-list">
-                    <li><i class="fab fa-visa"><i>Visa</button>
-                    <li><i class="fab fa-paypal"></i> PayPal</li>
-                </ul>
-            </div>
-
-        </div>
-
-    </div>
-</div>
-
-
-        <!-- ADDITIONAL ADMIN SECTIONS -->
+        <!-- Users Section -->
         <div id="usersContent" style="display:none;">
             <h2>Users Management</h2>
             <p>List all users, search, add or delete users here.</p>
         </div>
 
+        <!-- Points Section -->
         <div id="pointsContent" style="display:none;">
             <h2>Points Management</h2>
             <p>Update, adjust, or monitor user points here.</p>
         </div>
 
+        <!-- Rewards Section -->
         <div id="rewardsContent" style="display:none;">
             <h2>Rewards Management</h2>
             <p>Add new rewards or view redeemed rewards here.</p>
         </div>
 
+        <!-- Transactions Section -->
         <div id="transactionsContent" style="display:none;">
             <h2>Transactions</h2>
             <p>View all points and reward transactions here.</p>
         </div>
 
+        <!-- Reports Section -->
         <div id="reportsContent" style="display:none;">
             <h2>Reports & Analytics</h2>
-            <p>View charts, stats, and summaries here.</p>
+
+            <div class="table-box">
+                <h4>Stores Distribution</h4>
+                <div class="reports-flex">
+                    <div id="chartdiv" style="width:70%; height:400px;"></div>
+                    <div id="chartlegend" style="width:40%; height:400px;"></div>
+                </div>
+            </div>
         </div>
 
+        <!-- Settings Section -->
         <div id="settingsContent" style="display:none;">
             <h2>Settings</h2>
             <p>Admin settings, roles, and permissions.</p>
@@ -456,6 +498,7 @@ th {
 
     </div>
 </div>
+
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="dashboard.js"></script>
