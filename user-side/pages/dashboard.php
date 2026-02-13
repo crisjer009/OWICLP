@@ -351,28 +351,33 @@ body{
     margin-right:10px;
 }
 
-.green-bg{
-    background:#22c55e;
+.orange-bg{
+    background:orange;
 }
 
 .blue-bg{
     background:#3b82f6;
 }
 
-/* COLORS */
-.green{
-    color:#22c55e;
-    font-weight:600;
+/* Colors of right icons */
+.orange-bg {
+    background: linear-gradient(135deg, #ff7a18, #ffb347);
+    color: #fff;
 }
 
-.red{
-    color:#ef4444;
-    font-weight:600;
+.red-bg {
+    background: linear-gradient(135deg, #ff416c, #ff4b2b);
+    color: #fff;
+}
+
+.purple-bg {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: #fff;
 }
 
 
 
-/* BADGE */
+/* BADGES (Bronze,Silver,Gold and Platinum) */
 .badge{
     background:yellow;
     color:#000;
@@ -449,7 +454,7 @@ th{
             <a href="#" id="earnPointsLink"><i class="fas fa-gift"></i>Earn Points</a>
             <a href="#" id="rewardsLink"><i class="fas fa-star"></i>Rewards</a>
             <a href="#" id="transactionsLink"><i class="fas fa-exchange-alt"></i>Transactions</a>
-            <a href="#"><i class="fas fa-user"></i>Profile</a>
+            <a href="#" id="profileLink"><i class="fas fa-user"></i>Profile</a>
         </div>
 
         <a class="logout" href="/user-side/pages/login/logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a>
@@ -654,7 +659,7 @@ th{
         </div>
     </div>
 
-    <!-- TRANSACTIONS CONTENT -->
+    <!-- TRANSACTIONS SECTION -->
     <div id="transactionsContent" style="display:none;">
         <div class="transactions-wrapper">
 
@@ -665,7 +670,7 @@ th{
                     <div class="card-number">4562 1122 4595 7852</div>
                     <div class="card-bottom">
                         <div class="card-holder">
-                            <small>Card Holder</small>
+                            <small>Loyalty Member</small>
                             <p><?php echo htmlspecialchars($_SESSION['user']); ?></p>
                         </div>
                         <div class="mastercard-logo">
@@ -683,16 +688,16 @@ th{
 
                     <div class="transaction-item">
                         <div>
-                            <strong>Taxi Trips</strong>
-                            <small>Feb 12, 2026</small>
+                            <strong>Voucher</strong>
+                            <small>Feb 5, 2026</small>
                         </div>
                         <span class="red">-50</span>
                     </div>
 
                     <div class="transaction-item">
                         <div>
-                            <strong>Public Transport</strong>
-                            <small>Feb 10, 2026</small>
+                            <strong>Purchasing Milk</strong>
+                            <small>Feb 4, 2026</small>
                         </div>
                         <span class="red">-20</span>
                     </div>
@@ -707,30 +712,50 @@ th{
                 </div>
             </div>
 
-            <!-- RIGHT SIDE -->
-            <div class="right-section">
-                <div class="upcoming-box">
-                    <h4>Upcoming Payments</h4>
+           <!-- RIGHT SIDE (the promos) -->
+<div class="right-section">
+    <div class="upcoming-box">
+        <h4>Upcoming Promos</h4>
 
-                    <div class="payment-card">
-                        <div class="icon green-bg"><i class="fas fa-briefcase"></i></div>
-                        <div>
-                            <strong>Freelance</strong>
-                            <small>Expected</small>
-                        </div>
-                        <span>$1,500</span>
-                    </div>
-
-                    <div class="payment-card">
-                        <div class="icon blue-bg"><i class="fas fa-wallet"></i></div>
-                        <div>
-                            <strong>Salary</strong>
-                            <small>Monthly</small>
-                        </div>
-                        <span>$4,000</span>
-                    </div>
-                </div>
+        <!-- Promo 1 -->
+        <div class="payment-card">
+            <div class="icon orange-bg">
+                <i class="fas fa-gift"></i>
             </div>
+            <div>
+                <strong>Double Points Weekend</strong>
+                <p>Feb 20-22</p>
+            </div>
+                <span>2x Points</span>
+        </div>
+
+        <!-- Promo 2 -->
+        <div class="payment-card">
+            <div class="icon red-bg">
+                <i class="fas fa-tags"></i>
+            </div>
+            <div>
+                <strong>Buy 1 Get 1 Free: Get It Now!</strong>
+                <p>Selected Items Only</p>            
+            </div>
+            <span>March</span>
+        </div>
+
+        <!-- Promo 3 -->
+        <div class="payment-card">
+            <div class="icon purple-bg">
+                <i class="fas fa-fire"></i>
+            </div>
+            <div>
+                <strong>Flash Sale Friday</strong>
+                <p>March 1</p>
+            </div>
+            <span>Buy Now!</span>
+        </div>
+
+    </div>
+</div>
+        
 
         </div> 
     </div> 

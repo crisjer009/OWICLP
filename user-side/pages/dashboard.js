@@ -56,34 +56,4 @@ $(document).ready(function(){
         width: percentage + "%"
     }, 2000);
 
-    // ===== CHART =====
-    const ctx = document.getElementById('pointsChart').getContext('2d');
-
-    new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: ['Jan','Feb','Mar','Apr','May','Jun'],
-            datasets: [{
-                label: 'Points Earned',
-                data: [200, 400, 800, 1000, 1100, 1256],
-                borderColor: '#0072ff',
-                backgroundColor: 'rgba(0,114,255,0.1)',
-                tension: 0.4,
-                fill: true,
-                pointRadius: 5
-            }]
-        },
-        options: {
-            responsive: true,
-            plugins:{
-                legend:{display:false}
-            },
-            scales:{
-                y:{
-                    beginAtZero:true
-                }
-            }
-        }
-    });
-
 });
