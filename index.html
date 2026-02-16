@@ -3,154 +3,102 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SYSTEM</title>
+<title>CONSIGNMENT ORDER FORM SYSTEM</title>
 
 <style>
 *{
     margin:0;
     padding:0;
     box-sizing:border-box;
-    font-family:'Segoe UI',sans-serif;
+    font-family:'Segoe UI', sans-serif;
 }
 
 body{
-    height:100vh;
-    display:flex;   
+    min-height:100vh;
+    display:flex;
     justify-content:center;
     align-items:center;
     background:linear-gradient(135deg,#1e2955,#ccc8c8);
-    overflow:hidden;
 }
 
 /* Main container */
 .container{
-    width:900px;
-    height:500px;
-    background:rgba(255,255,255,0.1);
+    max-width:1000px;
+    width:90%;
+    display:flex;
+    justify-content:space-between;
+    gap:20px;
+    flex-wrap:wrap;
+}
+
+/* System box */
+.system-box{
+    flex:1 1 250px; /* responsive width */
+    min-width:250px;
+    height:200px;
+    background:rgba(255,255,255,0.15);
     backdrop-filter:blur(15px);
     border-radius:20px;
-    box-shadow:0 20px 40px rgba(0,0,0,0.3);
-    position:relative;
-    overflow:hidden;
-}
-
-/* Slider */
-.slider{
-    display:flex;
-    width:300%;
-    height:100%;
-    transition:0.6s ease;
-}
-
-/* Slide */
-.slide{
-    width:100%;
-    height:100%;
+    box-shadow:0 10px 30px rgba(0,0,0,0.3);
     display:flex;
     flex-direction:column;
     justify-content:center;
     align-items:center;
     color:white;
+    text-align:center;
+    transition:0.3s;
+    cursor:pointer;
+}
+
+.system-box:hover{
+    transform:translateY(-10px);
+    box-shadow:0 20px 40px rgba(0,0,0,0.4);
 }
 
 /* Title */
-.slide h1{
-    margin-bottom:20px;
-    font-size:32px;
+.system-box h2{
+    font-size:22px;
+    margin-bottom:15px;
 }
 
 /* Button */
-.btn{
-    padding:20px 30px;
+.system-box .btn{
+    padding:10px 25px;
     border:none;
     border-radius:25px;
     background:white;
-    color:#4b4ca2;
+    color:#1e2955;
     font-weight:bold;
     cursor:pointer;
     transition:0.3s;
 }
 
-.btn:hover{
-    transform:scale(1.1);
+.system-box .btn:hover{
+    transform:scale(1.05);
 }
-
-/* Navigation */
-.nav{
-    position:absolute;
-    bottom:20px;
-    width:100%;
-    display:flex;
-    justify-content:center;
-    gap:15px;
-}
-
-.dot{
-    width:15px;
-    height:15px;
-    border-radius:50%;
-    background:white;
-    opacity:0.5;
-    cursor:pointer;
-}
-
-.dot.active{
-    opacity:1;
-    transform:scale(1.2);
-}
-
-/* Back button */
-.back{
-    position:absolute;
-    top:20px;
-    left:20px;
-    color:white;
-    cursor:pointer;
-    font-size:18px;
-    display:none;
-}
-
 </style>
 </head>
 <body>
 
 <div class="container">
 
-    <div class="back" onclick="goHome()">← Back</div>
-
-    <div class="slider" id="slider">
-
-        <!-- HOME -->
-        <div class="slide">
-            <h1>CONSIGNMENT ORDER FORM SYSTEM</h1>
-            <button class="btn" onclick="goSlide(1)">Puregold System</button><br><br>
-            <button class="btn" onclick="goSlide(2)">TNAP System</button>
-            <button class="btn" onclick="goSlide(3)">Fishermall System</button>
-        </div>
-
-        <!-- ADMIN -->
-        <div class="slide">
-            <h1>Admin Login</h1>
-            <button class="btn" onclick="login('admin')">Login as Admin</button>
-        </div>
-
-        <!-- STAFF -->
-        <div class="slide">
-            <h1>Staff Login</h1>
-            <button class="btn" onclick="login('staff')">Login as Staff</button>
-        </div>
-
+    <div class="system-box" onclick="login('puregold')">
+        <h2>Puregold System</h2>
+        <button class="btn">Enter</button>
     </div>
 
-    <div class="nav">
-        <div class="dot active" onclick="goSlide(0)"></div>
-        <div class="dot" onclick="goSlide(1)"></div>
-        <div class="dot" onclick="goSlide(2)"></div>
+    <div class="system-box" onclick="login('tnap')">
+        <h2>TNAP System</h2>
+        <button class="btn">Enter</button>
+    </div>
+
+    <div class="system-box" onclick="login('fishermall')">
+        <h2>Fishermall System</h2>
+        <button class="btn">Enter</button>
     </div>
 
 </div>
 
 <script src="script.js"></script>
-
 </body>
 </html>
