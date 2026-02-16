@@ -3,14 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CONSIGNMENT ORDER FORM SYSTEM</title>
-
+<title>Consignment Order Form System</title>
 <style>
 *{
     margin:0;
     padding:0;
     box-sizing:border-box;
-    font-family:'Segoe UI', sans-serif;
+    font-family:'Segoe UI',sans-serif;
 }
 
 body{
@@ -18,87 +17,117 @@ body{
     display:flex;
     justify-content:center;
     align-items:center;
-    background:linear-gradient(135deg,#1e2955,#ccc8c8);
+    background: linear-gradient(#332d57, #817f7f33);
 }
 
-/* Main container */
-.container{
-    max-width:1000px;
+/* Wrapper */
+.wrapper{
     width:90%;
+    max-width:1000px;
+    text-align:center;
+}
+
+.page-title{
+    font-size:28px;
+    margin-bottom:50px;
+}
+
+/* Systems container */
+.systems{
     display:flex;
     justify-content:space-between;
-    gap:20px;
     flex-wrap:wrap;
+    gap:20px;
 }
 
-/* System box */
-.system-box{
-    flex:1 1 250px; /* responsive width */
+/* Card design */
+.system-card{
+    flex:1 1 250px;
     min-width:250px;
-    height:200px;
-    background:rgba(255,255,255,0.15);
-    backdrop-filter:blur(15px);
-    border-radius:20px;
-    box-shadow:0 10px 30px rgba(0,0,0,0.3);
+    height:250px;
+    background:#10121688;
+    border-radius:25px;
     display:flex;
     flex-direction:column;
     justify-content:center;
     align-items:center;
-    color:white;
-    text-align:center;
-    transition:0.3s;
+    transition: transform 0.4s, box-shadow 0.4s;
     cursor:pointer;
+    
 }
 
-.system-box:hover{
-    transform:translateY(-10px);
-    box-shadow:0 20px 40px rgba(0,0,0,0.4);
+.system-card:hover{
+    transform: translateY(-10px) scale(1.05) rotateZ(1deg);
 }
 
-/* Title */
-.system-box h2{
+.system-card h2{
     font-size:22px;
+    color:#ffffff;
+    margin-bottom:15px;
+}
+
+
+
+/* Icon */
+.icon{
+    font-size:50px;
+    margin-bottom:15px;
+}
+
+/* Card title */
+.system-card h2{
+    font-size:22px;
+    color:#fffdfd;
     margin-bottom:15px;
 }
 
 /* Button */
-.system-box .btn{
+.btn{
     padding:10px 25px;
     border:none;
     border-radius:25px;
-    background:white;
-    color:#1e2955;
+    background: #333;
+    color: #fff;
     font-weight:bold;
     cursor:pointer;
-    transition:0.3s;
+    transition: transform 0.3s, background 0.3s;
 }
 
-.system-box .btn:hover{
-    transform:scale(1.05);
+.btn:hover{
+    transform: scale(1.1);
+    background:#423e3e;
 }
+
+
 </style>
 </head>
 <body>
 
-<div class="container">
+<div class="wrapper">
+    <h1 class="page-title">Consignment Order Form System</h1>
 
-    <div class="system-box" onclick="login('puregold')">
-        <h2>Puregold System</h2>
-        <button class="btn">Enter</button>
+    <div class="systems">
+
+        <div class="system-card" onclick="login('puregold')">
+            <h2>Puregold System</h2>
+            <button class="btn">Enter</button>
+        </div>
+
+        <div class="system-card" onclick="login('tnap')">
+            <h2>TNAP System</h2>
+            <button class="btn">Enter</button>
+        </div>
+
+        <div class="system-card" onclick="login('fishermall')">
+            <h2>Fishermall System</h2>
+            <button class="btn">Enter</button>
+        </div>
+
     </div>
-
-    <div class="system-box" onclick="login('tnap')">
-        <h2>TNAP System</h2>
-        <button class="btn">Enter</button>
-    </div>
-
-    <div class="system-box" onclick="login('fishermall')">
-        <h2>Fishermall System</h2>
-        <button class="btn">Enter</button>
-    </div>
-
 </div>
 
 <script src="script.js"></script>
+
+
 </body>
 </html>
