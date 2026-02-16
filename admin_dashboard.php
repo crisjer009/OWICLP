@@ -143,7 +143,7 @@ $active_count = $active_query->fetch_assoc()['total'] ?? 0;
             <?php endif; ?>
         </nav>
     </div>
-    <img src="icon/switch.png" alt="Logout" onclick="openLogoutModal()" style="width: 35px; height: 35px; margin-right: 10px; vertical-align: middle;">
+    <div onclick="openLogoutModal()" style="cursor:pointer;"><i class="fa fa-power-off"></i> Logout</div>
     </div>
 
 
@@ -272,27 +272,17 @@ $active_count = $active_query->fetch_assoc()['total'] ?? 0;
 </div>
 
 <script>
-// 3. Unlock Function
     function unlockUser(userId, username) {
-        if (confirm("Are you sure you want to unlock @" + username + "?")) {
-            window.location.href = "unlock_process.php?id=" + userId;
+        if (confirm("Unlock @" + username + "?")) {
+            window.location.href = "admin_dashboard/unlock_process.php?id=" + userId;
         }
     }
-
     function toggleMobileMenu() {
         $('#mobileDrawer').toggleClass('active');
         $('#drawerOverlay').fadeToggle(300);
     }
     function openLogoutModal() { document.getElementById('logoutModal').style.display = 'flex'; }
     function closeLogoutModal() { document.getElementById('logoutModal').style.display = 'none'; }
-
-    function unlockUser(userId) {
-        if(confirm("Reset attempts and unlock this account?")) {
-            $.post('process_admin.php', { action: 'unlock', id: userId }, function(res) {
-                location.reload();
-            });
-        }
-    }
 </script>
 
 </body>

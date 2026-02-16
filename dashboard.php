@@ -230,7 +230,7 @@ body {
             <a href="#" class="nav-link"><i class="fa-sharp fa-solid fa-user-gear"></i> Settings</a>
         </nav>
     </div>
-    <img src="icon/switch.png" alt="Logout" onclick="openLogoutModal()" style="width: 35px; height: 35px; margin-right: 10px; vertical-align: middle;">
+   <div onclick="openLogoutModal()" style="cursor:pointer;"><i class="fa fa-power-off"></i> Logout</div>
     </div> 
 
 

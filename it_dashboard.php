@@ -103,7 +103,7 @@ $system_logs = $db->query("SELECT * FROM tbl_system_logs ORDER BY timestamp DESC
             <a href="#" class="nav-link"><i class="fa fa-database"></i> Database Tools</a>
         </nav>
     </div>
-    <    <img src="icon/switch.png" alt="Logout" onclick="openLogoutModal()" style="width: 35px; height: 35px; margin-right: 10px; vertical-align: middle;">
+    <   <div onclick="openLogoutModal()" style="cursor:pointer;"><i class="fa fa-power-off"></i> Logout</div>
 </div>
 
 <div class="main-content">
