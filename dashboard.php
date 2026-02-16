@@ -85,7 +85,7 @@ if ($current_tier == "Platinum") $tier_color = "#3498db";
         .mobile-drawer { position: fixed; top: 0; right: -320px; width: 280px; height: 100%; background: var(--brand-blue); color: white; z-index: 3000; transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); padding: 30px 20px; visibility: hidden; pointer-events: none; }
         .mobile-drawer.active { right: 0; visibility: visible; pointer-events: auto; }
         .drawer-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; z-index: 2999; }
-        .drawer-link { display: flex; align-items: center; color: white; text-decoration: none; padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .drawer-link { display: flex; align-items: center; color: #000; text-decoration: none; padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
         .drawer-link i { margin-right: 15px; width: 25px; text-align: center; }
 
         
@@ -164,6 +164,53 @@ if ($current_tier == "Platinum") $tier_color = "#3498db";
             }
             .bottom-nav i { font-size: 24px; color: #333; cursor: pointer; }
         
+            /* Theme Variables */
+:root {
+    --brand-blue: #004a9b;
+    --bg-main: #f4f7f6;
+    --card-bg: #ffffff;
+    --text-main: #333333;
+    --border-color: #eeeeee;
+}
+
+body.dark-mode {
+    --bg-main: #1a1a1a;
+    --card-bg: #2d2d2d;
+    --text-main: #e0e0e0;
+    --border-color: #444444;
+}
+
+body { 
+    background: var(--bg-main); 
+    color: var(--text-main); 
+
+}
+
+.card, .stat-box, .mobile-drawer, .modal-box { 
+    background: var(--card-bg) !important; 
+    color: var(--text-main); 
+    border-color: var(--border-color) !important;
+}
+
+/* Theme Toggle Button Style */
+.theme-toggle {
+    position: fixed;
+    bottom: 85px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    background: var(--card-bg);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    cursor: pointer;
+    z-index: 1001;
+    border: 1px solid var(--border-color);
+}
+
+.theme-toggle img { width: 25px; height: 25px; }
 
         @media (min-width: 769px) { .mobile-brand-header, .profile-card, .mobile-stats-row, .bottom-nav { display: none; } }
         
@@ -184,9 +231,16 @@ if ($current_tier == "Platinum") $tier_color = "#3498db";
         </nav>
     </div>
     <img src="icon/switch.png" alt="Logout" onclick="openLogoutModal()" style="width: 35px; height: 35px; margin-right: 10px; vertical-align: middle;">
-    </div>
+    </div> 
+
+
+    <div class="theme-toggle" onclick="toggleTheme()" id="themeBtn">
+    <img src="icon/light.png" id="themeIcon" alt="Toggle Theme">
+</div>
 
     <div class="main-content">
+        <div class="top-nav">
+            
         <h1>Dashboard, </h1>
     <div class="profile-card">
         <div class="profile-img-circle"></div>
@@ -339,46 +393,189 @@ if ($current_tier == "Platinum") $tier_color = "#3498db";
         };
     })(window);
 
-    // 4. amCharts initialization 
-    am5.ready(function() {
-        var root = am5.Root.new("chartdiv");
-        root.setThemes([am5themes_Animated.new(root)]);
-        var chart = root.container.children.push(am5xy.XYChart.new(root, { panX: false, panY: false, wheelX: "panX", wheelY: "zoomX", layout: root.horizontalLayout }));
-        var legend = chart.children.push(am5.Legend.new(root, { centerY: am5.p50, y: am5.p50, layout: root.verticalLayout, clickTarget: "none" }));
-        legend.valueLabels.template.set("forceHidden", true);
+    function toggleTheme() {
+    const body = document.body;
+    const themeIcon = document.getElementById('themeIcon');
+    
+    body.classList.toggle('dark-mode');
+    
+    // Check if dark mode is now active
+    if (body.classList.contains('dark-mode')) {
+        themeIcon.src = 'icon/dark.png'; // Switch to Dark icon
+        localStorage.setItem('theme', 'dark');
+        updateChartTheme(true);
+    } else {
+        themeIcon.src = 'icon/light.png'; // Switch to Light icon
+        localStorage.setItem('theme', 'light');
+        updateChartTheme(false);
+    }
+}
 
-        var data = [
-            { year: "2023", paper: 78, ink: 20, office: 55 },
-            { year: "2024", paper: 200, ink: 150, office: 90 },
-            { year: "2025", paper: 160, ink: 210, office: 101 },
-            { year: "2026", paper: 347, ink: 180, office: 150 }
-        ];
+// Check for saved theme preference on page load
+window.onload = function() {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+        document.body.classList.add('dark-mode');
+        document.getElementById('themeIcon').src = 'icon/dark.png';
+    }
+};
 
-        var xAxis = chart.xAxes.push(am5xy.CategoryAxis.new(root, { categoryField: "year", renderer: am5xy.AxisRendererX.new(root, { minGridDistance: 50 }) }));
-        xAxis.data.setAll(data);
-        var yAxis = chart.yAxes.push(am5xy.ValueAxis.new(root, { renderer: am5xy.AxisRendererY.new(root, {}) }));
+am5.ready(function() {
 
-        function createSeries(field, name) {
-            var series = chart.series.push(am5xy.SmoothedXLineSeries.new(root, { name: name, xAxis: xAxis, yAxis: yAxis, valueField: field, valueYField: field + "_hi", openValueYField: field + "_low", categoryXField: "year", tooltip: am5.Tooltip.new(root, { labelText: "{name}: {valueY}" }) }));
-            series.strokes.template.setAll({ forceHidden: true });
-            series.fills.template.setAll({ visible: true, fillOpacity: 1 });
-            series.appear();
-            legend.data.push(series);
-        }
 
-        createSeries("paper", "Paper");
-        createSeries("ink", "Ink");
-        createSeries("office", "Furniture");
+var root = am5.Root.new("chartdiv");
 
-        for (var i = 0; i < data.length; i++) {
-            var row = data[i], sum = 0;
-            chart.series.each(function(s) { var f = s.get("valueField"), v = Number(row[f]); row[f + "_low"] = sum; row[f + "_hi"] = sum + v; sum += v; });
-            var offset = sum / 2;
-            chart.series.each(function(s) { var f = s.get("valueField"); row[f + "_low"] -= offset; row[f + "_hi"] -= offset; s.data.setAll(data); });
-        }
-        chart.appear(1000, 100);
+
+
+
+
+var chart = root.container.children.push(am5xy.XYChart.new(root, {
+  panX: false,
+  panY: false,
+  wheelX: "panX",
+  wheelY: "zoomX",
+  paddingLeft:0,
+  layout: root.verticalLayout
+}));
+
+
+// Add legend
+// https://www.amcharts.com/docs/v5/charts/xy-chart/legend-xy-series/
+var legend = chart.children.push(am5.Legend.new(root, {
+  centerX: am5.p50,
+  x: am5.p50
+}))
+
+
+// Data
+var data = [{
+  year: "2017",
+  income: 23.5,
+  expenses: 18.1
+}, {
+  year: "2018",
+  income: 26.2,
+  expenses: 22.8
+}, {
+  year: "2019",
+  income: 30.1,
+  expenses: 23.9
+}, {
+  year: "2020",
+  income: 29.5,
+  expenses: 25.1
+}, {
+  year: "2021",
+  income: 24.6,
+  expenses: 25
+}];
+
+
+// Create axes
+// https://www.amcharts.com/docs/v5/charts/xy-chart/axes/
+var yAxis = chart.yAxes.push(am5xy.CategoryAxis.new(root, {
+  categoryField: "year",
+  renderer: am5xy.AxisRendererY.new(root, {
+    inversed: true,
+    cellStartLocation: 0.1,
+    cellEndLocation: 0.9,
+    minorGridEnabled: true
+  })
+}));
+
+yAxis.data.setAll(data);
+
+var xAxis = chart.xAxes.push(am5xy.ValueAxis.new(root, {
+  renderer: am5xy.AxisRendererX.new(root, {
+    strokeOpacity: 0.1,
+    minGridDistance: 50
+  }),
+  min: 0
+}));
+
+
+// Add series
+// https://www.amcharts.com/docs/v5/charts/xy-chart/series/
+function createSeries(field, name) {
+  var series = chart.series.push(am5xy.ColumnSeries.new(root, {
+    name: name,
+    xAxis: xAxis,
+    yAxis: yAxis,
+    valueXField: field,
+    categoryYField: "year",
+    sequencedInterpolation: true,
+    tooltip: am5.Tooltip.new(root, {
+      pointerOrientation: "horizontal",
+      labelText: "[bold]{name}[/]\n{categoryY}: {valueX}"
+    })
+  }));
+
+  series.columns.template.setAll({
+    height: am5.p100,
+    strokeOpacity: 0
+  });
+
+
+  series.bullets.push(function () {
+    return am5.Bullet.new(root, {
+      locationX: 1,
+      locationY: 0.5,
+      sprite: am5.Label.new(root, {
+        centerY: am5.p50,
+        text: "{valueX}",
+        populateText: true
+      })
     });
+  });
 
+  series.bullets.push(function () {
+    return am5.Bullet.new(root, {
+      locationX: 1,
+      locationY: 0.5,
+      sprite: am5.Label.new(root, {
+        centerX: am5.p100,
+        centerY: am5.p50,
+        text: "{name}",
+        fill: am5.color(0xffffff),
+        populateText: true
+      })
+    });
+  });
+
+  series.data.setAll(data);
+  series.appear();
+
+  return series;
+}
+
+createSeries("income", "Income");
+createSeries("expenses", "Expenses");
+
+
+// Add legend
+// https://www.amcharts.com/docs/v5/charts/xy-chart/legend-xy-series/
+var legend = chart.children.push(am5.Legend.new(root, {
+  centerX: am5.p50,
+  x: am5.p50
+}));
+
+legend.data.setAll(chart.series.values);
+
+
+// Add cursor
+// https://www.amcharts.com/docs/v5/charts/xy-chart/cursor/
+var cursor = chart.set("cursor", am5xy.XYCursor.new(root, {
+  behavior: "zoomY"
+}));
+cursor.lineY.set("forceHidden", true);
+cursor.lineX.set("forceHidden", true);
+
+
+// Make stuff animate on load
+// https://www.amcharts.com/docs/v5/concepts/animations/
+chart.appear(1000, 100);
+
+});
     // 5. Chart.js initialization 
     const ctx2 = document.getElementById('segmentChart').getContext('2d');
     new Chart(ctx2, { type: 'pie', data: { labels: ['B2B', 'B2C'], datasets: [{ data: [65, 35], backgroundColor: ['#004a9b', '#3498db'] }] }, options: { plugins: { legend: { position: 'bottom' } } } });

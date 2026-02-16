@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-// 1. Refined Access Control (New Logic)
+// 1. Refined Access Control 
 $userRole = isset($_SESSION['user_role']) ? (int)$_SESSION['user_role'] : 0;
 if (!isset($_SESSION['user_id']) || ($userRole !== 1 && $userRole !== 3)) {
     header("Location: index.php");
@@ -11,24 +11,29 @@ if (!isset($_SESSION['user_id']) || ($userRole !== 1 && $userRole !== 3)) {
 // 2. Database Connection
 $db = new mysqli("localhost", "root", "", "clp");
 
-// 3. Define UI Variables based on specific role (New Logic)
+// 3. Define UI Variables
 $isAdmin = ($userRole === 1);
 $isIT    = ($userRole === 3);
-$theme_color = $isAdmin ? '#2c3e50' : '#2980b9'; // var values from root
+$theme_color = $isAdmin ? '#004a9b' : '#2980b9'; 
 $panel_title = $isAdmin ? 'CLP | Admin' : 'CLP | IT Dashboard';
 
 // 4. Retrieve session data
 $full_name = $_SESSION['full_name'];
 
-// 5. Global System Metrics (New Logic)
+// 5. Global System Metrics
 $total_points_query = $db->query("SELECT SUM(total_points) as total FROM tbl_users");
 $total_points_issued = $total_points_query->fetch_assoc()['total'] ?? 0;
 
-$blocked_query = $db->query("SELECT COUNT(*) as total FROM tbl_users WHERE user_status = 'L' OR user_status = 'Blocked'");
+// Checks for status 'L', 'Blocked', or empty based on dump
+$blocked_query = $db->query("SELECT COUNT(*) as total FROM tbl_users WHERE user_status != 'Active' AND user_status != 'A'");
 $blocked_count = $blocked_query->fetch_assoc()['total'];
 
 // 6. User Management List
 $all_users = $db->query("SELECT id, username, user_status, user_attempt, FirstName, LastName FROM tbl_users ORDER BY id DESC LIMIT 10");
+
+// Fetch live count of active users
+$active_query = $db->query("SELECT COUNT(*) as total FROM tbl_users WHERE user_status = 'Active' OR user_status = 'A'");
+$active_count = $active_query->fetch_assoc()['total'] ?? 0;
 ?>
 
 <!DOCTYPE html>
@@ -97,6 +102,28 @@ $all_users = $db->query("SELECT id, username, user_status, user_attempt, FirstNa
             .main-content { padding: 20px; }
             .dashboard-grid { grid-template-columns: 1fr; }
         }
+
+        .unlock-btn {
+        background: white;
+        color: var(--brand-blue);
+        border: 1px solid var(--brand-blue);
+        padding: 5px 12px;
+        border-radius: 6px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .unlock-btn:hover {
+        background: var(--brand-blue);
+        color: white;
+        box-shadow: 0 4px 6px -1px rgba(0, 74, 155, 0.2);
+    }
+    
     </style>
 </head>
 <body>
@@ -106,8 +133,11 @@ $all_users = $db->query("SELECT id, username, user_status, user_attempt, FirstNa
         <h2><?php echo $panel_title; ?></h2>
         <p><i class="fa fa-shield-alt"></i> <?php echo $full_name; ?></p>
         <nav class="nav-links-container">
-            <a href="#" class="nav-link"><i class="fa fa-users"></i> Manage Users</a>
-            <a href="#" class="nav-link"><i class="fa fa-gift"></i> Rewards Config</a>
+            <a href="#" class="nav-link"><i class="fa fa-users"></i> Members Deatils</a>
+            <a href="#" class="nav-link"><i class="fa-solid fa-file-invoice"></i> Transaction</a>
+            <a href="#" class="nav-link"><i class="fa-solid fa-circle-dollar-to-slot"></i> Earn Module</a>
+            <a href="#" class="nav-link"><i class="fa-solid fa-gift"></i> Redeem Module</a>
+            <a href="#" class="nav-link"><i class="fa-solid fa-gear"></i> Settings</a>
             <?php if($isIT): ?>
                 <a href="#" class="nav-link"><i class="fa fa-terminal"></i> System Logs</a>
             <?php endif; ?>
@@ -115,6 +145,7 @@ $all_users = $db->query("SELECT id, username, user_status, user_attempt, FirstNa
     </div>
     <img src="icon/switch.png" alt="Logout" onclick="openLogoutModal()" style="width: 35px; height: 35px; margin-right: 10px; vertical-align: middle;">
     </div>
+
 
 <div class="main-content">
     <div class="header">
@@ -130,15 +161,51 @@ $all_users = $db->query("SELECT id, username, user_status, user_attempt, FirstNa
             <div style="font-size: 1.5rem; font-weight: bold; color: var(--brand-blue);"><?php echo number_format($total_points_issued); ?></div>
         </div>
 
-        <div class="card" style="text-align: center; border-left: 4px solid var(--danger-red);">
+        <!-- for active account count -->
+<div class="card" style="text-align: center; border-left: 4px solid var(--success-green);">
+    <h3>Active Accounts</h3>
+    <div style="font-size: 1.5rem; font-weight: bold; color: var(--success-green);">
+        <?php echo number_format($active_count); ?>
+    </div>
+</div>
+
+<?php if (isset($_GET['msg'])): ?>
+    <div id="statusAlert" style="padding: 12px; margin-bottom: 20px; border-radius: 8px; text-align: center; font-size: 0.9rem; font-weight: 600; 
+        <?php echo ($_GET['msg'] == 'UserUnlocked' || $_GET['msg'] == 'UserActive') ? 'background: #dcfce7; color: #166534; border: 1px solid #bbf7d0;' : 'background: #fee2e2; color: #991b1b; border: 1px solid #fecaca;'; ?>">
+        <i class="fa <?php echo ($_GET['msg'] == 'UserUnlocked' || $_GET['msg'] == 'UserActive') ? 'fa-check-circle' : 'fa-exclamation-circle'; ?>"></i>
+        <?php 
+            if ($_GET['msg'] == 'UserUnlocked' || $_GET['msg'] == 'UserActive') echo "User account has been successfully activated.";
+            else echo "An error occurred while trying to update the account.";
+        ?>
+    </div>
+    <script>
+        setTimeout(() => { 
+            const alert = document.getElementById('statusAlert');
+            if(alert) alert.style.display = 'none'; 
+        }, 3000);
+    </script>
+<?php endif; ?>
+
+<!-- for locked account count -->
+<div class="card" style="text-align: center; border-left: 4px solid var(--danger-red);">
             <h3>Locked Accounts</h3>
             <div style="font-size: 1.5rem; font-weight: bold; color: var(--danger-red);"><?php echo $blocked_count; ?></div>
         </div>
 
+        <?php if (isset($_GET['msg'])): ?>
+            <div id="statusAlert" style="grid-column: span 2; padding: 12px; margin-bottom: 10px; border-radius: 8px; text-align: center; font-size: 0.9rem; font-weight: 600; 
+                <?php echo ($_GET['msg'] == 'UserUnlocked') ? 'background: #dcfce7; color: #166534;' : 'background: #fee2e2; color: #991b1b;'; ?>">
+                <?php echo ($_GET['msg'] == 'UserUnlocked') ? 'User account successfully unlocked.' : 'Error processing request.'; ?>
+            </div>
+            <script>setTimeout(() => { $('#statusAlert').fadeOut(); }, 3000);</script>
+        <?php endif; ?>
+
         <div class="card" style="grid-column: span 2;">
             <h3>Recent User Activity</h3>
             <table class="admin-table">
-                <thead><tr><th>Name</th><th>Username</th><th>Attempts</th><th>Status</th><th>Action</th></tr></thead>
+                <thead>
+                    <tr><th>Name</th><th>Username</th><th>Attempts</th><th>Status</th><th>Action</th></tr>
+                </thead>
                 <tbody>
                     <?php while($user = $all_users->fetch_assoc()): ?>
                     <tr>
@@ -152,8 +219,8 @@ $all_users = $db->query("SELECT id, username, user_status, user_attempt, FirstNa
                         </td>
                         <td>
                             <?php if($user['user_status'] != 'Active' && $user['user_status'] != 'A'): ?>
-                                <button class="unlock-btn" onclick="unlockUser(<?php echo $user['id']; ?>)">
-                                    <i class="fa fa-unlock"></i> Unlock
+                                <button class="unlock-btn" onclick="unlockUser(<?php echo $user['id']; ?>, '<?php echo $user['username']; ?>')">
+                                    <i class="fa fa-unlock-alt"></i> Unlock
                                 </button>
                             <?php endif; ?>
                         </td>
@@ -164,6 +231,8 @@ $all_users = $db->query("SELECT id, username, user_status, user_attempt, FirstNa
         </div>
     </div>
 </div>
+
+
 
 <div class="bottom-nav">
     <div class="bottom-nav-item active"><i class="fa fa-home"></i></div>
@@ -178,8 +247,12 @@ $all_users = $db->query("SELECT id, username, user_status, user_attempt, FirstNa
         <h3 style="margin:0;">Menu</h3>
         <i class="fa fa-times" onclick="toggleMobileMenu()"></i>
     </div>
-    <a href="#" class="drawer-link"><i class="fa fa-user"></i> Profile</a>
-    <?php if($isIT): ?>
+    <a href="#" class="drawer-link"><i class="fa fa-users"></i> Members Deatils</a>
+            <a href="#" class="drawer-link"><i class="fa-solid fa-file-invoice"></i> Transaction</a>
+            <a href="#" class="drawer-link"><i class="fa-solid fa-circle-dollar-to-slot"></i> Earn Module</a>
+            <a href="#" class="drawer-link"><i class="fa-solid fa-gift"></i> Redeem Module</a>
+            <a href="#" class="drawer-link"><i class="fa-solid fa-gear"></i> Settings</a>
+            <?php if($isIT): ?>
         <a href="#" class="drawer-link"><i class="fa fa-terminal"></i> System Logs</a>
     <?php endif; ?>
     <a href="javascript:void(0)" class="drawer-link" onclick="toggleMobileMenu(); openLogoutModal();" style="color: #ff7675;">
@@ -199,6 +272,13 @@ $all_users = $db->query("SELECT id, username, user_status, user_attempt, FirstNa
 </div>
 
 <script>
+// 3. Unlock Function
+    function unlockUser(userId, username) {
+        if (confirm("Are you sure you want to unlock @" + username + "?")) {
+            window.location.href = "unlock_process.php?id=" + userId;
+        }
+    }
+
     function toggleMobileMenu() {
         $('#mobileDrawer').toggleClass('active');
         $('#drawerOverlay').fadeToggle(300);
