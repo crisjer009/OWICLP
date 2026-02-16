@@ -18,9 +18,7 @@ $(document).ready(function(){
 
 
 
-    // ==========================
-    // FAKE DATA GENERATOR
-    // ==========================
+    // FAKE DATA
     function generateGrowthData(start, increase, months = 6) {
         let data = [];
         let value = start;
@@ -39,9 +37,7 @@ $(document).ready(function(){
 
 
 
-    // ==========================
     // MINI CHART OPTIONS
-    // ==========================
     const miniOptions = {
         responsive: true,
         maintainAspectRatio: false,
@@ -115,15 +111,13 @@ $(document).ready(function(){
 
 
 
-    // ==========================
-    // YEARLY SALES CHART
-    // ==========================
+    // YEARLY SALES CHART (fake data)
     new Chart($("#yearlySalesChart"), {
         type: 'bar',
         data: {
             labels: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
             datasets: [{
-                label: 'Sales ($)',
+                label: 'Sales (₱)',
                 data: [1200, 1500, 1750, 2000, 2500, 2800, 3000, 3200, 2900, 3100, 3500, 4000],
                 backgroundColor: '#10b981'
             }]
@@ -138,9 +132,7 @@ $(document).ready(function(){
 
 
 
-    // =====================================================
-    // REPORTS SECTION (amCharts 5 DONUT CHART)
-    // =====================================================
+    // REPORTS SECTION (amCharts 5 Pie chart with legends)
     let chartLoaded = false;
 
     $("#reportsLink").click(function(e){
@@ -181,7 +173,8 @@ $(document).ready(function(){
             { category: "Puregold Makati", value: 420 },
             { category: "Puregold Cubao", value: 120 },
             { category: "Puregold Antipolo", value: 210 },
-            { category: "Puregold Marikina", value: 85 }
+            { category: "Puregold Marikina", value: 85 },
+            {category: "Puregold Pureza", value: 20}
         ]);
 
         // Clean flat style
