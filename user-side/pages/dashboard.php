@@ -142,7 +142,7 @@ body{
     padding:25px 20px;
     border-radius:15px;
     text-align:center;
-    box-shadow:0 6px 20px rgba(0,0,0,0.1);
+    box-shadow:0 6px 20px rgba(32, 30, 30, 0.1);
     transition:0.3s;
     position:relative;
 }
@@ -448,7 +448,7 @@ th{
     <!-- SIDEBAR -->
     <div class="sidebar">
         <div>
-            <h2>PixelBloom<br>Studios</h2>
+            <h2>Office<br>Warehouse</h2>
 
             <a href="#" id="dashboardLink"><i class="fas fa-home"></i>Dashboard</a>         
             <a href="#" id="earnPointsLink"><i class="fas fa-gift"></i>Earn Points</a>

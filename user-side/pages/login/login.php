@@ -1,12 +1,13 @@
 
 <?php
 session_start();
-$message = '';
-if (isset($_SESSION['message'])) {
-    $message = $_SESSION['message'];
-    unset($_SESSION['message']);
-}
+
+$message = isset($_SESSION['message']) ? $_SESSION['message'] : '';
+
+$systemName = isset($_GET['system']) ? ucfirst($_GET['system']) : '';
 ?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -165,10 +166,10 @@ body {
         display: grid;
         grid-template-columns: 1fr;
         gap: 0;
-        background: #fff;
+        background: #272525a1;
         border-radius: 25px;
         padding: 35px 25px;
-        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    box-shadow:0 10px 24px rgba(0,0,0,0.2);
         transition: transform 0.3s ease;
     }
 
@@ -238,8 +239,8 @@ body {
 }
 
 .login-box button:hover {
-    background-color: #357abd; /* blue on hover */
-    border-color: #357abd;     /* border also blue */
+    background-color: #18191a; /* blue on hover */
+    border-color: #dadfe4;     /* border also blue */
     color: #fff;               /* text becomes white */
     box-shadow: 0 6px 15px rgba(0,0,0,0.1); /* subtle shadow */
     transform: translateY(-2px); /* lift effect */
@@ -262,99 +263,18 @@ body {
     }
 }
 
-        /* Responsive mobile */
-@media (max-width:500px) {
-    body {
-        margin: 0;
-        padding: 0;
-    background: linear-gradient(135deg, rgb(2, 0, 36), #4b4a4af6);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-        font-family: 'Segoe UI', sans-serif;
-    }
-
+      /* Responsive adjustments */
+@media (max-width: 500px) {
     .container {
-        width: 100%;
-        max-width: 380px;
-        background: #ffffff;
-        border-radius: 15px;
-        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-        transition: transform 0.3s ease;
+        padding: 30px;
+        width: 90%;
     }
-
-    .container:hover {
-        transform: translateY(-3px);
-    }
-
-    /* Heading */
-    .right h1 {
-        font-size: 2rem;
-        text-align: center;
-        font-weight: 600;
-        color: #000000;
-        margin-bottom: 25px;
-    }
-        
-    /* Inputs */
-    .login-box input {
-        width: 100%;
-        padding: 14px 15px;
-        font-size: 1rem;
-        margin-bottom: 18px;
-        border-radius: 10px;
-        border: 1px solid #d1d9e6;
-        background: #f9f9f9;
-        transition: all 0.3s ease;
-    }
-
-    .login-box input:focus {
-        border-color: #e0e5eb;
-        background: #fff;
-        outline: none;
-        box-shadow: 0 0 5px rgba(74,144,226,0.3);
-    }
-
-    /* Login button */
-    .login-box button {
-    width: 80%;
-    max-width: 300px;
-    padding: 15px;
-    font-size: 1rem;
-    border-radius: 10px;
-    border: 2px solid #000;  
-    background-color: #fff;  
-    color: #000;             
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-    .login-box button:hover {
-       background:black; 
-        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    }
-
-    .login-box .forgot-password {
-        display: block;
-        text-align: center;
-        margin-top: 15px;
-        font-size: 0.85rem;
-        color: #4a90e2;
-        text-decoration: none;
-        transition: color 0.3s ease;
-    }
-
-    .login-box .forgot-password:hover {
-        color: #2a5c9b;
-    }
-
     
-    /* Right section full width */
-    .right {
-        width: 100%;
-        padding: 0;
+    .container h1 {
+        font-size: 1.8rem;
+    }
+    .container p {
+        font-size: 0.95rem;
     }
 }
 </style>
@@ -370,22 +290,26 @@ body {
 
     <!-- RIGHT SIDE LOGIN -->
     <div class="right">
-        <h1>LOGIN FORM</h1>
+    <h1>LOGIN FORM</h1>
+
+    <?php if($systemName != ''): ?>
+        <p>Welcome Back to <?php echo $systemName; ?> System!</p>
+    <?php else: ?>
         <p>Welcome Back!</p>
+    <?php endif; ?>
 
-            <div class="message" id="message"><?php echo $message; ?></div>
+    <div class="message" id="message"><?php echo $message; ?></div>
 
-            <div class="login-box">
-                <form id="loginForm" method="post" action="process_login.php">
-                    <input type="text" name="username" placeholder="Username" required>
-                    <input type="password" name="password" placeholder="Password" required>
-                    <button type="submit">LOG IN</button>
-                    <a href="#">Forgot Password?</a>
-                </form>
-            </div>
-
-        </div>
+    <div class="login-box">
+        <form id="loginForm" method="post" action="process_login.php">
+            <input type="text" name="username" placeholder="Username" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <button type="submit">LOG IN</button>
+            <a href="#">Forgot Password?</a>
+        </form>
     </div>
+</div>
+
     <!-- jQuery -->
      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
