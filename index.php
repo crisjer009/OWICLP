@@ -100,22 +100,23 @@ body{
 
     <div class="systems">
 
-        <div class="system-card">
-            <h2>Puregold System</h2>
-    <a class="btn" href="user-side/pages/login/login.php?system=puregold">Enter</a>
-        </div>
-
-        <div class="system-card">
-            <h2>TNAP System</h2>
-    <a class="btn" href="user-side/pages/login/login.php?system=tnap">Enter</a>
-        </div>
-
-        <div class="system-card">
-            <h2>Fishermall System</h2>
-    <a class="btn" href="user-side/pages/login/login.php?system=fishermall">Enter</a>
-        </div>
-
+    <div class="system-card">
+        <h2>Puregold System</h2>
+        <a class="btn" href="/user-side/pages/login/login.php?system=puregold">Enter</a>
     </div>
+
+    <div class="system-card">
+        <h2>TNAP System</h2>
+        <a class="btn" href="/user-side/pages/login/login.php?system=tnap">Enter</a>
+    </div>
+
+    <div class="system-card">
+        <h2>Fishermall System</h2>
+        <a class="btn" href="/user-side/pages/login/login.php?system=fishermall">Enter</a>
+    </div>
+
+</div>
+
 </div>
         <script src="script.js"></script>
 </body>
