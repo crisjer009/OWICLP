@@ -12,7 +12,7 @@ if (!isset($_SESSION['user'])) {
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard</title>
+<title>Dashboard- User Side</title>
 
 <!-- Font Awesome for icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -104,6 +104,33 @@ body{
     flex-wrap:wrap;
     margin-bottom:30px;
 }
+
+.notifications {
+    background: #fff9c4;
+    border-left: 5px solid #fbc02d;
+    padding: 10px 15px;
+    margin: 15px 0;
+    border-radius: 5px;
+}
+
+.notifications h4 {
+    margin-bottom: 8px;
+    font-size: 16px;
+    color: #333;
+}
+
+.notifications ul {
+    list-style: disc inside;
+    padding-left: 0;
+}
+
+.notifications li {
+    margin-bottom: 5px;
+    font-size: 14px;
+    color: #555;
+}
+
+
 
 .top h2{
     font-size:1.8rem;
@@ -476,6 +503,20 @@ th{
                 <input type="text" placeholder="Search...">
             </div>
         </div>
+
+
+
+                 <!-- Notifications / Alerts -->
+    <div class="notifications">
+        <h4>Notifications</h4>
+        <ul>
+            <li>You earned 200 points from your last purchase!</li>
+            <li>Your voucher expires in 5 days!</li>
+            <li>New reward available: "Free 50% Voucher"</li>
+        </ul>
+    </div>
+
+
 
         <div class="cards">
             <div class="card">

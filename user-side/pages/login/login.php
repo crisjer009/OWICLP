@@ -17,7 +17,7 @@ $systemName = isset($_GET['system']) ? ucfirst($_GET['system']) : '';
 <title>Login</title>
 
 <link href="https://fonts.googleapis.com/css?family=Poppins:600&display=swap" rel="stylesheet">
-    <script src="https://kit.fontawesome.com/a81368914c.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
 <style>
 * { 
@@ -301,19 +301,18 @@ body {
     <div class="message" id="message"><?php echo $message; ?></div>
 
     <div class="login-box">
-        <form id="loginForm" method="post" action="process_login.php">
+        <form id="loginForm" method="post" action="login_process.php">
             <input type="text" name="username" placeholder="Username" required>
             <input type="password" name="password" placeholder="Password" required>
-            <button type="submit">LOG IN</button>
+            <button type="submit" id="loginBtn" disabled>LOG IN</button>
             <a href="#">Forgot Password?</a>
         </form>
     </div>
 </div>
-
+                
     <!-- jQuery -->
      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
 <script src="Jquery.js"></script>
 <script src="login.js"></script>
 </body>
