@@ -144,37 +144,37 @@ body{
 
 /* Heading & description */
 #usersContent h2 {
-    margin-bottom: 10px;
-    color: #333;
+    margin-bottom: 20px;
+    color: #ffffff;
     font-size: 1.6rem;
 }
 #usersContent p {
     margin-bottom: 20px;
-    color: #666;
+    color: #fffdfd;
     font-size: 0.95rem;
 }
 
 /* Search input */
 #userSearch {
     border: 1px solid #ccc;
-    border-radius: 8px;
+    border-radius: 20px;
     padding: 10px 15px;
-    width: 100%;
+    width: 50%;
     max-width: 400px;
     margin-bottom: 20px;
     transition: 0.3s;
 }
 #userSearch:focus {
-    border-color: #007BFF;
+    border-color: #030303;
     outline: none;
-    box-shadow: 0 0 5px rgba(0,123,255,0.5);
+    box-shadow: 0 0 5px rgba(7, 7, 7, 0.5);
 }
 
 /* Users table */
 #usersTable {
     width: 100%;
     border-collapse: collapse;
-    box-shadow: 0 5px 15px rgba(255, 255, 255, 0.1);
+    box-shadow: 0 5px 15px rgba(255, 255, 255, 0.26);
     border-radius: 10px;
     overflow: hidden;
 }
@@ -381,12 +381,12 @@ th { color: #555; font-weight: 600; }
    ======================= */
 .reports-flex {
     display: flex;
-    gap: 20px;
+    gap: 30px;
     flex-wrap: wrap;
 }
 
 #chartdiv { width: 70%; height: 400px; }
-#chartlegend { width: 30%; height: 400px; }
+#chartlegend { width: 20%; height: 400px; }
 
 .metrics-cards {
     display: flex;
@@ -411,11 +411,24 @@ th { color: #555; font-weight: 600; }
 
 /* Responsive */
 @media (max-width: 900px) {
-    .reports-flex { flex-direction: column; }
-    #chartdiv, #chartlegend { width: 100%; height: 400px; }
-    .wrapper { flex-direction: column; }
-    .sidebar { width: 100%; padding:20px; flex-direction: row; overflow-x:auto; }
-    .sidebar a { margin:0 10px; }
+    .reports-flex { 
+        flex-direction: column; 
+    }
+    #chartdiv, #chartlegend { 
+        width: 100%; 
+        height: 400px; }
+    .wrapper { 
+        flex-direction: column; 
+    }
+    .sidebar { 
+        width: 100%; 
+        padding:20px; 
+        flex-direction: row; 
+        overflow-x:auto; 
+    }
+    .sidebar a { 
+        margin:0 10px;
+     }
     .main { padding:20px; }
 }
 </style>
@@ -516,6 +529,14 @@ th { color: #555; font-weight: 600; }
                         <h4>Yearly Sales</h4>
                         <canvas id="yearlySalesChart" height="200"></canvas>
                     </div>
+                        <div class="system-status">
+                <h4>System Health</h4>
+                <ul>
+                    <li>Server: Online ✅</li>
+                    <li>Database: Connected ✅</li>
+                    <li>Pending Errors: 2 ⚠️</li>
+                </ul>
+            </div>
                 </div>
 
             </div>
