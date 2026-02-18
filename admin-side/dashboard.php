@@ -628,6 +628,7 @@ th { color: #555; font-weight: 600; }
                     <h5>Total Rate</h5>
                     <p>187% <span class="up"><small>+77% vs last month</small></span></p>
                 </div>
+                
             </div>
 
             <div class="table-box">
