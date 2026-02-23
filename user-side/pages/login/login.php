@@ -427,6 +427,29 @@ body {
 .login-box input::placeholder {
     color: #999;
 }
+    
+ /* home */
+.right-header {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start; 
+    margin-bottom: 30px;         
+}
+
+.home-btn {
+    padding: 10px 25px;
+    font-size: 0.9rem;
+    color: #fff;
+    background:(135deg, rgb(2, 0, 36), #4b4a4af6);
+    border-radius: 25px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+
+
+
+    
 .login_btn {
     width: 80%;
     max-width: 300px;
@@ -549,6 +572,9 @@ body {
     </div>
 
     <div class="right">
+        <div class="right-header">
+        <a href="/PGInventory/index.php" class="home-btn">Home</a>
+    </div>
         <h1>LOGIN FORM</h1>
         <p>Welcome Back!</p>
         <div class="login-box">
