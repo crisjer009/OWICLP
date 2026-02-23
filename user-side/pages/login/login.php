@@ -27,6 +27,15 @@ $systemName = isset($_GET['system']) ? ucfirst($_GET['system']) : '';
     font-family: 'Poppins', sans-serif; 
 }
 
+
+ .container {
+ margin:0;
+ padding:0;
+ box-sizing: content-box;
+ font-family:Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+ }
+
+
 html, body { 
     width:100%; 
     height:100%; 
@@ -230,24 +239,23 @@ body {
     padding: 15px;
     font-size: 1rem;
     border-radius: 10px;
-    border: 2px solid #000;  /* black border */
-    background-color: #fff;  /* white background */
-    color: #000;             /* black text */
+    border: 2px solid #000;  
+    background-color: #fff;  
+    color: #000;             
     font-weight: 600;
     cursor: pointer;
     transition: all 0.3s ease;
 }
 
 .login-box button:hover {
-    background-color: #18191a; /* blue on hover */
-    border-color: #dadfe4;     /* border also blue */
-    color: #fff;               /* text becomes white */
-    box-shadow: 0 6px 15px rgba(0,0,0,0.1); /* subtle shadow */
-    transform: translateY(-2px); /* lift effect */
+    background-color: #18191a; 
+    border-color: #dadfe4;    
+    color: #fff;               
+    box-shadow: 0 6px 15px rgba(0,0,0,0.1); 
+    transform: translateY(-2px); 
 }
 
 
-    /* Forgot password link */
     .login-box .forgot-password {
         display: block;
         text-align: center;
@@ -280,15 +288,13 @@ body {
 </style>
 </head>
 <body>
-    <!-- LEFT SIDE WITH SVG LOGO -->
+
     <div class="container">
 
-    <!-- LEFT SIDE WITH SVG LOGO -->
     <div class="left">
     <img src="../../../images/image.svg"> 
     </div>
 
-    <!-- RIGHT SIDE LOGIN -->
     <div class="right">
     <h1>LOGIN FORM</h1>
 
@@ -310,7 +316,6 @@ body {
     </div>
 </div>
                 
-    <!-- jQuery -->
      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 <script src="Jquery.js"></script>

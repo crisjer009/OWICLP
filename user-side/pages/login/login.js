@@ -103,7 +103,6 @@ $(document).ready(function() {
                                 .css('color','green');
 
                         window.location.href = '../dashboard.php';
-
                     }
                     else {
 
