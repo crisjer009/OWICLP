@@ -483,6 +483,29 @@ body {
     color: #666;
     cursor: not-allowed;
 }
+
+.right-header {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start; 
+    margin-bottom: 30px;         
+}
+ /* home */
+.home-btn {
+    padding: 10px 25px;
+    font-size: 0.9rem;
+    color: #fff;
+    background:(135deg, rgb(2, 0, 36), #4b4a4af6);
+    border-radius: 25px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+
+
+
+
+
 .login-box a, .login-box .forgot-password {
     display: block;
     margin-top: 10px;
@@ -584,7 +607,7 @@ body {
         <p>Welcome Back!</p>
         <div class="login-box">
             <p id="err_mes" class="message"></p>
-
+            
             <form method="post" id="login_form" autocomplete="off" novalidate>
                 <input type="text" name="username" placeholder="Username" required autocomplete="username" />
                 <input type="password" name="password" placeholder="Password" required autocomplete="current-password" />
