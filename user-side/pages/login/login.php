@@ -490,7 +490,7 @@ body {
     justify-content: flex-start; 
     margin-bottom: 30px;         
 }
- /* home */
+ /* home button*/
 .home-btn {
     padding: 10px 25px;
     font-size: 0.9rem;
@@ -500,9 +500,6 @@ body {
     text-decoration: none;
     transition: all 0.3s ease;
 }
-
-
-
 
 
 
@@ -577,17 +574,35 @@ body {
         box-shadow: 0 0 5px rgba(74,144,226,0.3);
     }
 }
-/* Responsive mobile */
+/* Responsive mobile  */
 @media (max-width: 500px) {
     .container {
-        padding: 30px;
-        width: 90%;
+        display: flex;
+        flex-direction: column; 
+        
+        padding: 20px; 
+        width: 95%;    
+        margin: 0 auto;
     }
+
+    .left, .right {
+        width: 100%;   
+        padding: 10px 0;
+    }
+
     .right h1 {
-        font-size: 1.8rem;
+        font-size: 1.6rem; 
+        line-height: 1.2;
     }
+
     .right p {
-        font-size: 0.95rem;
+        font-size: 0.9rem;
+        line-height: 1.5; 
+    }
+
+    img {
+        max-width: 100%;
+        height: auto;
     }
 }
 </style>
@@ -596,7 +611,7 @@ body {
 
 <div class="container">
     <div class="left">
-        <img src="images/image.svg" alt="Office Warehouse Logo" />
+        <img src="/images/image.svg" alt="Office Warehouse Logo" />
     </div>
 
     <div class="right">

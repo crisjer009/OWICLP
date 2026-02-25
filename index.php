@@ -20,7 +20,7 @@ body{
     display:flex;
     justify-content:center;
     align-items:center;
-    background: linear-gradient(#332d57, #817f7f33);
+    background: linear-gradient(#332d57, #726969b2);
 }
 
 /* Wrapper */
@@ -58,6 +58,10 @@ body{
     cursor:pointer;
     
 }
+a {
+    text-decoration: none;
+    
+}
 
 .system-card:hover{
     transform: translateY(-10px) scale(1.05) rotateZ(1deg);
@@ -91,6 +95,68 @@ body{
     transform: scale(1.1);
     background:#000000;
 }
+
+
+/* TABLET RESPONSIVE */
+@media (max-width: 1024px){
+
+    .page-title{
+        font-size:24px;
+    }
+
+    .system-card{
+        flex:1 1 45%;
+        max-width:45%;
+        height:200px;
+    }
+
+}
+
+/* MOBILE RESPONSIVE */
+@media (max-width: 500px){
+
+    body{
+        padding:15px;
+    }
+
+    .page-title{
+        font-size:20px;
+        margin-bottom:25px;
+    }
+
+    .systems{
+    display:flex;
+    justify-content:center;
+    flex-wrap:wrap;
+    gap:20px;
+}
+
+    .system-card{
+    flex: 0 1 220px;      
+    max-width: 220px;     
+    aspect-ratio: 1 / 1;  
+    background:#10121688;
+    border-radius:18px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    transition: all 0.3s ease;
+}   
+
+    .system-card:hover{
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
+    .system-card h2{
+        font-size:16px;
+    }
+
+    .btn{
+        padding:8px 20px;
+        font-size:14px;
+    }
+    }
 </style>
 </head>
 <body>
@@ -107,8 +173,8 @@ body{
 
     <div class="system-card">
         <h2>TNAP System</h2>
-        <a class="btn" href="/user-side/pages/login/login.php?system=tnap">Enter</a>
-    </div>
+         <a class="btn" href="/TNAPInventory/index.php?system=tnap">Enter</a>
+    </div>    
 
     <div class="system-card">
         <h2>Fishermall System</h2>
