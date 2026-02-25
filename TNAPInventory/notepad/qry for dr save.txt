@@ -1,9 +1,0 @@
-SELECT
-tbl_dr.dr_tag,
-tbl_dr.consign_tag,
-tbl_consign_reports.OWI_SKU,
-tbl_consign_reports.branch_id
-FROM
-tbl_dr
-RIGHT JOIN tbl_consign_reports ON tbl_dr.consign_tag = tbl_consign_reports.consign_tag
-WHERE tbl_dr.dr_tag = 'PQIN-001'
