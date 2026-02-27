@@ -8,155 +8,188 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Consignment Order Form System</title>
 <style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:'Segoe UI',sans-serif;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', system-ui, sans-serif;
 }
 
-body{
-    min-height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    background: linear-gradient(#332d57, #726969b2);
+body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #2a254a, #4a4444);
+    padding: 40px 20px;
 }
 
-/* Wrapper */
-.wrapper{
-    width:90%;
-    max-width:1000px;
-    text-align:center;
+.wrapper {
+    width: 100%;
+    max-width: 1200px;
 }
 
-.page-title{
-    font-size:28px;
-    margin-bottom:50px;
+.page-title {
+    font-size: 3rem;
+    color: #ffffff;
+    margin-bottom: 80px;
+    text-align: center;
+    font-weight: 200; 
+    letter-spacing: 4px;
+    text-transform: uppercase;
 }
 
-/* Systems container */
-.systems{
-    display:flex;
-    justify-content:space-between;
-    flex-wrap:wrap;
-    gap:20px;
+.systems {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    flex-wrap: wrap;
 }
 
-/* Card design */
-.system-card{
-    flex:1 1 250px;
-    min-width:250px;
-    height:250px;
-    background:#10121688;
-    border-radius:25px;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    transition: transform 0.4s, box-shadow 0.4s;
-    cursor:pointer;
-    
+.system-card {
+    background: #10121688;
+    width: 320px;
+    height: 320px;
+    border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; /* Organic shape */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    box-shadow: 20px 20px 60px rgba(0, 0, 0, 0.3), 
+                -20px -20px 60px rgba(255, 255, 255, 0.02);
 }
-a {
+
+
+
+.system-card:hover {
+    border-radius: 50%; 
+    transform: translateY(-10px) scale(1.05);
+    background: #101216ee;
+    box-shadow: 0 0 50px rgba(255, 255, 255, 0.1);
+}
+
+.system-card h2 {
+    font-size: 20px;
+    color: #ffffff;
+    margin-bottom: 20px;
+    font-weight: 400;
+    text-align: center;
+}
+
+.btn {
     text-decoration: none;
-    
+    padding: 10px 25px;
+    border: 1px solid #ffffff;
+    color: #ffffff;
+    border-radius: 0; 
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
 }
 
-.system-card:hover{
-    transform: translateY(-10px) scale(1.05) rotateZ(1deg);
+.btn:hover {
+    background: #ffffff;
+    color: #332d57;
+    padding: 10px 40px; 
 }
-
-.system-card h2{
-    font-size:22px;
-    color:#ffffff;
-    margin-bottom:15px;
-}
-
-/* Icon */
-.icon{
-    font-size:50px;
-    margin-bottom:15px;
-}
-
-/* Button */
-.btn{
-    padding:10px 25px;
-    border:none;
-    border-radius:25px;
-    background: #333;
-    color: #fff;
-    font-weight:bold;
-    cursor:pointer;
-    transition: transform 0.3s, background 0.3s;
-}
-
-.btn:hover{
-    transform: scale(1.1);
-    background:#000000;
-}
-
 
 /* TABLET RESPONSIVE */
-@media (max-width: 1024px){
+@media (max-width: 1024px) {
 
-    .page-title{
-        font-size:24px;
+    .page-title {
+        font-size: 24px;
+        margin-bottom: 20px;
     }
 
-    .system-card{
-        flex:1 1 45%;
-        max-width:45%;
-        height:200px;
+    .systems {
+        display: flex;
+        flex-direction: column; /* stack cards vertically */
+        gap: 15px;
+        align-items: stretch; /* make cards full width */
     }
 
+    .system-card {
+        width: 100%;          /* full width of container */
+        max-width: 100%;
+        height: auto;         /* height adjusts to content */
+        padding: 20px;
+        background: #10121688;
+        border-radius: 18px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        transition: all 0.3s ease;
+    }
+
+    .system-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    }
+
+    .system-card h2 {
+        font-size: 18px;
+        margin-bottom: 10px;
+    }
+
+    .btn {
+        padding: 10px 25px;
+        font-size: 16px;
+        align-self: flex-start;
+    }
 }
 
 /* MOBILE RESPONSIVE */
-@media (max-width: 500px){
+@media (max-width: 500px) {
 
-    body{
-        padding:15px;
+    body {
+        padding: 15px;
     }
 
-    .page-title{
-        font-size:20px;
-        margin-bottom:25px;
+    .page-title {
+        font-size: 20px;
+        margin-bottom: 20px;
     }
 
-    .systems{
-    display:flex;
-    justify-content:center;
-    flex-wrap:wrap;
-    gap:20px;
+    .systems {
+        display: flex;
+        flex-direction: column; /* vertical list */
+        gap: 15px;
+    }
+
+    .system-card {
+        width: 100%;         /* full width for list */
+        max-width: 100%;
+        padding: 15px;
+        background: #10121688;
+        border-radius: 18px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        transition: all 0.3s ease;
+    }
+
+    .system-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+    }
+
+    .system-card h2 {
+        font-size: 16px;
+        margin-bottom: 8px;
+    }
+
+    .btn {
+        padding: 8px 20px;
+        font-size: 14px;
+        align-self: flex-start;
+    }
 }
-
-    .system-card{
-    flex: 0 1 220px;      
-    max-width: 220px;     
-    aspect-ratio: 1 / 1;  
-    background:#10121688;
-    border-radius:18px;
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    transition: all 0.3s ease;
-}   
-
-    .system-card:hover{
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-}
-    .system-card h2{
-        font-size:16px;
-    }
-
-    .btn{
-        padding:8px 20px;
-        font-size:14px;
-    }
-    }
 </style>
 </head>
 <body>
@@ -173,7 +206,7 @@ a {
 
     <div class="system-card">
         <h2>TNAP System</h2>
-         <a class="btn" href="/TNAPInventory/index.php?system=tnap">Enter</a>
+         <a class="btn" href="/user-side/pages/login/login.php?system=tnap">Enter</a>
     </div>    
 
     <div class="system-card">
