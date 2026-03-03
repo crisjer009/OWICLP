@@ -1,543 +1,453 @@
-/*  $(document).ready(function(){
-
-    // ==========================
-    // SECTION SWITCHING
-    // ==========================
-    function showSection(sectionId){
-        $('#dashboardContent, #usersContent, #pointsContent, #rewardsContent, #transactionsContent, #reportsContent, #settingsContent').hide();        $(sectionId).show();
-    }
-
-    $("#dashboardLink").click(e => { e.preventDefault(); showSection("#dashboardContent"); });
-    $("#usersLink").click(e => { e.preventDefault(); showSection("#usersContent"); });
-    $("#pointsLink").click(e => { e.preventDefault(); showSection("#pointsContent"); });
-    $("#rewardsLink").click(e => { e.preventDefault(); showSection("#rewardsContent"); });
-    $("#transactionsLink").click(e => { e.preventDefault(); showSection("#transactionsContent"); });
-    $("#settingsLink").click(e => { e.preventDefault(); showSection("#settingsContent"); });
-
-    showSection("#dashboardContent");
-
-
-
-   $(document).ready(function() {
-    // 1. DATA GENERATOR (Creates a realistic upward trend)
-    function generateGrowthData(start, variance, months = 6) {
-        let data = [];
-        let current = start;
-        for (let i = 0; i < months; i++) {
-            current += Math.floor(Math.random() * variance) + 10;
-            data.push(current);
-        }
-        return data;
-    }
-
-    // Prepare the datasets
-    const labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
-    const usersData = generateGrowthData(150, 50);      // Starts at 150, grows by ~50/mo
-    const pointsData = generateGrowthData(1000, 500);   // Starts at 1000, grows by ~500/mo
-    const transactionsData = generateGrowthData(20, 15); // Starts at 20, grows by ~15/mo
-    const rewardsData = [65, 35]; // 65% Active, 35% Redeemed
-
-    // 2. CHART RENDER HELPER (Handles Desktop Re-renders)
-    function render(id, config) {
-        const chartStatus = Chart.getChart(id);
-        if (chartStatus) { chartStatus.destroy(); }
-        new Chart(document.getElementById(id), config);
-    }
-
-    // 3. MINI CHART CONFIG
-    const miniOptions = {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: { legend: { display: false } },
-        scales: { x: { display: false }, y: { display: false } },
-        elements: { point: { radius: 0 }, line: { tension: 0.4, borderWidth: 3 } }
-    };
-
-    // --- EXECUTE CHARTS ---
-
-    // Total Users (Indigo Line)
-    render("usersMiniChart", {
-        type: 'line',
-        data: { labels, datasets: [{ data: usersData, borderColor: '#6366f1', backgroundColor: 'rgba(99, 102, 241, 0.1)', fill: true }] },
-        options: miniOptions
-    });
-
-    // Total Points (Emerald Bars)
-    render("pointsMiniChart", {
-        type: 'bar',
-        data: { labels, datasets: [{ data: pointsData, backgroundColor: '#10b981', borderRadius: 4 }] },
-        options: miniOptions
-    });
-
-    // Total Rewards (Amber Doughnut)
-    render("rewardsMiniChart", {
-        type: 'doughnut',
-        data: { 
-            labels: ['Active', 'Redeemed'], 
-            datasets: [{ data: rewardsData, backgroundColor: ['#f59e0b', '#e2e8f0'], borderWidth: 0 }] 
-        },
-        options: { cutout: '75%', plugins: { legend: { display: false } }, maintainAspectRatio: false }
-    });
-
-    // Total Transactions (Rose Line)
-    render("transactionsMiniChart", {
-        type: 'line',
-        data: { labels, datasets: [{ data: transactionsData, borderColor: '#ef4444', backgroundColor: 'rgba(239, 68, 68, 0.1)', fill: true }] },
-        options: miniOptions
-    });
-
-    
-
-});
-
-  function viewUser(id, name, email, tier, date) {
-    const modal = document.getElementById('userModal');
-    if (!modal) return;
-
-    // Populate data
-    document.getElementById('detID').innerText = id;
-    document.getElementById('detName').innerText = name;
-    document.getElementById('detEmail').innerText = email;
-    document.getElementById('detTier').innerText = tier;
-    document.getElementById('detDate').innerText = date;
-    
-    // Clear old password
-    document.getElementById('tempPassDisplay').innerText = "";
-    
-    // Show modal
-    modal.style.display = "block";
-}
-
-// 2. Close Modal
-function closeModal() {
-    const modal = document.getElementById('userModal');
-    if (modal) modal.style.display = "none";
-}
-
-// 3. Password Generator
-function generatePassword() {
-    const charset = "abcdefghijkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789!@#$";
-    let password = "";
-    for (let i = 0; i < 10; i++) {
-        password += charset.charAt(Math.floor(Math.random() * charset.length));
-    }
-    document.getElementById('tempPassDisplay').innerText = password;
-}
-
-// 4. User Table Search Filter
-function filterUsers() {
-    let input = document.getElementById("userSearch").value.toUpperCase();
-    let table = document.getElementById("usersTable");
-    if (!table) return;
-    
-    let tr = table.getElementsByTagName("tr");
-    for (let i = 1; i < tr.length; i++) {
-        let td = tr[i].getElementsByTagName("td")[1]; // Full Name column
-        if (td) {
-            let txtValue = td.textContent || td.innerText;
-            tr[i].style.display = txtValue.toUpperCase().indexOf(input) > -1 ? "" : "none";
-        }
-    }
-}
-
-// 5. Global Click Handler (Close modal when clicking background)
-window.onclick = function(event) {
-    let modal = document.getElementById('userModal');
-    if (event.target == modal) closeModal();
-};
-
-    // REPORTS SECTION (amCharts 5 Pie chart with legends)
-    let chartLoaded = false;
-
-    $("#reportsLink").click(function(e){
-        e.preventDefault();
-        showSection("#reportsContent");
-
-        if (!chartLoaded) {
-            loadReportsChart();
-            chartLoaded = true;
-        }
-    });
-
-    function loadReportsChart(){
-
-    am5.ready(function(){
-
-        var root = am5.Root.new("chartdiv");
-
-        root.setThemes([
-            am5themes_Animated.new(root)
-        ]);
-
-        var chart = root.container.children.push(
-            am5percent.PieChart.new(root, {
-                layout: root.horizontalLayout,
-                innerRadius: am5.percent(40)
-            })
-        );
-
-        var series = chart.series.push(
-            am5percent.PieSeries.new(root, {
-                valueField: "value",
-                categoryField: "category"
-            })
-        );
-
-        series.data.setAll([
-            { category: "Puregold Makati", value: 420 },
-            { category: "Puregold Cubao", value: 120 },
-            { category: "Puregold Antipolo", value: 210 },
-            { category: "Puregold Marikina", value: 85 },
-            {category: "Puregold Pureza", value: 20}
-        ]);
-
-        // Clean flat style
-        series.slices.template.setAll({
-            strokeOpacity: 0
-        });
-
-        series.labels.template.set("visible", false);
-        series.ticks.template.set("visible", false);
-
-        // Legend on RIGHT SIDE
-        var legendRoot = am5.Root.new("chartlegend");
-
-        legendRoot.setThemes([
-            am5themes_Animated.new(legendRoot)
-        ]);
-
-        var legend = legendRoot.container.children.push(
-            am5.Legend.new(legendRoot, {
-                layout: legendRoot.verticalLayout
-            })
-        );
-
-        legend.data.setAll(series.dataItems);
-
-        series.appear(1000, 100);
-    });
-}
-
-
-});
-
-
-
- 
-
-
- */
-
-/* =========================================================
-    GLOBAL FUNCTIONS (Accessible by HTML onclick)
-   ========================================================= */
-
-function viewUser(id, name, email, tier, date) {
-    const modal = document.getElementById('userModal');
-    if (!modal) return;
-
-    document.getElementById('detID').innerText = id;
-    document.getElementById('detName').innerText = name;
-    document.getElementById('detEmail').innerText = email;
-    document.getElementById('detTier').innerText = tier;
-    document.getElementById('detDate').innerText = date;
-    
-    document.getElementById('tempPassDisplay').innerText = "";
-    
-    // the modal
-    modal.style.display = "block";
-}
-
-function closeModal() {
-    const modal = document.getElementById('userModal');
-    if (modal) modal.style.display = "none";
-}
-
-//  Password Generator
-function generatePassword() {
-    const charset = "abcdefghijkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789!@#$";
-    let password = "";
-    for (let i = 0; i < 10; i++) {
-        password += charset.charAt(Math.floor(Math.random() * charset.length));
-    }
-    document.getElementById('tempPassDisplay').innerText = password;
-}
-
-function filterUsers() {
-    let input = document.getElementById("userSearch").value.toUpperCase();
-    let table = document.getElementById("usersTable");
-    if (!table) return;
-    
-    let tr = table.getElementsByTagName("tr");
-    for (let i = 1; i < tr.length; i++) {
-        let td = tr[i].getElementsByTagName("td")[1]; // Full Name column
-        if (td) {
-            let txtValue = td.textContent || td.innerText;
-            tr[i].style.display = txtValue.toUpperCase().indexOf(input) > -1 ? "" : "none";
-        }
-    }
-}
-
-
-window.onclick = function(event) {
-    let modal = document.getElementById('userModal');
-    if (event.target == modal) closeModal();
-};
-
-
-function deleteUser(button, userId) {
-    if (confirm("Are you sure you want to delete user " + userId + "?")) {
-        // Find the <tr> and remove it
-        const row = button.closest('tr');
-        row.style.opacity = '0';
-        setTimeout(() => row.remove(), 300); // Smooth fade out then remove
-    }
-}
-$(document).ready(function() {
-
-    // --- SECTION SWITCHING ---
+document.addEventListener('DOMContentLoaded', () => {
+    // ==========================================
+    // 1. Sidebar Navigation Toggle
+    // ==========================================
     function showSection(sectionId) {
-        $('#dashboardContent, #usersContent, #pointsContent, #rewardsContent, #transactionsContent, #reportsContent, #settingsContent').hide();
+        // Hide all content sections
+        $('#dashboardContent, #branchesContent, #StocksContent, #transactionsContent, #reportsContent, #settingsContent').hide();
         $(sectionId).show();
+
+        // Load charts if reports section is shown
+        if (sectionId === '#reportsContent') {
+            loadReportsCharts();
+        }
     }
 
     $("#dashboardLink").click(e => { e.preventDefault(); showSection("#dashboardContent"); });
-    $("#usersLink").click(e => { e.preventDefault(); showSection("#usersContent"); });
-    $("#pointsLink").click(e => { e.preventDefault(); showSection("#pointsContent"); });
-    $("#rewardsLink").click(e => { e.preventDefault(); showSection("#rewardsContent"); });
-    $("#transactionsLink").click(e => { e.preventDefault(); showSection("#transactionsContent"); });
+    $("#usersLink").click(e => { e.preventDefault(); showSection("#branchesContent"); });
+    $("#suppliersStockLink").click(e => { e.preventDefault(); showSection("#StocksContent"); });
+    $("#reportsLink").click(e => { e.preventDefault(); showSection("#reportsContent"); });
     $("#settingsLink").click(e => { e.preventDefault(); showSection("#settingsContent"); });
-    $("#reportsLink").click(e => { 
-        e.preventDefault(); 
-        showSection("#reportsContent"); 
-        if (!chartLoaded) {
-            loadReportsChart();
-            chartLoaded = true;
-        }
-    });
 
+    // Show dashboard by default
     showSection("#dashboardContent");
 
-    // --- DASHBOARD DATA & CHARTS ---
-    function generateGrowthData(start, variance, months = 6) {
-        let data = [];
-        let current = start;
-        for (let i = 0; i < months; i++) {
-            current += Math.floor(Math.random() * variance) + 10;
-            data.push(current);
-        }
-        return data;
+    // ==========================================
+    // 2. Table Search Functionality
+    // ==========================================
+    const searchInput = document.querySelector('.top .search input');
+    const tableRows = document.querySelectorAll('.data-table tbody tr');
+
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+
+            tableRows.forEach(row => {
+                const rowText = row.textContent.toLowerCase();
+                row.style.display = rowText.includes(searchTerm) ? '' : 'none';
+            });
+        });
     }
 
-    function renderMiniChart(id, config) {
-        const chartStatus = Chart.getChart(id);
-        if (chartStatus) { chartStatus.destroy(); }
-        const ctx = document.getElementById(id);
-        if (ctx) new Chart(ctx, config);
+    // ==========================================
+    // 3. Stock Movement Chart (Chart.js)
+    // ==========================================
+    const chartPlaceholder = document.querySelector('.chart-placeholder');
+    
+    if (chartPlaceholder) {
+        const ctx = document.createElement('canvas');
+        // Replace placeholder text with canvas
+        chartPlaceholder.innerHTML = '';
+        chartPlaceholder.appendChild(ctx);
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                datasets: [{
+                    label: 'Stock In',
+                    data: [120, 150, 100, 180],
+                    borderColor: '#38bdf8', // Blue
+                    backgroundColor: 'rgba(56, 189, 248, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }, {
+                    label: 'Stock Out',
+                    data: [80, 100, 130, 90],
+                    borderColor: '#ef4444', // Red
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: 'white' // Make legend text visible on dark background
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: { color: 'rgba(255, 255, 255, 0.7)' },
+                        grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                    },
+                    y: {
+                        ticks: { color: 'rgba(255, 255, 255, 0.7)' },
+                        grid: { color: 'rgba(255, 255, 255, 0.1)' }
+                    }
+                }
+            }
+        });
     }
 
-    const labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
-    const miniOptions = {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: { legend: { display: false } },
-        scales: { x: { display: false }, y: { display: false } },
-        elements: { point: { radius: 0 }, line: { tension: 0.4, borderWidth: 3 } }
-    };
-
-    renderMiniChart("usersMiniChart", {
-        type: 'line',
-        data: { labels, datasets: [{ data: generateGrowthData(150, 50), borderColor: '#6366f1', backgroundColor: 'rgba(99, 102, 241, 0.1)', fill: true }] },
-        options: miniOptions
-    });
-
-    renderMiniChart("pointsMiniChart", {
-        type: 'bar',
-        data: { labels, datasets: [{ data: generateGrowthData(1000, 500), backgroundColor: '#10b981', borderRadius: 4 }] },
-        options: miniOptions
-    });
-
-    renderMiniChart("rewardsMiniChart", {
-        type: 'doughnut',
-        data: { 
-            labels: ['Active', 'Redeemed'], 
-            datasets: [{ data: [65, 35], backgroundColor: ['#f59e0b', '#e2e8f0'], borderWidth: 0 }] 
-        },
-        options: { cutout: '75%', plugins: { legend: { display: false } }, maintainAspectRatio: false }
-    });
-
-    renderMiniChart("transactionsMiniChart", {
-        type: 'line',
-        data: { labels, datasets: [{ data: generateGrowthData(20, 15), borderColor: '#ef4444', backgroundColor: 'rgba(239, 68, 68, 0.1)', fill: true }] },
-        options: miniOptions
-    });
-
-   // REPORTS SECTION (the amCharts 5 Pie chart with legends)
-    let chartLoaded = false;
-
-    $("#reportsLink").click(function(e){
-        e.preventDefault();
-        showSection("#reportsContent");
-
-        if (!chartLoaded) {
-            loadReportsChart();
-            chartLoaded = true;
-        }
-    });
-
-
-/* =========================================================
-   BRANCH MANAGEMENT FUNCTIONS
-   ========================================================= */
-
-function loadBranchUsers() {
+    // ==========================================
+    // 4. Branch Management Table Data
+    // ==========================================
     const branchSelect = document.getElementById('branchSelect');
-    const table = document.getElementById('usersTable');
-    const tbody = document.getElementById('branchUsersBody');
-    const selectedBranch = branchSelect.value;
+    const tableWrapper = document.getElementById('branchTableWrapper');
+    const tableBody = document.getElementById('branchTableBody');
 
-    // 1. Clear previous table data
-    tbody.innerHTML = '';
-
-    // 2. Define Data (In real app, this comes from an API/Backend)
-    let branchData = {
-        'cubao': [
-            { id: 'U001', name: 'John Doe', role: 'Admin', email: 'john@example.com', status: 'Active', activity: 'Logged in 10 mins ago' }
+    // Fake Database for Branch Users
+    const branchData = {
+        "Makati": [
+            { id: "USR-001", name: "Sherlyn Ramos", branch: "Makati", role: "Manager", status: "Active" },
+            { id: "USR-002", name: "Yasmin Pilapil", branch: "Makati", role: "Staff", status: "Active" }
         ],
-        'antipolo': [
-            { id: 'U003', name: 'Kyle Manansala', role: 'Admin', email: 'kyle.m@outlook.ph', status: 'Active', activity: 'Logged in 2 mins ago' },
-            { id: 'U005', name: 'Sarah Santos', role: 'Manager', email: 'sarah.s@gmail.com', status: 'Active', activity: 'Updated Inventory 1hr ago' }
+        "Cubao": [
+            { id: "USR-003", name: "Leinn Margaret", branch: "Cubao", role: "Supervisor", status: "Active" }
         ],
-        'santolan': [], // Example of empty branch
-        'montalban': []
+        "Batangas": [
+            { id: "USR-004", name: "Justin Parlan", branch: "Batangas", role: "Staff", status: "Active" }
+        ],
+        "Bulacan": [
+            { id: "USR-005", name: "Gab Zapanta", branch: "Bulacan", role: "Staff", status: "Active" },
+            { id: "USR-006", name: "Princess Reyes", branch: "Bulacan", role: "Staff", status: "Active" }
+        ],
+        "Antipolo": [
+            { id: "USR-007", name: "Robvick Besiata", branch: "Antipolo", role: "Supervisor", status: "Active" },
+            { id: "USR-008", name: "Gab Zapanta", branch: "Antipolo", role: "Staff", status: "Inactive" }
+        ]
     };
 
-    // 3. Get data for selected branch
-    const data = branchData[selectedBranch] || [];
+    if (branchSelect) {
+        branchSelect.addEventListener('change', function() {
+            const selectedBranch = this.value;
+            tableBody.innerHTML = '';
 
-    // 4. Populate table or hide it
-    if (data.length > 0) {
-        table.style.display = 'table'; // Show table
+            if (selectedBranch && branchData[selectedBranch]) {
+                branchData[selectedBranch].forEach(user => {
+                    const row = `
+                        <tr>
+                            <td>${user.id}</td>
+                            <td>${user.name}</td>
+                            <td>${user.branch}</td>
+                            <td>${user.role}</td>
+                            <td>
+                                <span class="status ${user.status === 'Active' ? 'delivered' : 'pending'}">
+                                    ${user.status}
+                                </span>
+                            </td>
+                            <td>
+                                <button class="edit-btn" onclick="openEditModal('${user.id}', '${user.name}', '${user.branch}', '${user.role}', '${user.status}')">
+                                    <i class="fas fa-edit"></i> Edit
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                    tableBody.innerHTML += row;
+                });
+                tableWrapper.style.display = 'block';
+            } else {
+                tableWrapper.style.display = 'none';
+            }
+        });
+    }
+
+    // --- EDIT FORM MODAL LOGIC ---
+    const modal = document.getElementById('editModal');
+
+    window.openEditModal = function(id, name, branch, role, status) {
+        document.getElementById('editUserId').value = id;
+        document.getElementById('editName').value = name;
+        document.getElementById('editBranch').value = branch;
+        document.getElementById('editRole').value = role;
+        document.getElementById('editStatus').value = status;
         
-        data.forEach(user => {
+        modal.style.display = 'flex';
+    }
+
+    window.closeModal = function() {
+        modal.style.display = 'none';
+    }
+
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+
+    // ==========================================
+    // 5. Stocks Management
+    // ==========================================
+    
+    const supplierData = [
+        {
+            product: "Ergonomic Desk Chair",
+            supplier: "Office Furniture Inc.",
+            contact: "Office Furniture Inc.",
+            address: "123 Makati Business Park, Makati City",
+            pricing: "₱4,500 per unit (5% discount for 50+ orders)",
+            leadTime: "5 days",
+            reorderDate: "March 10, 2026"
+        },
+        {
+            product: "LaserJet Office Printer",
+            supplier: "Tech Solutions Ltd.",
+            contact: "Tech Solutions Ltd.",
+            address: "45 Cubao Tech Center, Quezon City",
+            pricing: "₱12,000 per unit (10% bulk discount)",
+            leadTime: "7 days",
+            reorderDate: "March 15, 2026"
+        },
+        {
+            product: "Bond Paper A4 (Sub 20)",
+            supplier: "Paper Corp Publishing",
+            contact: "Paper Corp Publishing",
+            address: "88 Paper Street, Bulacan",
+            pricing: "₱180 per ream",
+            leadTime: "4 days",
+            reorderDate: "March 5, 2026"
+        },
+        {
+            product: "Modular Office Desk",
+            supplier: "Office Furniture Inc.",
+            contact: "Office Furniture Inc.",
+            address: "123 Makati Business Park, Makati City",
+            pricing: "₱8,500 per unit",
+            leadTime: "6 days",
+            reorderDate: "March 12, 2026"
+        },
+        {
+            product: "24-inch Monitor",
+            supplier: "Tech Solutions Ltd.",
+            contact: "Tech Solutions Ltd.",
+            address: "45 Cubao Tech Center, Quezon City",
+            pricing: "₱6,500 per unit",
+            leadTime: "5 days",
+            reorderDate: "March 8, 2026"
+        }
+    ];
+
+    const supplierTableBody = document.querySelector('#StocksContent .data-table tbody');
+
+    if (supplierTableBody) {
+        supplierData.forEach(item => {
             const row = `
                 <tr>
-                    <td>${user.id}</td>
-                    <td>${user.name}</td>
-                    <td>${user.role}</td>
-                    <td>${user.email}</td>
-                    <td><span class="badge status-active">${user.status}</span></td>
-                    <td>${user.activity}</td>
-                    <td>
-                        <button class="view-btn" onclick="openEditModal('${user.id}', '${user.name}', '${user.email}', '${user.role}')">Edit</button>
-                    </td>
+                    <td>${item.product}</td>
+                    <td>${item.supplier}</td>
+                    <td>${item.contact}</td>
+                    <td>${item.address}</td>
+                    <td>${item.pricing}</td>
+                    <td>${item.leadTime}</td>
+                    <td>${item.reorderDate}</td>
                 </tr>
             `;
-            tbody.innerHTML += row;
+            supplierTableBody.innerHTML += row;
         });
-    } else {
-        table.style.display = 'none'; // Hide table if no data
     }
-}
 
-// Open Edit Modal and Populate Data
-function openEditModal(id, name, email, role) {
-    const modal = document.getElementById('userModal');
-    if (!modal) return;
+    // ==========================================
+    // 6. Inter-Branch Transfers Logic
+    // ==========================================
+    let transfersData = [
+        { id: 1, item: "Ergonomic Chair", from: "Quezon City", to: "Antipolo", qty: 5, status: "In-Transit", date: "2026-03-01" },
+        { id: 2, item: "LaserJet Printer", from: "Quezon City", to: "Batangas", qty: 2, status: "Pending", date: "2026-03-02" },
+        { id: 3, item: "Ergonomic Chair", from: "Quezon City", to: "Makati", qty: 3, status: "Completed", date: "2026-02-28" },
+        { id: 4, item: "Office Desk", from: "Quezon City", to: "Bulacan", qty: 10, status: "In-Transit", date: "2026-03-03" }
+    ];
 
-    // Populate form fields
-    document.getElementById('detID').innerText = id;
-    document.getElementById('detName').value = name;
-    document.getElementById('detEmail').value = email;
-    // Set select to lowercase to match option values
-    document.getElementById('detRole').value = role.toLowerCase();
-    
-    // Show modal
-    modal.style.display = "block";
-}
+    const transfersTableBody = document.getElementById('transfersTableBody');
 
-// Close Modal
-function closeModal() {
-    const modal = document.getElementById('userModal');
-    if (modal) modal.style.display = "none";
-}
+    function renderTransfers() {
+        if (!transfersTableBody) return;
+        transfersTableBody.innerHTML = '';
+        transfersData.forEach(trf => {
+            let actionBtn = '';
+            if (trf.status !== 'Completed') {
+                actionBtn = `<button class="action-btn" onclick="completeTransfer(${trf.id})">Complete</button>`;
+            }
 
-// Save Changes
-function saveUserChanges() {
-    const id = document.getElementById('detID').innerText;
-    const name = document.getElementById('detName').value;
-    const email = document.getElementById('detEmail').value;
-    const role = document.getElementById('detRole').value;
-
-    // Backend update logic would go here
-    alert(`Saving changes for User: ${name} (${id})`);
-    
-    closeModal();
-}
-
-// Close modal when clicking background
-window.onclick = function(event) {
-    let modal = document.getElementById('userModal');
-    if (event.target == modal) closeModal();
-};
-
-
-
-    
-    function loadReportsChart(){
-
-    am5.ready(function(){
-
-        var root = am5.Root.new("chartdiv");
-
-        root.setThemes([
-            am5themes_Animated.new(root)
-        ]);
-
-        var chart = root.container.children.push(
-            am5percent.PieChart.new(root, {
-                layout: root.horizontalLayout,
-                innerRadius: am5.percent(40)
-            })
-        );
-
-        var series = chart.series.push(
-            am5percent.PieSeries.new(root, {
-                valueField: "value",
-                categoryField: "category"
-            })
-        );
-
-        series.data.setAll([
-            { category: "Puregold Makati", value: 420 },
-            { category: "Puregold Cubao", value: 120 },
-            { category: "Puregold Antipolo", value: 210 },
-            { category: "Puregold Marikina", value: 85 },
-            {category: "Puregold Pureza", value: 20}
-        ]);
-
-        series.slices.template.setAll({
-            strokeOpacity: 0
+            const row = `
+                <tr>
+                    <td>${trf.item}</td>
+                    <td>${trf.from}</td>
+                    <td>${trf.to}</td>
+                    <td>${trf.qty}</td>
+                    <td><span class="status ${trf.status.toLowerCase().replace(' ', '-')}">${trf.status}</span></td>
+                    <td>${trf.date}</td>
+                    <td>${actionBtn}</td>
+                </tr>
+            `;
+            transfersTableBody.innerHTML += row;
         });
+    }
 
-        series.labels.template.set("visible", false);
-        series.ticks.template.set("visible", false);
+    renderTransfers();
 
-        var legendRoot = am5.Root.new("chartlegend");
+    // --Complete Transfer Function ---
+    window.completeTransfer = (id) => {
+        const transfer = transfersData.find(t => t.id === id);
+        if (transfer) {
+            transfer.status = "Completed";
+            alert(`Transfer of ${transfer.item} to ${transfer.to} completed. Inventory updated.`);
+            renderTransfers();
+            renderChart(); 
+        }
+    }
 
-        legendRoot.setThemes([
-            am5themes_Animated.new(legendRoot)
-        ]);
+    // --- Transfer Status Chart (Chart.js) ---
+    let myChart = null;
+    function renderChart() {
+        const chartCanvas = document.getElementById('transferStatusChart');
+        if (!chartCanvas) return;
+        const ctx = chartCanvas.getContext('2d');
+        
+        if (myChart) myChart.destroy();
 
-        var legend = legendRoot.container.children.push(
-            am5.Legend.new(legendRoot, {
-                layout: legendRoot.verticalLayout
-            })
-        );
+        const statusCounts = transfersData.reduce((acc, curr) => {
+            acc[curr.status] = (acc[curr.status] || 0) + 1;
+            return acc;
+        }, {});
 
-        legend.data.setAll(series.dataItems);
+        myChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Pending', 'In-Transit', 'Completed'],
+                datasets: [{
+                    data: [
+                        statusCounts['Pending'] || 0,
+                        statusCounts['In-Transit'] || 0,
+                        statusCounts['Completed'] || 0
+                    ],
+                    backgroundColor: ['#fbbf24', '#38bdf8', '#34d399'], // Yellow, Blue, Green
+                    borderColor: 'rgba(0,0,0,0.1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { color: 'white' }
+                    }
+                }
+            }
+        });
+    }
+    
+    renderChart();
 
-        series.appear(1000, 100);
-    });
+    // ==========================================
+    // 7. Reports Section Charts (amCharts 5)
+    // ==========================================
+    function loadReportsCharts() {
+        // Ensure amCharts is loaded
+        if (typeof am5 === 'undefined') return;
+
+        am5.ready(function() {
+
+            // --- 1. PIE CHART (Sales Distribution) ---
+            var rootPie = am5.Root.new("chartdiv");
+            rootPie.setThemes([am5themes_Animated.new(rootPie)]);
+
+            var chartPie = rootPie.container.children.push(
+                am5percent.PieChart.new(rootPie, { layout: rootPie.horizontalLayout })
+            );
+
+            var seriesPie = chartPie.series.push(
+                am5percent.PieSeries.new(rootPie, {
+                    valueField: "value",
+                    categoryField: "category",
+                    innerRadius: am5.percent(50)
+                })
+            );
+
+            seriesPie.data.setAll([
+                { category: "Makati", value: 550 },
+                { category: "Cubao", value: 320 },
+                { category: "Antipolo", value: 480 },
+                { category: "Marikina", value: 150 }
+            ]);
+
+            seriesPie.labels.template.set("visible", false);
+            seriesPie.ticks.template.set("visible", false);
+
+            // Pie Legend
+            var legendPie = rootPie.container.children.push(am5.Legend.new(rootPie, {
+                centerY: am5.percent(50),
+                y: am5.percent(50),
+                layout: rootPie.verticalLayout
+            }));
+            legendPie.data.setAll(seriesPie.dataItems);
+            
+            // Ensure legend text is white for dark theme
+            legendPie.labels.template.setAll({ fill: am5.color(0xffffff) });
+            legendPie.valueLabels.template.setAll({ fill: am5.color(0xffffff) });
+
+
+            // --- 2. LINE CHART (Sales Trend) ---
+            var rootLine = am5.Root.new("linechartdiv");
+            rootLine.setThemes([am5themes_Animated.new(rootLine)]);
+
+            var chartLine = rootLine.container.children.push(
+                am5xy.XYChart.new(rootLine, {
+                    panX: true, panY: true, wheelX: "panX", wheelY: "zoomX"
+                })
+            );
+
+            // Data
+            var data = [
+                { date: new Date(2026, 0, 1).getTime(), sales: 500, visitors: 300 },
+                { date: new Date(2026, 1, 1).getTime(), sales: 600, visitors: 350 },
+                { date: new Date(2026, 2, 1).getTime(), sales: 800, visitors: 400 },
+                { date: new Date(2026, 3, 1).getTime(), sales: 700, visitors: 380 }
+            ];
+
+            // Axes
+            var xAxis = chartLine.xAxes.push(am5xy.DateAxis.new(rootLine, {
+                baseInterval: { timeUnit: "month", count: 1 },
+                renderer: am5xy.AxisRendererX.new(rootLine, {}),
+                tooltip: am5.Tooltip.new(rootLine, {})
+            }));
+
+            var yAxis = chartLine.yAxes.push(am5xy.ValueAxis.new(rootLine, {
+                renderer: am5xy.AxisRendererY.new(rootLine, {})
+            }));
+
+            // Series 1 (Sales)
+            var seriesSales = chartLine.series.push(am5xy.LineSeries.new(rootLine, {
+                name: "Sales",
+                xAxis: xAxis, yAxis: yAxis,
+                valueYField: "sales", valueXField: "date",
+                tooltip: am5.Tooltip.new(rootLine, { labelText: "{valueY}" })
+            }));
+
+            // Series 2 (Visitors)
+            var seriesVisitors = chartLine.series.push(am5xy.LineSeries.new(rootLine, {
+                name: "Visitors",
+                xAxis: xAxis, yAxis: yAxis,
+                valueYField: "visitors", valueXField: "date",
+                tooltip: am5.Tooltip.new(rootLine, { labelText: "{valueY}" })
+            }));
+
+            seriesSales.data.setAll(data);
+            seriesVisitors.data.setAll(data);
+
+            // Line Legend
+            var legendLine = rootLine.container.children.push(am5.Legend.new(rootLine, {
+                layout: rootLine.horizontalLayout
+            }));
+            legendLine.data.setAll(chartLine.series.values);
+            legendLine.labels.template.setAll({ fill: am5.color(0xffffff) });
+
+            seriesSales.appear(1000);
+            seriesVisitors.appear(1000);
+            chartLine.appear(1000, 100);
+
+        });
     }
 });
