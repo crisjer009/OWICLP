@@ -13,10 +13,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     $("#dashboardLink").click(e => { e.preventDefault(); showSection("#dashboardContent"); });
-    $("#newFolderLink").click(e => { e.preventDefault(); showSection("#NFolderContent"); });
-    $("#myFoldersLink").click(e => { e.preventDefault(); showSection("#MFolderContent"); });
-    $("#foldersListLink").click(e =>{e.preventDefault(); showSection("#FlistContent")})
-    $("#myGalleryLink").click(e => { e.preventDefault(); showSection("#MGallerysContent"); });
+    $("#usersLink").click(e => { e.preventDefault(); showSection("#branchesContent"); });
+    $("#suppliersStockLink").click(e => { e.preventDefault(); showSection("#StocksContent"); });
+    $("#ticketManagementLink").click(e =>{e.preventDefault(); showSection("#ticketContent")})
+    $("#reportsLink").click(e => { e.preventDefault(); showSection("#reportsContent"); });
     $("#settingsLink").click(e => { e.preventDefault(); showSection("#settingsContent"); });
 
     // Show dashboard by default
