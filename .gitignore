@@ -1,0 +1,15 @@
+# Environment file
+db_connection.php
+.env
+
+# Composer
+/vendor/
+/composer.lock
+/composer.json
+
+# Database connection (sensitive)
+db_connection.php
+
+# OS junk
+.DS_Store
+Thumbs.db
