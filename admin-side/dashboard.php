@@ -18,15 +18,6 @@ $user = isset($_SESSION['username']) && !empty($_SESSION['username'])
     <!-- Font Awesome -->
     <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
-    <!-- Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <!-- amCharts -->
-    <script src="https://cdn.amcharts.com/lib/5/index.js"></script>
-    <script src="https://cdn.amcharts.com/lib/5/percent.js"></script>
-    <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
-
                                  <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
      <style>
@@ -153,10 +144,8 @@ font-size:12px;
     min-height: 100vh;
 }
 
-#dashboardContent {
-    max-width: 1400px;
-    margin: 0 auto;
-}
+
+
 
 /* ==========================================================
    DASHBOARD & FILE MANAGER STYLING
@@ -381,17 +370,16 @@ font-size:12px;
     .top .search input:focus {
         width: 100%;
     }
-    
 }
+
 
 /* ================= MY FOLDERS SECTION ================= */
 
-/* Parent Container */
-#FolderContent {
+#myFoldersContent {
     margin-top: 20px;
 }
 
-#FolderContent h3 {
+#myFoldersContent h3 {
     margin-bottom: 20px;
     font-size: 18px;
     color: #94a3b8;
@@ -411,6 +399,7 @@ font-size:12px;
 }
 
 /* Add Folder Button */
+
 .add-folder{
     background:#38bdf8;
     border:none;
@@ -427,6 +416,7 @@ font-size:12px;
 }
 
 /* Layout Toggle */
+
 .layout-toggle button{
     padding:7px 14px;
     border:none;
@@ -442,7 +432,6 @@ font-size:12px;
     background:#475569;
 }
 
-
 /* ================= FILTERS ================= */
 
 .folder-filters{
@@ -450,6 +439,7 @@ font-size:12px;
     gap:10px;
     margin-bottom:20px;
     flex-wrap:wrap;
+    align-items:center;
 }
 
 .folder-filters select{
@@ -466,70 +456,100 @@ font-size:12px;
     border-color:#38bdf8;
 }
 
+/* ================= FOLDER SEARCH ================= */
+
+#folderSearch{
+    padding:10px 14px 10px 36px;
+    border-radius:8px;
+    border:1px solid rgba(255,255,255,0.08);
+    background:rgba(255,255,255,0.05);
+    color:#e2e8f0;
+    font-size:13px;
+    width:220px;
+    transition:all .25s ease;
+
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%2394a3b8' viewBox='0 0 24 24'%3E%3Cpath d='M21 21l-4.3-4.3m1.3-5.2a7 7 0 11-14 0 7 7 0 0114 0z' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+
+    background-repeat:no-repeat;
+    background-size:16px;
+    background-position:12px center;
+}
+
+#folderSearch::placeholder{
+    color:#94a3b8;
+}
+
+#folderSearch:hover{
+    border-color:rgba(56,189,248,0.4);
+}
+
+#folderSearch:focus{
+    outline:none;
+    border-color:#38bdf8;
+    box-shadow:0 0 0 2px rgba(56,189,248,0.2);
+    background:rgba(255,255,255,0.07);
+}
 
 /* ================= GRID LAYOUT ================= */
 
-.folders-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 20px;
+.my-folders-grid,
+.folders-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+    gap:20px;
 }
-
 
 /* ================= FOLDER CARD ================= */
 
-.folder-item {
-    background: linear-gradient(145deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01));
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 16px;
-    padding: 22px;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    position: relative;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+.folder-item{
+    background:linear-gradient(145deg,rgba(255,255,255,0.05),rgba(255,255,255,0.01));
+    border:1px solid rgba(255,255,255,0.08);
+    border-radius:16px;
+    padding:22px;
+    display:flex;
+    align-items:center;
+    gap:15px;
+    position:relative;
+    cursor:pointer;
+    transition:all .3s cubic-bezier(0.4,0,0.2,1);
 }
 
-/* Hover Effect */
-.folder-item:hover {
-    background: rgba(255,255,255,0.08);
-    border-color: rgba(56,189,248,0.4);
-    transform: translateY(-5px);
-    box-shadow: 0 12px 24px rgba(0,0,0,0.4);
+.folder-item:hover{
+    background:rgba(255,255,255,0.08);
+    border-color:rgba(56,189,248,0.4);
+    transform:translateY(-5px);
+    box-shadow:0 12px 24px rgba(0,0,0,0.4);
 }
-
 
 /* ================= FOLDER ICON ================= */
 
-.folder-icon {
-    width: 50px;
-    height: 50px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 22px;
-    flex-shrink: 0;
+.folder-icon{
+    width:50px;
+    height:50px;
+    border-radius:12px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:22px;
+    flex-shrink:0;
 }
 
 /* Folder Type Colors */
 
 .doc-color{
-    background: rgba(56,189,248,0.15);
+    background:rgba(56,189,248,0.15);
     color:#38bdf8;
 }
 
 .proj-color{
-    background: rgba(168,85,247,0.15);
+    background:rgba(168,85,247,0.15);
     color:#a855f7;
 }
 
 .arch-color{
-    background: rgba(244,114,182,0.15);
+    background:rgba(244,114,182,0.15);
     color:#f472b6;
 }
-
 
 /* ================= FOLDER INFO ================= */
 
@@ -553,7 +573,6 @@ font-size:12px;
     display:block;
 }
 
-
 /* ================= OPTIONS BUTTON ================= */
 
 .folder-options{
@@ -565,14 +584,12 @@ font-size:12px;
     right:15px;
     cursor:pointer;
     padding:5px;
-    transition:color 0.2s ease;
+    transition:color .2s ease;
 }
 
 .folder-options:hover{
     color:#ffffff;
 }
-
-
 
 /* ================= MODAL ================= */
 
@@ -613,6 +630,8 @@ font-size:12px;
     color:white;
 }
 
+/* Modal buttons */
+
 .modal-actions{
     display:flex;
     justify-content:flex-end;
@@ -636,42 +655,314 @@ font-size:12px;
     color:white;
 }
 
-
 /* ================= LIST LAYOUT ================= */
 
-.folders-list{
+.folders-list,
+.my-folders-list{
     display:flex;
     flex-direction:column;
     gap:12px;
 }
 
-.folders-list .folder-item{
+.folders-list .folder-item,
+.my-folders-list .folder-item{
     width:100%;
 }
-
-
 
 /* ================= RESPONSIVE ================= */
 
 @media (max-width:768px){
 
-.folder-controls{
-    flex-direction:column;
-    align-items:flex-start;
+    .folder-controls{
+        flex-direction:column;
+        align-items:flex-start;
+    }
+
+    .folder-filters{
+        flex-direction:column;
+    }
+
+    #folderSearch{
+        width:100%;
+    }
+
 }
 
-.folder-filters{
-    flex-direction:column;
+
+
+/* ================= USER MANAGEMENT ================= */
+.user-management {
+    padding: 20px 40px; /* Wider padding for a breathable layout */
+    background: transparent;
+    color: #e2e8f0;
+    font-family: 'Inter', sans-serif;
 }
 
+/* Header Section */
+.user-management-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 50px; /* Increased margin for clear separation */
+}
+
+.user-management-header h2 {
+    font-size: 14px; /* Slightly smaller, more professional heading */
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: rgba(241, 245, 249, 0.9);
+    margin: 0;
+}
+
+/* Floating Action Button */
+.btn-add {
+    background: #38bdf8;
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn-add:hover {
+    background: #0ea5e9;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3);
+}
+
+/* Minimalist Stats */
+.stats-cards {
+    display: flex;
+    justify-content: center; /* Centers the stats like the image */
+    align-items: center;
+    gap: 100px;              
+    margin: 40px 0 60px 0;
+    padding: 20px 0;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: transparent; 
+    border: none;            
+}
+
+.card span {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #cad3e0;        
+    margin-bottom: 8px;
+}
+
+.card strong {
+    display: block;
+    font-size: 36px;
+    font-weight: 700;
+    margin-top: 8px;
+    letter-spacing: -1px;
+}
+
+/* Stat Colors - Highlighting Active */
+.card:nth-child(1) strong { color: rgba(255, 255, 255, 0.15); }
+.card:nth-child(2) strong { color: #34d399; }
+.card:nth-child(3) strong { color: rgba(255, 255, 255, 0.15); }
+
+/* Integrated Table Controls */
+.table-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.search-box {
+    position: relative;
+    width: 350px;
+}
+
+.search-box i {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #475569;
+    font-size: 16px;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 10px 10px 10px 30px;
+    border: none;
+    background: transparent;
+    color: #f1f5f9;
+    font-size: 14px;
+    outline: none;
+}
+
+.search-box input::placeholder {
+    color: #475569;
+}
+
+.filter-box select {
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    font-size: 13px;
+    outline: none;
+    text-align: right;
+}
+
+.filter-box select option {
+    background: #0f172a; /* Match sidebar/dark background */
+    color: white;
+}
+
+/* Clean Table Design */
+.table-wrapper {
+    width: 100%;
+}
+
+.user-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.user-table th {
+    padding: 15px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #64748b;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.user-table td {
+    padding: 20px 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.02); /* Very subtle lines */
+    color: #94a3b8;
+    transition: background 0.2s;
+}
+
+.user-table tr:hover td {
+    background: rgba(255, 255, 255, 0.02);
+    color: #f1f5f9;
+}
+
+.user-name {
+    font-weight: 600;
+    color: #f1f5f9;
+    display: block;
+    font-size: 14px;
+}
+
+.user-email {
+    font-size: 12px;
+    color: #475569;
+    margin-top: 2px;
+}
+
+/* Status Pill */
+.status-pill.active {
+    background: rgba(56, 189, 248, 0.1);
+    color: #38bdf8;
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+/* Sleek Storage Bar */
+.storage-bar {
+    width: 120px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    margin-bottom: 6px;
+    overflow: hidden;
+}
+
+.storage-bar .progress {
+    height: 100%;
+    background: #38bdf8;
+    border-radius: 10px;
+}
+
+/* Action Icons */
+.btn-icon {
+    background: none;
+    border: none;
+    color: #475569;
+    padding: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s;
+    border-radius: 6px;
+}
+
+.btn-icon:hover {
+    color: #f1f5f9;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.btn-icon.text-danger:hover {
+    color: #ef4444;
+    background: rgba(239, 68, 68, 0.1);
+}
+
+/* Responsive Fixes */
+@media (max-width: 768px) {
+    .stats-cards {
+        gap: 30px;
+        flex-wrap: wrap;
+    }
+    
+    .user-management {
+        padding: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .user-management-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+    }
+    
+    .table-controls {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+    }
+    
+    .search-box {
+        width: 100%;
+    }
 }
 
 @media (max-width:480px){
-.folders-grid{
-    grid-template-columns:1fr;
-}
-}
 
+    .folders-grid,
+    .my-folders-grid{
+        grid-template-columns:1fr;
+    }
+
+            
+}
 
 </style>
 </head>
@@ -750,7 +1041,7 @@ font-size:12px;
         </div>
 
         <!-- Logout -->
-        <a class="logout" href="/user-side/pages/login/login.php">
+        <a class="logout" href="/OLD_OWICLP/user-side/pages/login/loginn.php">
             <i class="fas fa-sign-out-alt"></i> Logout
         </a>
 
@@ -762,157 +1053,266 @@ font-size:12px;
 
 
         <!-- ================= DASHBOARD CONTENT ================= -->
-        <div id="dashboardContent">
+            <div id="dashboardContent" class="content-section">
+    <div class="top">
+        <div>
+            <h2>Welcome, <?= htmlspecialchars($user); ?>!</h2>
+        </div>
+        <div class="search">
+            <input type="text" placeholder="Search items...">
+        </div>
+    </div>
 
-            <div class="top">
-                <div>
-                    <h2>Welcome, <?= htmlspecialchars($user); ?>!</h2>
-                </div>
+    <div class="documents-section">
+    <div class="header-flex">
+        <h3>File Manager</h3>
+        <p>Manage your recent activity and workspace directories</p>
+    </div>
 
-                <div class="search">
-                    <input type="text" placeholder="Search items...">
-                </div>
+    <div class="content-card">
+        <div class="card-header recent">
+            <h4><i class="fas fa-clock"></i> Recent & Frequently Opened</h4>
+            <span class="count-badge">3 Files</span>
+        </div>
+        <ul class="file-list">
+            <li>
+                <a href="#"><i class="fas fa-file-invoice"></i> Inventory_Report_March.pdf</a>
+                <span class="file-meta">Opened 2 mins ago</span>
+            </li>
+            <li>
+                <a href="#"><i class="fas fa-file-alt"></i> Purchase_Order_#4421.docx</a>
+                <span class="file-meta">Modified Yesterday</span>
+            </li>
+            <li>
+                <a href="#"><i class="fas fa-file-signature"></i> Supplier_Agreement_v2.pdf</a>
+                <span class="file-meta">Frequently Used</span>
+            </li>
+        </ul>
+    </div>
+
+    <div class="content-card">
+        <div class="card-header shared">
+            <h4><i class="fas fa-share-alt"></i> Shared Folders</h4>
+            <span class="count-badge">Shared with Team</span>
+        </div>
+        <ul class="file-list grid-view">
+            <li><a href="#"><i class="fas fa-users"></i> HR Documents</a></li>
+            <li><a href="#"><i class="fas fa-hand-holding-usd"></i> Finance Reports 2026</a></li>
+            <li><a href="#"><i class="fas fa-gavel"></i> Admin Policies</a></li>
+        </ul>
+    </div>
+
+    <div class="content-card">
+        <div class="card-header personal">
+            <h4><i class="fas fa-folder-open"></i> Private & Office Storage</h4>
+        </div>
+        
+        <div class="storage-split">
+            <div class="storage-group">
+                <span class="group-label">Office Drive</span>
+                <ul class="file-list">
+                    <li><a href="#"><i class="fas fa-building"></i> Branch_Operational_Manual</a></li>
+                    <li><a href="#"><i class="fas fa-network-wired"></i> IT_Infrastructure_Logs</a></li>
+                </ul>
             </div>
-
-            <div class="documents-section">
-
-                <h3>File Manager</h3>
-                <small>Quick access to your most used directories</small>
-
-                <!-- cards remain unchanged -->
-                <!-- (your dashboard cards stay exactly the same) -->
-
+            <div class="storage-group">
+                <span class="group-label">Personal Space</span>
+                <ul class="file-list">
+                    <li><a href="#"><i class="fas fa-user-lock"></i> My_Certificates</a></li>
+                    <li><a href="#"><i class="fas fa-key"></i> Credentials_Safe</a></li>
+                </ul>
             </div>
+        </div>
+    </div>
+</div>
+    </div>
 
+
+
+       <!-- ================= MY FOLDERS SECTION ================= -->
+<div id="myFoldersContent" class="content-section">
+    <h3>My Folders</h3>
+
+    <!-- Controls: Add folder, Layout toggle -->
+    <div class="folder-controls">
+        <button class="add-folder" onclick="openFolderModal()">Add Folder</button>
+
+        <div class="layout-toggle">
+            <button onclick="setGrid()">Grid</button>
+            <button onclick="setList()">List</button>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="folder-filters">
+        <select id="typeFilter">
+            <option value="all">All Types</option>
+            <option value="document">Documents</option>
+            <option value="spreadsheet">Spreadsheet</option>
+            <option value="pdf">PDF</option>
+            <option value="archive">Archive</option>
+        </select>
+
+        <select id="modifiedFilter">
+            <option value="all">All</option>
+            <option value="today">Today</option>
+            <option value="yesterday">Yesterday</option>
+        </select>
+
+        <select id="sourceFilter">
+            <option value="all">All Sources</option>
+            <option value="created">Created</option>
+            <option value="uploaded">Uploaded</option>
+            <option value="shared">Shared</option>
+        </select>
+
+        <input type="text" id="folderSearch" placeholder="Search folders...">
+    </div>
+
+    <!-- Folder Grid/List -->
+    <div class="my-folders-grid folders-grid" id="foldersContainer">
+        <div class="folder-item" data-type="document" data-modified="today" data-source="created">
+            <div class="folder-icon doc-color">
+                <i class="fas fa-folder"></i>
+            </div>
+            <div class="folder-info">
+                <h4>Documents</h4>
+                <span>128 Files</span>
+            </div>
+            <button class="folder-options"><i class="fas fa-ellipsis-v"></i></button>
         </div>
 
-
-        <!-- ================= MY FOLDERS CONTENT ================= -->
-        <div id="FolderContent">
-
-            <h3>My Folders</h3>
-
-            <div class="documents-section">
-
-                <!-- controls, filters and folder grid remain unchanged -->
-
+        <div class="folder-item" data-type="spreadsheet" data-modified="yesterday" data-source="created">
+            <div class="folder-icon proj-color">
+                <i class="fas fa-project-diagram"></i>
             </div>
-
+            <div class="folder-info">
+                <h4>Projects</h4>
+                <span>12 Active</span>
+            </div>
+            <button class="folder-options"><i class="fas fa-ellipsis-v"></i></button>
         </div>
 
+        <div class="folder-item" data-type="archive" data-modified="today" data-source="uploaded">
+            <div class="folder-icon arch-color">
+                <i class="fas fa-archive"></i>
+            </div>
+            <div class="folder-info">
+                <h4>Archives</h4>
+                <span>2.4 GB</span>
+            </div>
+            <button class="folder-options"><i class="fas fa-ellipsis-v"></i></button>
+        </div>
+    </div>
+</div>
 
-        <!-- ================= CREATE FOLDER MODAL ================= -->
-        <div id="folderModal" class="folder-modal">
+<!-- ================= CREATE FOLDER MODAL ================= -->
+<div id="folderModal" class="folder-modal">
+    <div class="modal-content">
+        <h3>Create Folder</h3>
+        <input type="text" id="folderName" placeholder="Folder Name">
+        <select id="folderType">
+            <option value="document">Documents</option>
+            <option value="spreadsheet">Spreadsheet</option>
+            <option value="pdf">PDF</option>
+            <option value="archive">Archive</option>
+        </select>
+        <select id="folderSource">
+            <option value="created">Created</option>
+            <option value="uploaded">Uploaded</option>
+            <option value="shared">Shared</option>
+        </select>
+        <div class="modal-actions">
+            <button onclick="createFolder()">Create</button>
+            <button onclick="closeFolderModal()">Cancel</button>
+        </div>
+    </div>
+</div>
 
-            <div class="modal-content">
 
-                <h3>Create Folder</h3>
+  <!-- ================= DEPARTMENT FOLDERS CONTENT ================= -->
 
-                <input type="text" id="folderName" placeholder="Folder Name">
+ <!-- ================= USER MANAGEMENT ================= -->
+    <div id="usersManagementContent" class="user-management">
 
-                <select id="folderType">
-                    <option value="document">Documents</option>
-                    <option value="spreadsheet">Spreadsheet</option>
-                    <option value="pdf">PDF</option>
-                    <option value="archive">Archive</option>
+        <!-- Header & Add Button -->
+        <div class="user-management-header">
+            <h2>User Management</h2>
+            <button class="btn-add">
+                <i class="fas fa-user-plus"></i> Add New User
+            </button>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-cards">
+            <div class="card">Total Users: <strong>124</strong></div>
+            <div class="card">Active: <strong>118</strong></div>
+            <div class="card">Storage Used: <strong>85%</strong></div>
+        </div>
+
+        <!-- Controls -->
+        <div class="table-controls">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="userSearch" placeholder="Search by name or email...">
+            </div>
+            <div class="filter-box">
+                <select id="deptFilter">
+                    <option value="all">All Departments</option>
+                    <option value="accounting">Accounting</option>
+                    <option value="hr">Human Resources</option>
+                    <option value="it">IT Department</option>
+                    <option value="marketing">Marketing</option>
                 </select>
-
-                <select id="folderSource">
-                    <option value="created">Created</option>
-                    <option value="uploaded">Uploaded</option>
-                    <option value="shared">Shared</option>
-                </select>
-
-                <div class="modal-actions">
-                    <button onclick="createFolder()">Create</button>
-                    <button onclick="closeFolderModal()">Cancel</button>
-                </div>
-
             </div>
-
         </div>
 
+        <!-- User Table -->
+        <div class="table-wrapper">
+            <table class="user-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Department</th>
+                        <th>Role</th>
+                        <th>Status</th>
+                        <th>Storage</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
 
-        <!-- ================= DEPARTMENT FOLDERS ================= -->
-        <div id="departmentFoldersContent">
-
-            <h3>Department Folders</h3>
-
-            <div class="documents-section">
-
-                <div class="folders-grid">
-
-                    <!-- Marketing -->
-                    <div class="folder-item">
-                        <div class="folder-icon doc-color">
-                            <i class="fas fa-bullhorn"></i>
-                        </div>
-                        <div class="folder-info">
-                            <h4>Marketing</h4>
-                            <span>Campaign Files</span>
-                            <small>Department Storage</small>
-                        </div>
-                    </div>
-
-                    <!-- Accounting -->
-                    <div class="folder-item">
-                        <div class="folder-icon proj-color">
-                            <i class="fas fa-calculator"></i>
-                        </div>
-                        <div class="folder-info">
-                            <h4>Accounting</h4>
-                            <span>Financial Reports</span>
-                            <small>Department Storage</small>
-                        </div>
-                    </div>
-
-                    <!-- IT -->
-                    <div class="folder-item">
-                        <div class="folder-icon arch-color">
-                            <i class="fas fa-server"></i>
-                        </div>
-                        <div class="folder-info">
-                            <h4>IT Department</h4>
-                            <span>System Files</span>
-                            <small>Department Storage</small>
-                        </div>
-                    </div>
-
-                    <!-- Merchandising -->
-                    <div class="folder-item">
-                        <div class="folder-icon doc-color">
-                            <i class="fas fa-box"></i>
-                        </div>
-                        <div class="folder-info">
-                            <h4>Merchandising</h4>
-                            <span>Product Files</span>
-                            <small>Department Storage</small>
-                        </div>
-                    </div>
-
-                    <!-- HR -->
-                    <div class="folder-item">
-                        <div class="folder-icon proj-color">
-                            <i class="fas fa-users"></i>
-                        </div>
-                        <div class="folder-info">
-                            <h4>Human Resources</h4>
-                            <span>Employee Documents</span>
-                            <small>Department Storage</small>
-                        </div>
-                    </div>
-
-                </div>
-
-            </div>
-
+                <tbody id="userTableBody">
+                    <tr data-dept="accounting">
+                        <td>
+                            <div class="user-info">
+                                <span class="user-name">Sebastian Lazaro</span>
+                                <span class="user-email">SLazaro@gmail.com</span>
+                            </div>
+                        </td>
+                        <td>Accounting</td>
+                        <td>Senior Accountant</td>
+                        <td><span class="status-pill active">Active</span></td>
+                        <td>
+                            <div class="storage-bar">
+                                <div class="progress" style="width:45%"></div>
+                            </div>
+                            <small>4.5GB / 10GB</small>
+                        </td>
+                        <td>
+                            <button class="btn-icon"><i class="fas fa-edit"></i></button>
+                            <button class="btn-icon text-danger"><i class="fas fa-trash"></i></button>
+                        </td>
+                        
+                    </tr>
+                </tbody>
+            </table>
         </div>
+    </div>
+    </div>
+    
+</div>
 
-
-    </div> <!-- End main -->
-
-</div> <!-- End wrapper -->
-
+   
                 
 <script src="/admin-side/dashboard.js"></script>
 

@@ -254,38 +254,19 @@
 <body>
 
 <div class="split-wrapper">
-    <a href="loginn.php?system=dts" class="sector sceptile-sector">
-        <div class="content">
-            <div class="status-badge">Operational Intel</div>
-            <div class="icon-hex">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-                    <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
-                    <line x1="12" y1="22.08" x2="12" y2="12"></line>
-                </svg>
-            </div>
-            <h2>DATA TRACKING SYSTEM</h2>
-            <p>Track and manage data in real time with an organized platform.</p>
-        </div>
-    </a>
-
     <a href="loginn.php?system=helpdesk" class="sector wartortle-sector">
         <div class="content">
-            <div class="status-badge">Secure Archival</div>
+            <div class="status-badge"></div>
             <div class="icon-hex">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
                 </svg>
             </div>
-            <h2>OWI HELPDESK</h2>
+            <h2>CLP</h2>
             <p>Manage technical support requests and track reported issues.</p>
         </div>
     </a>
 </div>
 
 </body>
-<<<<<<< HEAD
 </html>
-=======
-</html>
->>>>>>> 060cd36c568857c6b7b57a794d86aa3e02d9c8aa

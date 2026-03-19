@@ -67,7 +67,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $token = bin2hex(random_bytes(16));
             $verifyLink = rtrim($_ENV['APP_URL'], '/') . "/user-side/pages/login/verify.php?token=" . $token;
 
-            // --- Insert into database ---
             $insert = $pdo->prepare("
                 INSERT INTO employees 
                 (employee_id, first_name, last_name, department, email, password, is_verified, verification_token) 
@@ -111,9 +110,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 $mail->send();
 
-                $_SESSION['success'] = "Registration successful! Please check your email.";
-                header("Location: /UI/UX/login.php");
-                exit;
+                $successMessage = "Registration successful! Please check your email for verification.";
+                $formDisabled = true;
 
             } catch (Exception $e) {
                 $serverError = "Mailer Error: {$mail->ErrorInfo}";
@@ -346,6 +344,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="reg-right">
         <div class="status-badge">Registration Portal</div>
         
+                      <!----- message that verify link will be sent to the gmail ----->
+                <?php if (!empty($successMessage)): ?>
+             <div style="color:#4caf50; font-weight:bold; margin-bottom:20px;">
+            <?= htmlspecialchars($successMessage); ?>
+      </div>
+            <?php endif; ?>
+ <!----- for the validation for email if th eemail is already registered-->
+            <?php if (!empty($serverError)): ?>
+    <div style="color:#ff6b6b; font-weight:bold; margin-bottom:20px;">
+        <?= htmlspecialchars($serverError); ?>
+    </div>
+<?php endif; ?>
+
         <form method="POST" novalidate>
             <div class="form-grid">
                 <div class="form-group">
@@ -375,13 +386,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
                 <div class="form-group">
                  <label>Email Address</label>
-                 <input type="email" id="email" name="email" placeholder="john.doe@company.com" required>
+                 <input type="email" id="email" name="email" placeholder="john.doe@company.com" 
+                value="<?= isset($email) ? htmlspecialchars($email) : '' ?>" 
+                 class="<?= ($serverError === 'Email already registered!') ? 'input-error' : '' ?>" required>
                 <small id="emailError" class="error-text">Invalid email format</small>
                 </div>
 
                  <div class="form-group">
                  <label>Password</label>
                 <input type="password" id="password" name="password" placeholder="••••••••" required>
+                <small id="passwordStrength" class="error-text">Password must be 8+ characters, alphanumeric</small>
                  </div>
 
                 <div class="form-group">
@@ -393,34 +407,66 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <button type="submit" class="btn-reg">CREATE ACCOUNT</button>
             
             <div class="footer-links">
-                Already have an account? <a href="/UI/UX/draft4.php? echo $systemName; ?>">Log in here</a>
+                Already have an account? <a href="/UI/UX/loginn.php?>">Log in here</a>
             </div>
         </form>
     </div>
 </div>
-
 <script>
-const email = document.getElementById('email');
+const emailField = document.getElementById('email');
 const password = document.getElementById('password');
 const confirmPassword = document.getElementById('confirm_password');
 
-    const emailError = document.getElementById('emailError');
-    const passwordError = document.getElementById('passwordError');
-    email.addEventListener('input', () => {
-    const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/; // alphanumeric
+const emailError = document.getElementById('emailError');
+const passwordError = document.getElementById('passwordError');
+const passwordStrength = document.getElementById('passwordStrength');
 
-     if (!email.value.match(emailPattern)) {
+emailField.addEventListener('input', () => {
+    const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+    const email = emailField.value.trim();
+
+    if (!email.match(emailPattern)) {
+        emailError.textContent = 'Invalid email format';
         emailError.style.display = 'block';
-        email.classList.add('input-error');
-        email.classList.remove('input-success');
-     } else {
-        emailError.style.display = 'none';
-        email.classList.remove('input-error');
-        email.classList.add('input-success');
+        emailField.classList.add('input-error');
+        emailField.classList.remove('input-success');
+        return;
+    } else {
+        emailField.classList.remove('input-error');
+        emailField.classList.add('input-success');
+    }
+
+    if (email !== '') {
+        fetch('check_email.php?email=' + encodeURIComponent(email))
+            .then(response => response.json())
+            .then(data => {
+                if (data.exists) {
+                    emailError.textContent = 'Email is already registered!';
+                    emailError.style.display = 'block';
+                    emailField.classList.add('input-error');
+                    emailField.classList.remove('input-success');
+                } else {
+                    emailError.style.display = 'none';
+                    emailField.classList.remove('input-error');
+                    emailField.classList.add('input-success');
+                }
+            });
     }
 });
 
-    function validatePassword() {
+function validatePassword() {
+    const pattern = /^(?=.*[a-zA-Z])(?=.*\d).{8,}$/;
+    
+    if (!password.value.match(pattern)) {
+        passwordStrength.style.display = 'block';
+        password.classList.add('input-error');
+        password.classList.remove('input-success');
+    } else {
+        passwordStrength.style.display = 'none';
+        password.classList.remove('input-error');
+        password.classList.add('input-success');
+    }
+
     if (confirmPassword.value === "") {
         passwordError.style.display = 'none';
         confirmPassword.classList.remove('input-error');
@@ -433,7 +479,6 @@ const confirmPassword = document.getElementById('confirm_password');
     } else {
         passwordError.style.display = 'none';
         confirmPassword.classList.remove('input-error');
-        confirmPassword.classList.add('input-success');
     }
 }
 
@@ -442,25 +487,29 @@ confirmPassword.addEventListener('input', validatePassword);
 
 document.querySelector('form').addEventListener('submit', function(e) {
     let valid = true;
-
     const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+    const passwordPattern = /^(?=.*[a-zA-Z])(?=.*\d).{8,}$/;
 
-    if (!email.value.match(emailPattern)) {
+    if (!emailField.value.match(emailPattern)) {
+        emailError.textContent = 'Invalid email format';
         emailError.style.display = 'block';
-        email.classList.add('input-error');
+        emailField.classList.add('input-error');
         valid = false;
     }
-
     if (password.value !== confirmPassword.value) {
         passwordError.style.display = 'block';
         confirmPassword.classList.add('input-error');
         valid = false;
     }
-
-    if (!valid) {
-        e.preventDefault();
+    if (!password.value.match(passwordPattern)) {
+        passwordStrength.style.display = 'block';
+        password.classList.add('input-error');
+        valid = false;
     }
+
+    if (!valid) e.preventDefault();
 });
 </script>
 </body>
 </html>
+

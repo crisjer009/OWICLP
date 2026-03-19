@@ -1784,7 +1784,7 @@ canvas {
                                 <span>Total Inventory Value</span>
                                 <h2>₱200,890.00</h2>
                             </div>
-                            <span class="trend up">↑ 1.8%</span>
+                            <span class="trend up">↑ 1.82%</span>
                         </div>
 
                         <div class="card">
@@ -2150,7 +2150,7 @@ canvas {
 
 </div>
 
-<script src="/admin-side/dashboard.js"></script>
+<script src="/admin-side/draft_dashboard.js"></script>
 
 </body>
 </html>

@@ -1,19 +1,60 @@
 <?php
-// 1. Get the system from the URL (default to 'helpdesk' if not set)
+session_start();
+require_once __DIR__ . '/../../../db_connection.php';
+
+if (!isset($pdo)) {
+    die("Database connection failed.");
+}
 $system = isset($_GET['system']) ? $_GET['system'] : 'helpdesk';
 
-// 2. Define names and colors based on the system
 if ($system === 'dts') {
     $display_name = 'Data Tracking System';
-    $accent = '#83cd6a'; // Sceptile Green
+    $accent = '#83cd6a';
     $accent_rgb = '131, 205, 106';
     $accent_dark = '#0d1a0a';
 } else {
-    // Default or 'helpdesk'
     $display_name = 'OWI Helpdesk';
-    $accent = '#8bacf6'; // Wartortle Blue
+    $accent = '#8bacf6';
     $accent_rgb = '139, 172, 246';
     $accent_dark = '#0a0e1a';
+}
+$error = "";
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+    $email = trim($_POST['email']);
+    $password = trim($_POST['password']);
+
+    if (empty($email) || empty($password)) {
+        $_SESSION['error'] = "Please fill in all fields.";
+    } else {
+        $stmt = $pdo->prepare("SELECT * FROM employees WHERE email = ?");
+        $stmt->execute([$email]);
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($user) {
+            if (password_verify($password, $user['password'])) {
+                if ($user['is_verified'] == 0) {
+                    $_SESSION['error'] = "Please verify your email first.";
+                } else {
+                    $_SESSION['employee_id'] = $user['employee_id'];
+                    $_SESSION['name'] = $user['first_name'] . " " . $user['last_name'];
+                    $_SESSION['department'] = $user['department'];
+
+                    header("Location: ../../../admin-side/dashboard.php");
+                    exit;
+                }
+            } else {
+                $_SESSION['error'] = "Invalid email or password.";
+            }
+        } else {
+            $_SESSION['error'] = "Account not found.";
+        }
+    }
+
+    header("Location: " . $_SERVER['PHP_SELF'] . "?system=" . $system);
+    exit;
+
 }
 ?>
 <!DOCTYPE html>
@@ -21,7 +62,7 @@ if ($system === 'dts') {
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Login | <?php echo $display_name; ?></title>
+<title>Login</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
 <style>
     :root {
@@ -53,7 +94,6 @@ if ($system === 'dts') {
         color: white;
     }
 
-    /* Animated background elements */
     body::before {
         content: "";
         position: absolute;
@@ -218,7 +258,6 @@ if ($system === 'dts') {
 
     .back-link:hover { color: var(--accent); }
 
-    /* Animations */
     @keyframes slideUp {
         from { opacity: 0; transform: translateY(40px); }
         to { opacity: 1; transform: translateY(0); }
@@ -260,21 +299,33 @@ if ($system === 'dts') {
     </div>
 
     <div class="login-right">
-        <div class="status-badge">LOGIN FORM</div>
-            <input type="hidden" name="system" value="<?php echo $system; ?>">
+    <div class="status-badge">LOGIN FORM</div>
 
-            <div class="form-group">
-                <label>Username</label>
-                <input type="text" name="username" placeholder="Employee-ID" required autofocus autocomplete="off">
+    <form method="POST" action="">
+        <input type="hidden" name="system" value="<?php echo $system; ?>">
+
+        <?php  if (isset($_SESSION['error'])): ?>
+         <p style="color:#ff6b6b; margin-bottom:15px;"><?php 
+        echo $_SESSION['error']; 
+        unset($_SESSION['error']); 
+         ?></p> <?php endif; ?>
+
+        <div class="form-group">
+            <label>Email</label>
+            <input type="email" name="email" placeholder="Enter your email" required autofocus>
+            <small id="emailStatus" style="color:#ff6b6b;"></small>
+        </div>
+
+        <div class="form-group">
+            <label>Password</label>
+            <input type="password" name="password" placeholder="••••••••" required>
+        </div>
+
+        <button type="submit" class="btn-login">LOGIN</button>
+        <div class="footer-links">
+                Don't have an account? <a href="/user-side/pages/login/Registration.php">Log in here</a>
             </div>
-
-            <div class="form-group">
-                <label>Password</label>
-                <input type="password" name="password" placeholder="••••••••" required>
-            </div>
-<button type="button" class="btn-login" onclick="window.location.href='admin-side/dashboard.php'">LOGIN</button>
-
-<!-- <button type="submit" class="btn-login">LOGIN</button> -->    </div>
+    </form>
 </div>
 
 </body>
