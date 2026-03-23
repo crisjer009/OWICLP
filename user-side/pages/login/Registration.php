@@ -58,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt = $pdo->query("SELECT MAX(id) as max_id FROM employees");
             $row = $stmt->fetch();
             $nextID = ($row['max_id'] ?? 0) + 1;
-            $employeeID = "OWI-2024-" . str_pad($nextID, 3, '0', STR_PAD_LEFT);
+            $employeeID = "OWI-2026-" . str_pad($nextID, 3, '0', STR_PAD_LEFT);
 
             // --- Hash password ---
             $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
@@ -407,7 +407,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <button type="submit" class="btn-reg">CREATE ACCOUNT</button>
             
             <div class="footer-links">
-                Already have an account? <a href="/UI/UX/loginn.php?>">Log in here</a>
+                Already have an account? <a href="/user-side/pages/login/loginn.php">Log in here</a>
             </div>
         </form>
     </div>

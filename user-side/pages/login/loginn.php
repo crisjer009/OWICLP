@@ -5,6 +5,8 @@ require_once __DIR__ . '/../../../db_connection.php';
 if (!isset($pdo)) {
     die("Database connection failed.");
 }
+$app_url = $_ENV['APP_URL'] ?? '';
+
 $system = isset($_GET['system']) ? $_GET['system'] : 'helpdesk';
 
 if ($system === 'dts') {
@@ -18,43 +20,82 @@ if ($system === 'dts') {
     $accent_rgb = '139, 172, 246';
     $accent_dark = '#0a0e1a';
 }
-$error = "";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $email = trim($_POST['email']);
     $password = trim($_POST['password']);
 
+    $latitude = $_POST['latitude'] ?? null;
+    $longitude = $_POST['longitude'] ?? null;
+
     if (empty($email) || empty($password)) {
         $_SESSION['error'] = "Please fill in all fields.";
     } else {
+
         $stmt = $pdo->prepare("SELECT * FROM employees WHERE email = ?");
         $stmt->execute([$email]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($user) {
+
             if (password_verify($password, $user['password'])) {
+
                 if ($user['is_verified'] == 0) {
                     $_SESSION['error'] = "Please verify your email first.";
                 } else {
+
+                    $logStmt = $pdo->prepare("
+                        INSERT INTO employee_login_logs 
+                        (employee_id, email, first_name, last_name, latitude, longitude, status)
+                        VALUES (?, ?, ?, ?, ?, ?, ?)
+                        ON DUPLICATE KEY UPDATE
+                            email = VALUES(email),
+                            first_name = VALUES(first_name),
+                            last_name = VALUES(last_name),
+                            latitude = VALUES(latitude),
+                            longitude = VALUES(longitude),
+                            status = VALUES(status),
+                            login_time = CURRENT_TIMESTAMP
+                    ");
+
+                    $logStmt->execute([
+                        $user['employee_id'],
+                        $user['email'],
+                        $user['first_name'],
+                        $user['last_name'],
+                        $latitude,
+                        $longitude,
+                        'success'
+                    ]);
+
+                    // Session
                     $_SESSION['employee_id'] = $user['employee_id'];
                     $_SESSION['name'] = $user['first_name'] . " " . $user['last_name'];
                     $_SESSION['department'] = $user['department'];
 
+                    // Redirect
                     header("Location: ../../../admin-side/dashboard.php");
                     exit;
                 }
+
             } else {
+
+                $logStmt = $pdo->prepare("
+                    INSERT INTO employee_login_logs (email, status)
+                    VALUES (?, ?)
+                ");
+                $logStmt->execute([$email, 'failed']);
+
                 $_SESSION['error'] = "Invalid email or password.";
             }
+
         } else {
             $_SESSION['error'] = "Account not found.";
         }
     }
-
     header("Location: " . $_SERVER['PHP_SELF'] . "?system=" . $system);
     exit;
-
 }
 ?>
 <!DOCTYPE html>
@@ -301,32 +342,58 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="login-right">
     <div class="status-badge">LOGIN FORM</div>
 
-    <form method="POST" action="">
-        <input type="hidden" name="system" value="<?php echo $system; ?>">
+   <form id="loginForm" method="POST" action="">
+    <input type="hidden" name="system" value="<?php echo $system; ?>">
 
-        <?php  if (isset($_SESSION['error'])): ?>
-         <p style="color:#ff6b6b; margin-bottom:15px;"><?php 
-        echo $_SESSION['error']; 
-        unset($_SESSION['error']); 
-         ?></p> <?php endif; ?>
+    <?php if (isset($_SESSION['error'])): ?>
+        <p style="color:#ff6b6b; margin-bottom:15px;">
+            <?php 
+                echo $_SESSION['error']; 
+                unset($_SESSION['error']); 
+            ?>
+        </p>
+    <?php endif; ?>
 
-        <div class="form-group">
-            <label>Email</label>
-            <input type="email" name="email" placeholder="Enter your email" required autofocus>
-            <small id="emailStatus" style="color:#ff6b6b;"></small>
-        </div>
+    <div class="form-group">
+        <label>Email</label>
+        <input type="email" name="email" placeholder="Enter your email" required autofocus>
+        <small id="emailStatus" style="color:#ff6b6b;"></small>
+    </div>
 
-        <div class="form-group">
-            <label>Password</label>
-            <input type="password" name="password" placeholder="••••••••" required>
-        </div>
+    <div class="form-group">
+        <label>Password</label>
+        <input type="password" name="password" placeholder="••••••••" required>
+    </div>
 
-        <button type="submit" class="btn-login">LOGIN</button>
-        <div class="footer-links">
-                Don't have an account? <a href="/user-side/pages/login/Registration.php">Log in here</a>
-            </div>
-    </form>
+    <input type="hidden" name="latitude" id="latitude">
+    <input type="hidden" name="longitude" id="longitude">
+
+    <button type="submit" class="btn-login">LOGIN</button>
+
+    <div class="footer-links">
+        Don't have an account? <a href="/user-side/pages/login/Registration.php">Log in here</a>
+    </div>
+</form>
 </div>
+                <script>
+        document.getElementById("loginForm").addEventListener("submit", function(e) {
+            e.preventDefault(); 
 
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+
+                    document.getElementById("latitude").value = position.coords.latitude;
+                    document.getElementById("longitude").value = position.coords.longitude;
+
+                    e.target.submit();
+
+                }, function(error) {
+                    alert("Please allow location access to continue.");
+                });
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        });
+        </script>
 </body>
 </html>
