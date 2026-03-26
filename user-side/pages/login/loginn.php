@@ -2,6 +2,7 @@
 session_start();
 require_once __DIR__ . '/../../../db_connection.php';
 
+
 if (!isset($pdo)) {
     die("Database connection failed.");
 }
@@ -19,6 +20,34 @@ if ($system === 'dts') {
     $accent = '#8bacf6';
     $accent_rgb = '139, 172, 246';
     $accent_dark = '#0a0e1a';
+}
+
+
+/* ================= HELPERS ================= */
+function getUserIP() {
+    if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+        return $_SERVER['HTTP_CLIENT_IP'];
+    } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+        return $_SERVER['HTTP_X_FORWARDED_FOR'];
+    } else {
+        return $_SERVER['REMOTE_ADDR'];
+    }
+}
+
+function getDeviceType($userAgent) {
+    $userAgent = strtolower($userAgent);
+
+    // Mobile detection
+    if (preg_match('/android|iphone|ipad|ipod|windows phone|mobile/i', $userAgent)) {
+        return 'Mobile';
+    }
+
+    // Tablet detection
+    if (preg_match('/ipad|tablet/i', $userAgent)) {
+        return 'Tablet';
+    }
+
+    return 'Desktop';
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -69,22 +98,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         'success'
                     ]);
 
-                    // Session
                     $_SESSION['employee_id'] = $user['employee_id'];
                     $_SESSION['name'] = $user['first_name'] . " " . $user['last_name'];
                     $_SESSION['department'] = $user['department'];
 
-                    // Redirect
                     header("Location: ../../../admin-side/dashboard.php");
                     exit;
                 }
 
             } else {
 
-                $logStmt = $pdo->prepare("
-                    INSERT INTO employee_login_logs (email, status)
-                    VALUES (?, ?)
-                ");
+                $logStmt->execute([
+                    $email,
+                    'failed',
+                    $ip_address,
+                    $device_type,
+                    $user_agent
+                ]);
+
                 $logStmt->execute([$email, 'failed']);
 
                 $_SESSION['error'] = "Invalid email or password.";
@@ -393,7 +424,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else {
                 alert("Geolocation is not supported by this browser.");
             }
+
+
+            
         });
+
         </script>
 </body>
 </html>
