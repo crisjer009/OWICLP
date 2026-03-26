@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Office Warehouse | Dual Portals</title>
+    <title>Office Warehouse | Triplex Portals</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;800&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -11,6 +11,7 @@
             --sceptile-dark: #1b2e16;
             --wartortle: #8bacf6;
             --wartortle-dark: #161c2e;
+            --pikachu: #ffd84d; 
             --white: #ffffff;
             --ease: cubic-bezier(0.85, 0, 0.15, 1);
         }
@@ -53,6 +54,11 @@
 
         .wartortle-sector {
             background: linear-gradient(135deg, #1d263b 0%, var(--wartortle-dark) 100%);
+        }
+
+        .pikachu-sector {
+        background: linear-gradient(135deg, #d3aa18, #3a2f00);
+        --accent: var(--pikachu);
         }
 
         .sector:hover {
@@ -256,7 +262,7 @@
 <div class="split-wrapper">
     <a href="loginn.php?system=dts" class="sector sceptile-sector">
         <div class="content">
-            <div class="status-badge">Operational Intel</div>
+            <div class="status-badge">Digital Documents</div>
             <div class="icon-hex">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
@@ -271,7 +277,7 @@
 
     <a href="loginn.php?system=helpdesk" class="sector wartortle-sector">
         <div class="content">
-            <div class="status-badge">Secure Archival</div>
+            <div class="status-badge">Technical Secure</div>
             <div class="icon-hex">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
@@ -279,6 +285,20 @@
             </div>
             <h2>OWI HELPDESK</h2>
             <p>Manage technical support requests and track reported issues.</p>
+        </div>
+    </a>
+
+    <a href="loginn.php?system=returns" class="sector pikachu-sector">
+        <div class="content">
+            <div class="status-badge">Return</div>
+
+            <div class="icon-hex">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"></path>
+                </svg>
+            </div>
+            <h2>RETURN TO SUPPLIERS</h2>
+            <p>Handle return-to-suplier requests and their status updates.</p>
         </div>
     </a>
 </div>
